@@ -1,0 +1,408 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Disponibilités Août</title>
+<style>
+@import url('https://fonts.googleapis.com/css2?family=Playfair+Display:wght@400;600&family=DM+Sans:wght@300;400;500;600&display=swap');
+*{box-sizing:border-box;margin:0;padding:0}
+.wrap{font-family:'DM Sans',sans-serif;padding:1.5rem 1rem 3rem;background:transparent;position:relative}
+.bg{position:fixed;inset:0;background:linear-gradient(160deg,#fce4ec 0%,#e8f5e9 45%,#b2dfdb 100%);z-index:0}
+.content{position:relative;z-index:1;max-width:740px;margin:0 auto}
+header{text-align:center;margin-bottom:2rem}
+header h1{font-family:'Playfair Display',serif;font-size:2rem;color:#2e7d72;line-height:1.2}
+header p{font-size:.9rem;color:#6a8f8c;margin-top:.3rem;font-weight:300}
+.card{background:rgba(255,255,255,.85);backdrop-filter:blur(8px);border-radius:18px;padding:1.4rem 1.5rem;margin-bottom:1.1rem;border:1px solid rgba(255,255,255,.9);box-shadow:0 4px 20px rgba(100,180,160,.08)}
+.card h2{font-family:'Playfair Display',serif;font-size:1.1rem;color:#2e7d72;margin-bottom:1rem;display:flex;align-items:center;gap:8px}
+.dot{width:8px;height:8px;border-radius:50%;flex-shrink:0}
+.dp{background:#f06292}.dt{background:#26a69a}.da{background:#fb8c00}.dg{background:#7e57c2}
+
+.people-grid{display:flex;flex-wrap:wrap;gap:8px;margin-bottom:.9rem}
+.person-wrap{position:relative;display:inline-flex;align-items:center}
+.person-btn{padding:8px 32px 8px 16px;border-radius:999px;border:1.5px solid #b2dfdb;background:white;font-family:'DM Sans',sans-serif;font-size:.85rem;font-weight:500;color:#4a8c87;cursor:pointer;transition:all .15s}
+.person-btn:hover{border-color:#f06292;color:#c2185b;background:#fce4ec}
+.person-btn.selected{background:linear-gradient(135deg,#f48fb1,#f06292);border-color:transparent;color:white;font-weight:600;box-shadow:0 3px 10px rgba(240,98,146,.3)}
+.del-btn{position:absolute;right:8px;width:16px;height:16px;border-radius:50%;border:none;background:rgba(100,160,155,.3);color:#2e7d72;font-size:10px;cursor:pointer;display:flex;align-items:center;justify-content:center;font-weight:700;line-height:1;padding:0;transition:background .15s}
+.del-btn:hover{background:#e53935;color:white}
+.person-btn.selected~.del-btn{background:rgba(255,255,255,.3);color:white}
+.person-btn.selected~.del-btn:hover{background:#e53935;color:white}
+
+.add-form{display:flex;gap:8px;align-items:center;margin-top:.5rem}
+.add-input{flex:1;padding:9px 14px;border-radius:999px;border:1.5px solid #b2dfdb;font-family:'DM Sans',sans-serif;font-size:.88rem;color:#2e4a47;outline:none;background:white;transition:border-color .15s}
+.add-input:focus{border-color:#26a69a}
+.add-btn{padding:9px 18px;border-radius:999px;border:none;background:linear-gradient(135deg,#80cbc4,#26a69a);color:white;font-family:'DM Sans',sans-serif;font-size:.85rem;font-weight:600;cursor:pointer;white-space:nowrap;transition:opacity .15s}
+.add-btn:hover{opacity:.88}
+
+.month-title{font-family:'Playfair Display',serif;font-size:1rem;color:#2e7d72;text-align:center;margin-bottom:.6rem;font-weight:600}
+.cal-grid{display:grid;grid-template-columns:repeat(7,1fr);gap:3px}
+.cal-dow{text-align:center;font-size:.68rem;font-weight:600;color:#6a8f8c;text-transform:uppercase;letter-spacing:.4px;padding:4px 0}
+.cal-day{aspect-ratio:1;border-radius:9px;border:1.5px solid #b2dfdb;background:white;display:flex;flex-direction:column;align-items:center;justify-content:center;cursor:pointer;transition:all .15s;position:relative;min-width:0;overflow:visible}
+.cal-day.empty{background:transparent;border-color:transparent;cursor:default}
+.cal-day.selected{background:linear-gradient(135deg,#80cbc4,#26a69a);border-color:transparent}
+.cal-day.selected .day-num{color:white}
+.day-num{font-size:.82rem;font-weight:600;line-height:1;color:#2e4a47}
+.day-count{font-size:.6rem;font-weight:600;margin-top:1px}
+.cal-day.cg{background:#e8f5e9;border-color:#a5d6a7}
+.cal-day.cg .day-num{color:#2e7d32}
+.cal-day.cg .day-count{color:#388e3c}
+.cal-day.co{background:#fff3e0;border-color:#ffcc80}
+.cal-day.co .day-num{color:#e65100}
+.cal-day.co .day-count{color:#ef6c00}
+
+/* Heart badge */
+.heart-badge{position:absolute;top:-6px;right:-5px;font-size:.75rem;line-height:1;pointer-events:none;filter:drop-shadow(0 1px 2px rgba(240,98,146,.4));z-index:2}
+
+/* Tooltip */
+.tip{position:absolute;bottom:calc(100% + 8px);left:50%;transform:translateX(-50%);background:#2e4a47;color:white;border-radius:8px;padding:6px 10px;font-size:.72rem;pointer-events:none;z-index:20;opacity:0;transition:opacity .15s;line-height:1.6;white-space:nowrap;text-align:center}
+.cal-day:hover .tip{opacity:1}
+.tip::after{content:'';position:absolute;top:100%;left:50%;transform:translateX(-50%);border:4px solid transparent;border-top-color:#2e4a47}
+
+.legend{display:flex;gap:10px;flex-wrap:wrap;margin-bottom:.8rem;align-items:center}
+.leg-item{display:flex;align-items:center;gap:5px;font-size:.75rem;color:#4a8c87}
+.leg-dot{width:12px;height:12px;border-radius:3px}
+.lg{background:#c8e6c9}.lo{background:#ffe0b2}
+
+.btn-row{display:flex;gap:8px;margin-top:.7rem}
+.btn-submit{flex:1;padding:12px;border-radius:12px;border:none;background:linear-gradient(135deg,#f48fb1 0%,#26a69a 100%);color:white;font-family:'DM Sans',sans-serif;font-size:.9rem;font-weight:600;cursor:pointer;transition:opacity .2s,transform .15s;box-shadow:0 4px 14px rgba(240,98,146,.2)}
+.btn-submit:hover{opacity:.9;transform:translateY(-1px)}
+.btn-submit:active{transform:scale(.98)}
+.btn-reset{padding:12px 16px;border-radius:12px;border:1.5px solid #ef9a9a;background:white;font-family:'DM Sans',sans-serif;font-size:.88rem;font-weight:600;color:#e53935;cursor:pointer;transition:all .15s;white-space:nowrap}
+.btn-reset:hover{background:#ffebee;border-color:#e53935}
+.toast{display:none;border-radius:10px;padding:10px 16px;font-size:.86rem;font-weight:500;margin-top:.6rem;text-align:center;animation:fadeUp .3s ease}
+.toast.ok{background:linear-gradient(135deg,#26a69a,#43a047);color:white}
+.toast.del{background:#ffebee;color:#c62828;border:1px solid #ef9a9a}
+@keyframes fadeUp{from{opacity:0;transform:translateY(5px)}to{opacity:1;transform:translateY(0)}}
+
+.cost-row{display:flex;align-items:center;gap:10px;margin-bottom:1rem;flex-wrap:wrap}
+.cost-row label{font-size:.88rem;color:#4a8c87;font-weight:500;white-space:nowrap}
+.cost-input{padding:8px 12px;border-radius:10px;border:1.5px solid #b2dfdb;font-family:'DM Sans',sans-serif;font-size:.95rem;font-weight:600;color:#2e7d72;width:120px;outline:none;background:white}
+.cost-input:focus{border-color:#26a69a}
+.pay-table{width:100%;border-collapse:collapse}
+.pay-table th{font-size:.72rem;font-weight:600;text-transform:uppercase;letter-spacing:.6px;color:#6a8f8c;padding:6px 8px;text-align:left;border-bottom:1.5px solid #b2dfdb}
+.pay-table td{padding:8px;font-size:.85rem;border-bottom:1px solid rgba(178,223,219,.4);color:#2e4a47;vertical-align:middle}
+.pay-table tr:last-child td{border-bottom:none}
+.name-c{font-weight:600;color:#2e7d72;font-family:'Playfair Display',serif}
+.days-c{color:#26a69a;font-weight:600}
+.amt-c{font-weight:700;color:#c2185b}
+.ratio-c{color:#6a8f8c;font-size:.78rem}
+.total-row td{font-weight:700;color:#2e7d72;border-top:2px solid #80cbc4}
+.empty-state{text-align:center;color:#9dbfbc;font-size:.86rem;padding:1.2rem 0;font-style:italic}
+
+/* Couples legend */
+.couple-legend{display:flex;flex-wrap:wrap;gap:8px;margin-bottom:.9rem}
+.couple-tag{font-size:.75rem;background:#fce4ec;color:#c2185b;border-radius:999px;padding:4px 12px;font-weight:500;border:1px solid #f8bbd0}
+
+/* Styles pour le popup et la réduction */
+.modal-overlay {
+  position: fixed; inset: 0; background: rgba(46, 74, 71, 0.6);
+  z-index: 100; display: none; align-items: center; justify-content: center;
+  backdrop-filter: blur(3px);
+}
+.modal-content {
+  background: white; padding: 2rem; border-radius: 18px;
+  max-width: 400px; text-align: center; margin: 1rem;
+  box-shadow: 0 10px 30px rgba(0,0,0,0.2);
+  animation: popIn 0.3s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+}
+.modal-content h3 {
+  font-family: 'Playfair Display', serif; color: #c2185b;
+  margin-bottom: 0.8rem; font-size: 1.6rem;
+}
+.modal-content p {
+  color: #2e4a47; font-size: 0.95rem; margin-bottom: 1.5rem; line-height: 1.5;
+}
+.btn-close-modal {
+  padding: 12px 24px; border-radius: 999px; border: none;
+  background: linear-gradient(135deg, #f48fb1, #f06292); color: white;
+  font-family: 'DM Sans', sans-serif; font-size: 0.95rem; font-weight: 600;
+  cursor: pointer; transition: transform 0.15s, box-shadow 0.15s;
+  box-shadow: 0 4px 14px rgba(240,98,146,.3);
+}
+.btn-close-modal:hover { transform: translateY(-2px); box-shadow: 0 6px 18px rgba(240,98,146,.4); }
+@keyframes popIn { from { transform: scale(0.8); opacity: 0; } to { transform: scale(1); opacity: 1; } }
+
+.discount-badge {
+  background: #fce4ec; color: #c2185b; font-size: 0.65rem; padding: 3px 6px;
+  border-radius: 6px; font-weight: 700; margin-left: 6px; vertical-align: middle;
+}
+</style>
+</head>
+<body>
+
+<div class="bg"></div>
+<div class="wrap"><div class="content">
+
+<header>
+  <div style="font-size:2rem;margin-bottom:.4rem">🐚</div>
+  <h1>Disponibilités Août</h1>
+  <p>Sélectionne tes jours, enregistre et visualise qui vient quand</p>
+</header>
+
+<!-- Participants -->
+<div class="card">
+  <h2><span class="dot dp"></span>Participants</h2>
+  <div class="people-grid" id="peopleGrid"></div>
+  <div class="add-form">
+    <input class="add-input" id="addInput" type="text" placeholder="Ajouter un prénom..." maxlength="20" onkeydown="if(event.key==='Enter')addPerson()">
+    <button class="add-btn" onclick="addPerson()">+ Ajouter</button>
+  </div>
+</div>
+
+<!-- Sélection jours -->
+<div class="card" id="selCard" style="display:none">
+  <h2><span class="dot dt"></span>Jours disponibles — <span id="selName" style="color:#f06292"></span></h2>
+  <p style="font-size:.8rem;color:#6a8f8c;margin-bottom:.8rem">Clique sur les jours où tu seras présent·e</p>
+  <div class="month-title">Août 2025</div>
+  <div class="cal-grid" id="selCal"></div>
+  <div class="btn-row">
+    <button class="btn-reset" onclick="resetPerson()">✕ Effacer mes jours</button>
+    <button class="btn-submit" onclick="handleSubmit()">Enregistrer 🌊</button>
+  </div>
+  <div class="toast ok" id="toast"></div>
+</div>
+
+<!-- Récap calendrier -->
+<div class="card">
+  <h2><span class="dot da"></span>Calendrier des présences</h2>
+  <div class="legend">
+    <div class="leg-item"><div class="leg-dot lg"></div>1–7 personnes</div>
+    <div class="leg-item"><div class="leg-dot lo"></div>8+ personnes</div>
+    <div class="leg-item" style="margin-left:4px">💕 couple ensemble</div>
+  </div>
+  <div class="couple-legend">
+    <span class="couple-tag">💕 Lea + Albin</span>
+    <span class="couple-tag">💕 Charles + Lilie</span>
+    <span class="couple-tag">💕 Lise + Vincent</span>
+  </div>
+  <div class="month-title">Août 2025</div>
+  <div class="cal-grid" id="recapCal"></div>
+</div>
+
+<!-- Paiements -->
+<div class="card">
+  <h2><span class="dot dg"></span>Répartition des coûts</h2>
+  <div class="cost-row">
+    <label>Coût total du séjour :</label>
+    <input class="cost-input" type="number" id="totalCost" value="1000" min="0" oninput="renderPayments()">
+    <span style="font-size:.88rem;color:#6a8f8c">€</span>
+  </div>
+  <table class="pay-table">
+    <thead><tr><th>Prénom</th><th>Jours</th><th>Ratio</th><th>À payer</th></tr></thead>
+    <tbody id="payBody"></tbody>
+  </table>
+</div>
+
+<!-- Popup de promotion -->
+<div class="modal-overlay" id="promoModal">
+  <div class="modal-content">
+    <h3> Fais pas ton Kassim !</h3>
+    <p>Reste <strong>plus d'une semaine</strong> avec nous (8 jours ou plus) et bénéficie d'une <strong>réduction de 10%</strong> sur ta part des frais de séjour ! 🐚🌊</p>
+    <button class="btn-close-modal" onclick="closePromoModal()">Génial, j'en profite !</button>
+  </div>
+</div>
+
+</div></div>
+
+<script>
+const DEFAULT_PEOPLE=['Lilie','Lea','Albin','Noé','Charles','Kassim','Clément','HB','Titouan','Nathan','Vincent'];
+const YEAR=2025,MONTH=7,DAYS=31;
+const DOW=['Lun','Mar','Mer','Jeu','Ven','Sam','Dim'];
+const SK='dispo_aout_v4';
+
+// Couples : paires de prénoms (comparaison insensible à la casse)
+const COUPLES=[
+  ['Lea','Albin'],
+  ['Charles','Lilie'],
+  ['Lise','Vincent'],
+];
+
+let people=[...DEFAULT_PEOPLE];
+let state={};
+DEFAULT_PEOPLE.forEach(p=>state[p]=[]);
+let selectedPerson=null;
+let selDays=new Set();
+
+// Variable pour s'assurer que le popup ne s'affiche qu'une seule fois
+let promoSeen = false;
+
+const firstDow=(()=>{const d=new Date(YEAR,MONTH,1).getDay();return d===0?6:d-1;})();
+
+function normName(n){return n.trim().charAt(0).toUpperCase()+n.trim().slice(1).toLowerCase();}
+
+function loadState(){
+  try{
+    const r=localStorage.getItem(SK);
+    if(r){const d=JSON.parse(r);if(d.people)people=d.people;if(d.state){state={};people.forEach(p=>state[p]=d.state[p]||[]);}}
+  }catch(e){}
+}
+function saveState(){try{localStorage.setItem(SK,JSON.stringify({people,state}));}catch(e){}}
+
+function heartsForDay(d){
+  const presentLower=people.filter(p=>state[p]&&state[p].includes(d)).map(p=>p.toLowerCase());
+  const hearts=[];
+  COUPLES.forEach(([a,b])=>{
+    if(presentLower.includes(a.toLowerCase())&&presentLower.includes(b.toLowerCase()))hearts.push('💕');
+  });
+  return hearts;
+}
+
+function closePromoModal() {
+  document.getElementById('promoModal').style.display = 'none';
+}
+
+function addPerson(){
+  const inp=document.getElementById('addInput');
+  const name=normName(inp.value);
+  if(!name||people.includes(name))return;
+  people.push(name);state[name]=[];inp.value='';
+  saveState();renderAll();
+}
+
+function deletePerson(name){
+  if(!confirm(`Supprimer ${name} et ses disponibilités ?`))return;
+  people=people.filter(p=>p!==name);delete state[name];
+  if(selectedPerson===name){selectedPerson=null;selDays=new Set();document.getElementById('selCard').style.display='none';}
+  saveState();renderAll();
+}
+
+function selectPerson(name){
+  selectedPerson=name;selDays=new Set(state[name]||[]);
+  document.getElementById('selCard').style.display='block';
+  document.getElementById('selName').textContent=name;
+  document.getElementById('toast').style.display='none';
+  renderPeople();buildSelCal();
+  document.getElementById('selCard').scrollIntoView({behavior:'smooth',block:'nearest'});
+  
+  // Affichage du popup incitatif
+  if(!promoSeen) {
+    document.getElementById('promoModal').style.display = 'flex';
+    promoSeen = true;
+  }
+}
+
+function toggleDay(d){selDays.has(d)?selDays.delete(d):selDays.add(d);buildSelCal();}
+
+function handleSubmit(){
+  if(!selectedPerson)return;
+  state[selectedPerson]=[...selDays].sort((a,b)=>a-b);
+  saveState();buildRecapCal();renderPayments();renderPeople();
+  showToast(`✓ ${selectedPerson} — ${selDays.size} jour${selDays.size>1?'s':''} enregistré${selDays.size>1?'s':''} !`,'ok');
+}
+
+function resetPerson(){
+  if(!selectedPerson)return;
+  selDays=new Set();state[selectedPerson]=[];
+  saveState();buildSelCal();buildRecapCal();renderPayments();renderPeople();
+  showToast(`Jours de ${selectedPerson} effacés`,'del');
+}
+
+function showToast(msg,type){
+  const t=document.getElementById('toast');t.className='toast '+type;t.textContent=msg;t.style.display='block';
+  setTimeout(()=>t.style.display='none',2800);
+}
+
+function renderPeople(){
+  const g=document.getElementById('peopleGrid');
+  g.innerHTML=people.map(p=>{
+    const days=state[p]&&state[p].length>0?` (${state[p].length}j)`:'';
+    return `<div class="person-wrap">
+      <button class="person-btn${selectedPerson===p?' selected':''}" onclick="selectPerson('${p}')">${p}${days}</button>
+      <button class="del-btn" onclick="deletePerson('${p}')" title="Supprimer ${p}">✕</button>
+    </div>`;
+  }).join('');
+}
+
+function buildSelCal(){
+  const el=document.getElementById('selCal');el.innerHTML='';
+  DOW.forEach(d=>{const h=document.createElement('div');h.className='cal-dow';h.textContent=d;el.appendChild(h);});
+  for(let i=0;i<firstDow;i++){const e=document.createElement('div');e.className='cal-day empty';el.appendChild(e);}
+  for(let d=1;d<=DAYS;d++){
+    const cell=document.createElement('div');cell.className='cal-day'+(selDays.has(d)?' selected':'');
+    const num=document.createElement('div');num.className='day-num';num.textContent=d;
+    cell.appendChild(num);cell.onclick=()=>toggleDay(d);el.appendChild(cell);
+  }
+}
+
+function buildRecapCal(){
+  const el=document.getElementById('recapCal');el.innerHTML='';
+  DOW.forEach(d=>{const h=document.createElement('div');h.className='cal-dow';h.textContent=d;el.appendChild(h);});
+  for(let i=0;i<firstDow;i++){const e=document.createElement('div');e.className='cal-day empty';el.appendChild(e);}
+  for(let d=1;d<=DAYS;d++){
+    const present=people.filter(p=>state[p]&&state[p].includes(d));
+    const count=present.length;
+    let cls='cal-day';
+    if(count>0)cls+=count<=7?' cg':' co';
+    const cell=document.createElement('div');cell.className=cls;
+
+    const num=document.createElement('div');num.className='day-num';num.textContent=d;
+    const cnt=document.createElement('div');cnt.className='day-count';cnt.textContent=count>0?count+'p':'';
+    cell.appendChild(num);cell.appendChild(cnt);
+
+    const hearts=heartsForDay(d);
+    if(hearts.length>0){
+      const hb=document.createElement('div');hb.className='heart-badge';
+      hb.textContent=hearts.join('');
+      cell.appendChild(hb);
+    }
+
+    if(count>0){
+      const tip=document.createElement('div');tip.className='tip';
+      const lines=present.map(p=>p).join(' · ');
+      const heartLine=hearts.length>0?`<div style="margin-top:3px;font-size:.85rem">${hearts.join(' ')}</div>`:'';
+      tip.innerHTML=lines+heartLine;
+      cell.appendChild(tip);
+    }
+    el.appendChild(cell);
+  }
+}
+
+function renderPayments(){
+  const total=parseFloat(document.getElementById('totalCost').value)||0;
+  const active=people.filter(p=>state[p]&&state[p].length>0);
+  const tbody=document.getElementById('payBody');
+  
+  if(active.length===0){
+    tbody.innerHTML=`<tr><td colspan="4" class="empty-state">Aucune disponibilité renseignée 🌊</td></tr>`;
+    return;
+  }
+  
+  const totalDays=active.reduce((s,p)=>s+state[p].length,0);
+  let rows='';
+  let gt=0;
+  
+  active.forEach(p=>{
+    const days=state[p].length;
+    const ratio=totalDays>0?days/totalDays:0;
+    let amt=total*ratio;
+    let badge='';
+    
+    // Application de la réduction de 10% si plus de 7 jours
+    if(days > 7) {
+      amt = amt * 0.90; 
+      badge = '<span class="discount-badge">-10%</span>';
+    }
+    
+    gt+=amt;
+    rows+=`<tr>
+      <td class="name-c">${p}</td>
+      <td class="days-c">${days}j</td>
+      <td class="ratio-c">${(ratio*100).toFixed(1)}%</td>
+      <td class="amt-c">${amt.toFixed(2)} € ${badge}</td>
+    </tr>`;
+  });
+  
+  rows+=`<tr class="total-row">
+    <td colspan="2">Total recouvré</td>
+    <td>-</td>
+    <td>${gt.toFixed(2)} €</td>
+  </tr>`;
+  tbody.innerHTML=rows;
+}
+
+function renderAll(){renderPeople();buildSelCal();buildRecapCal();renderPayments();}
+
+loadState();renderAll();
+</script>
+</body>
+</html>
