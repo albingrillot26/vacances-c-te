@@ -257,14 +257,13 @@ header p{font-size:.9rem;color:#6a8f8c;margin-top:.3rem;font-weight:300}
 const firebaseConfig = {
   apiKey: "AIzaSyDD_Nj2nDBa_Ertoy7k9YjOV2HesLgbp6I",
   authDomain: "vacances-3bce4.firebaseapp.com",
-  databaseURL: "https://console.firebase.google.com/u/0/project/vacances-3bce4/database/vacances-3bce4-default-rtdb/data/~2F",
+  databaseURL: "https://vacances-3bce4-default-rtdb.europe-west1.firebasedatabase.app", // LA VRAIE ADRESSE EST LÀ !
   projectId: "vacances-3bce4",
   storageBucket: "vacances-3bce4.firebasestorage.app",
   messagingSenderId: "416205104205",
   appId: "1:416205104205:web:06841f15ec3a141f30a804"
 };
 // ==========================================
-
 firebase.initializeApp(firebaseConfig);
 const db = firebase.database();
 const dbRef = db.ref('vacances_aout');
