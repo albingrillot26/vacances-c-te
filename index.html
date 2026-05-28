@@ -16,7 +16,7 @@ header p{font-size:.9rem;color:#6a8f8c;margin-top:.3rem;font-weight:300}
 .card{background:rgba(255,255,255,.85);backdrop-filter:blur(8px);border-radius:18px;padding:1.4rem 1.5rem;margin-bottom:1.1rem;border:1px solid rgba(255,255,255,.9);box-shadow:0 4px 20px rgba(100,180,160,.08)}
 .card h2{font-family:'Playfair Display',serif;font-size:1.1rem;color:#2e7d72;margin-bottom:1rem;display:flex;align-items:center;gap:8px}
 .dot{width:8px;height:8px;border-radius:50%;flex-shrink:0}
-.dp{background:#f06292}.dt{background:#26a69a}.da{background:#fb8c00}.dg{background:#7e57c2}
+.dp{background:#f06292}.dt{background:#26a69a}.da{background:#fb8c00}.dg{background:#7e57c2}.dv{background:#ff9800}
 
 .people-grid{display:flex;flex-wrap:wrap;gap:8px;margin-bottom:.9rem}
 .person-wrap{position:relative;display:inline-flex;align-items:center}
@@ -33,6 +33,35 @@ header p{font-size:.9rem;color:#6a8f8c;margin-top:.3rem;font-weight:300}
 .add-input:focus{border-color:#26a69a}
 .add-btn{padding:9px 18px;border-radius:999px;border:none;background:linear-gradient(135deg,#80cbc4,#26a69a);color:white;font-family:'DM Sans',sans-serif;font-size:.85rem;font-weight:600;cursor:pointer;white-space:nowrap;transition:opacity .15s}
 .add-btn:hover{opacity:.88}
+
+/* Styles du profil (Genre, Statut, Snap) */
+.status-section {margin-bottom: 1.2rem; padding: 12px; background: rgba(255,255,255,0.7); border-radius: 12px; border: 1px dashed #80cbc4;}
+.status-block {margin-bottom: 12px;}
+.status-block:last-child {margin-bottom: 0;}
+.status-title {font-size: 0.85rem; color: #2e7d72; font-weight: 600; margin-bottom: 6px; display: flex; align-items: center; gap: 5px;}
+.status-group {display: flex; gap: 6px; flex-wrap: wrap;}
+.status-btn {padding: 6px 12px; border-radius: 999px; border: 1px solid #b2dfdb; font-size: 0.78rem; cursor: pointer; background: white; color: #4a8c87; transition: all 0.2s;}
+.status-btn:hover {background: #e8f5e9;}
+.status-btn.active {background: #fce4ec; border-color: #f06292; color: #c2185b; font-weight: 600;}
+
+.profile-input { width: 100%; padding: 8px 12px; border-radius: 8px; border: 1.5px solid #b2dfdb; font-family: 'DM Sans', sans-serif; font-size: 0.85rem; color: #2e7d72; outline: none; background: white; transition: border-color 0.15s; }
+.profile-input:focus { border-color: #f06292; }
+
+/* Styles pour les Villas */
+.villa-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(220px, 1fr)); gap: 12px; margin-bottom: 1rem; }
+.villa-card { background: white; border: 1.5px solid #b2dfdb; border-radius: 12px; overflow: hidden; display: flex; flex-direction: column; position: relative; transition: transform 0.15s;}
+.villa-card:hover { transform: translateY(-3px); box-shadow: 0 6px 15px rgba(100,180,160,.15); }
+.villa-img { width: 100%; height: 130px; object-fit: cover; background: #e8f5e9; border-bottom: 1.5px solid #b2dfdb; }
+.villa-info { padding: 10px; display: flex; flex-direction: column; flex: 1; }
+.villa-name { font-family: 'Playfair Display', serif; font-size: 1rem; color: #2e7d72; font-weight: 600; margin-bottom: 4px; white-space: nowrap; overflow: hidden; text-overflow: ellipsis;}
+.villa-specs { font-size: 0.75rem; color: #6a8f8c; margin-bottom: 8px; display: flex; gap: 8px; flex-wrap: wrap; }
+.villa-spec-item { background: #e8f5e9; padding: 2px 6px; border-radius: 4px; color: #2e7d32; font-weight: 600; }
+.villa-link { text-decoration: none; font-size: 0.8rem; color: white; background: #26a69a; padding: 6px; border-radius: 6px; text-align: center; font-weight: 600; margin-top: auto; transition: opacity 0.15s; }
+.villa-link:hover { opacity: 0.85; }
+.villa-del { position: absolute; top: 6px; right: 6px; background: rgba(255,255,255,0.9); border: none; width: 24px; height: 24px; border-radius: 50%; color: #e53935; cursor: pointer; font-weight: bold; display: flex; align-items: center; justify-content: center; box-shadow: 0 2px 5px rgba(0,0,0,0.1); }
+.villa-vote-btn { margin-top: 6px; border: 1px solid #f8bbd0; background: white; color: #c2185b; padding: 4px; border-radius: 6px; font-size: 0.75rem; font-weight: 600; cursor: pointer; display: flex; align-items: center; justify-content: center; gap: 4px; transition: all 0.2s;}
+.villa-vote-btn.voted { background: #fce4ec; border-color: #f06292; }
+.villa-voters { font-size: 0.65rem; color: #f06292; margin-top: 4px; text-align: center; }
 
 .month-title{font-family:'Playfair Display',serif;font-size:1rem;color:#2e7d72;text-align:center;margin-bottom:.6rem;font-weight:600}
 .cal-grid{display:grid;grid-template-columns:repeat(7,1fr);gap:3px}
@@ -93,39 +122,22 @@ header p{font-size:.9rem;color:#6a8f8c;margin-top:.3rem;font-weight:300}
 .couple-legend{display:flex;flex-wrap:wrap;gap:8px;margin-bottom:.9rem}
 .couple-tag{font-size:.75rem;background:#fce4ec;color:#c2185b;border-radius:999px;padding:4px 12px;font-weight:500;border:1px solid #f8bbd0}
 
-/* Styles pour le popup et la réduction */
-.modal-overlay {
-  position: fixed; inset: 0; background: rgba(46, 74, 71, 0.6);
-  z-index: 100; display: none; align-items: center; justify-content: center;
-  backdrop-filter: blur(3px);
-}
-.modal-content {
-  background: white; padding: 2rem; border-radius: 18px;
-  max-width: 400px; text-align: center; margin: 1rem;
-  box-shadow: 0 10px 30px rgba(0,0,0,0.2);
-  animation: popIn 0.3s cubic-bezier(0.175, 0.885, 0.32, 1.275);
-}
-.modal-content h3 {
-  font-family: 'Playfair Display', serif; color: #c2185b;
-  margin-bottom: 0.8rem; font-size: 1.6rem;
-}
-.modal-content p {
-  color: #2e4a47; font-size: 0.95rem; margin-bottom: 1.5rem; line-height: 1.5;
-}
-.btn-close-modal {
-  padding: 12px 24px; border-radius: 999px; border: none;
-  background: linear-gradient(135deg, #f48fb1, #f06292); color: white;
-  font-family: 'DM Sans', sans-serif; font-size: 0.95rem; font-weight: 600;
-  cursor: pointer; transition: transform 0.15s, box-shadow 0.15s;
-  box-shadow: 0 4px 14px rgba(240,98,146,.3);
-}
-.btn-close-modal:hover { transform: translateY(-2px); box-shadow: 0 6px 18px rgba(240,98,146,.4); }
-@keyframes popIn { from { transform: scale(0.8); opacity: 0; } to { transform: scale(1); opacity: 1; } }
+/* Styles pour les modales (Popup) */
+.modal-overlay { position: fixed; inset: 0; background: rgba(46, 74, 71, 0.7); z-index: 100; display: none; align-items: center; justify-content: center; backdrop-filter: blur(4px); }
+.modal-content { background: white; padding: 2rem; border-radius: 18px; max-width: 420px; width: 90%; text-align: center; margin: 1rem; box-shadow: 0 10px 30px rgba(0,0,0,0.2); animation: popIn 0.3s cubic-bezier(0.175, 0.885, 0.32, 1.275); }
+.modal-content h3 { font-family: 'Playfair Display', serif; color: #c2185b; margin-bottom: 0.8rem; font-size: 1.6rem; }
+.modal-content.match h3 { color: #ff3d00; font-size: 1.8rem; }
+.modal-content p { color: #2e4a47; font-size: 0.95rem; margin-bottom: 1.2rem; line-height: 1.5; }
+.match-list { background: #fff3e0; border: 1px dashed #ffb74d; border-radius: 10px; padding: 12px; margin-bottom: 1.5rem; text-align: left; }
+.match-item { font-size: 0.9rem; color: #e65100; font-weight: 600; margin-bottom: 6px; display: flex; justify-content: space-between; border-bottom: 1px solid rgba(255,183,77,0.4); padding-bottom: 6px; }
+.match-item:last-child { margin-bottom: 0; border-bottom: none; padding-bottom: 0; }
+.match-snap { font-family: monospace; background: white; padding: 2px 6px; border-radius: 4px; color: #333; }
 
-.discount-badge {
-  background: #fce4ec; color: #c2185b; font-size: 0.65rem; padding: 3px 6px;
-  border-radius: 6px; font-weight: 700; margin-left: 6px; vertical-align: middle;
-}
+.btn-close-modal { padding: 12px 24px; border-radius: 999px; border: none; background: linear-gradient(135deg, #f48fb1, #f06292); color: white; font-family: 'DM Sans', sans-serif; font-size: 0.95rem; font-weight: 600; cursor: pointer; transition: transform 0.15s, box-shadow 0.15s; box-shadow: 0 4px 14px rgba(240,98,146,.3); width: 100%; }
+.btn-close-modal.match-btn { background: linear-gradient(135deg, #ff9100, #ff3d00); box-shadow: 0 4px 14px rgba(255,61,0,.3); }
+.btn-close-modal:hover { transform: translateY(-2px); box-shadow: 0 6px 18px rgba(0,0,0,.15); }
+@keyframes popIn { from { transform: scale(0.8); opacity: 0; } to { transform: scale(1); opacity: 1; } }
+.discount-badge { background: #fce4ec; color: #c2185b; font-size: 0.65rem; padding: 3px 6px; border-radius: 6px; font-weight: 700; margin-left: 6px; vertical-align: middle; }
 </style>
 </head>
 <body>
@@ -151,7 +163,12 @@ header p{font-size:.9rem;color:#6a8f8c;margin-top:.3rem;font-weight:300}
 
 <!-- Sélection jours -->
 <div class="card" id="selCard" style="display:none">
-  <h2><span class="dot dt"></span>Jours disponibles — <span id="selName" style="color:#f06292"></span></h2>
+  <h2><span class="dot dt"></span>Profil & Jours — <span id="selName" style="color:#f06292"></span></h2>
+  
+  <div class="status-section" id="profileFormArea">
+    <!-- Généré via JS -->
+  </div>
+
   <p style="font-size:.8rem;color:#6a8f8c;margin-bottom:.8rem">Clique sur les jours où tu seras présent·e</p>
   <div class="month-title">Août 2025</div>
   <div class="cal-grid" id="selCal"></div>
@@ -170,13 +187,33 @@ header p{font-size:.9rem;color:#6a8f8c;margin-top:.3rem;font-weight:300}
     <div class="leg-item"><div class="leg-dot lo"></div>8+ personnes</div>
     <div class="leg-item" style="margin-left:4px">💕 couple ensemble</div>
   </div>
-  <div class="couple-legend">
-    <span class="couple-tag">💕 Lea + Albin</span>
-    <span class="couple-tag">💕 Charles + Lilie</span>
-    <span class="couple-tag">💕 Lise + Vincent</span>
-  </div>
+  <div class="couple-legend" id="coupleLegend"></div>
   <div class="month-title">Août 2025</div>
   <div class="cal-grid" id="recapCal"></div>
+</div>
+
+<!-- Villas -->
+<div class="card">
+  <h2><span class="dot dv"></span>Villas en vue 🏡</h2>
+  <p style="font-size:.8rem;color:#6a8f8c;margin-bottom:1rem">Propose les pépites que tu as trouvées (sélectionne ton prénom en haut pour pouvoir voter !)</p>
+  
+  <div class="villa-grid" id="villaGrid">
+    <!-- Généré via JS -->
+  </div>
+
+  <div style="margin-top: 1rem; padding-top: 1.2rem; border-top: 1.5px dashed #b2dfdb;">
+    <p style="font-size: .88rem; color: #2e7d72; font-weight: 600; margin-bottom: .8rem;">Ajouter une trouvaille :</p>
+    <div style="display: flex; flex-direction: column; gap: 8px;">
+      <input type="text" id="vName" class="profile-input" placeholder="Nom de la villa (ex: Mas provençal)">
+      <input type="url" id="vLink" class="profile-input" placeholder="Lien de l'annonce (Airbnb, Booking...)">
+      <input type="url" id="vImg" class="profile-input" placeholder="Lien d'une image (optionnel, clic droit 'Copier l'adresse de l'image')">
+      <div style="display: flex; gap: 8px;">
+        <input type="number" id="vPrice" class="profile-input" placeholder="Prix total (€)">
+        <input type="number" id="vCap" class="profile-input" placeholder="Capacité (pers.)">
+      </div>
+      <button class="add-btn" style="width:100%; justify-content:center; margin-top:4px;" onclick="addVilla()">+ Ajouter à la liste</button>
+    </div>
+  </div>
 </div>
 
 <!-- Paiements -->
@@ -196,34 +233,58 @@ header p{font-size:.9rem;color:#6a8f8c;margin-top:.3rem;font-weight:300}
 <!-- Popup de promotion -->
 <div class="modal-overlay" id="promoModal">
   <div class="modal-content">
-    <h3> Fais pas ton Kassim !</h3>
+    <h3>Fais pas ton Kassim !</h3>
     <p>Reste <strong>plus d'une semaine</strong> avec nous (8 jours ou plus) et bénéficie d'une <strong>réduction de 10%</strong> sur ta part des frais de séjour ! 🐚🌊</p>
     <button class="btn-close-modal" onclick="closePromoModal()">Génial, j'en profite !</button>
+  </div>
+</div>
+
+<!-- Popup ALERTE MATCH -->
+<div class="modal-overlay" id="matchModal">
+  <div class="modal-content match">
+    <h3>🔥 Alerte Match !</h3>
+    <p>Tes dates se croisent avec d'autres célibs ! C'est le moment de glisser dans les DM :</p>
+    <div class="match-list" id="matchListArea"></div>
+    <button class="btn-close-modal match-btn" onclick="closeMatchModal()">C'est noté ! 😏</button>
   </div>
 </div>
 
 </div></div>
 
 <script>
-const DEFAULT_PEOPLE=['Lilie','Lea','Albin','Noé','Charles','Kassim','Clément','HB','Titouan','Nathan','Vincent'];
+const DEFAULT_PEOPLE=[];
 const YEAR=2025,MONTH=7,DAYS=31;
 const DOW=['Lun','Mar','Mer','Jeu','Ven','Sam','Dim'];
-const SK='dispo_aout_v4';
 
-// Couples : paires de prénoms (comparaison insensible à la casse)
-const COUPLES=[
-  ['Lea','Albin'],
-  ['Charles','Lilie'],
-  ['Lise','Vincent'],
+const SK='dispo_aout_v9'; // Clé V9 pour inclure les Villas
+
+const GENDERS = [
+  { id: 'M', label: 'Mec 🙎‍♂️' },
+  { id: 'F', label: 'Meuf 🙎‍♀️' }
+];
+
+const STATUS_OPTIONS = [
+  { id: 'couple', label: 'Maqué(e) et menotté(e) 💍', emoji: '💍', matchable: false },
+  { id: 'charo', label: 'En mode charo cet été 🦈', emoji: '🦈', matchable: true },
+  { id: 'toxic', label: 'Célib mais focus sur mon ex 🤡', emoji: '🤡', matchable: true },
+  { id: 'desespoir', label: 'Célib depuis la préhistoire 🦕', emoji: '🦕', matchable: true },
+  { id: 'open', label: 'Ouvert(e) à toute proposition 🥂', emoji: '🥂', matchable: true }
 ];
 
 let people=[...DEFAULT_PEOPLE];
 let state={};
-DEFAULT_PEOPLE.forEach(p=>state[p]=[]);
+let userStatus={};
+let userPartner={};
+let userGender={}; 
+let userSnap={};   
+let villas=[]; // Tableau pour stocker les villas proposées
+
+DEFAULT_PEOPLE.forEach(p=>{
+  if(!state[p]) state[p]=[];
+});
+
 let selectedPerson=null;
 let selDays=new Set();
-
-// Variable pour s'assurer que le popup ne s'affiche qu'une seule fois
 let promoSeen = false;
 
 const firstDow=(()=>{const d=new Date(YEAR,MONTH,1).getDay();return d===0?6:d-1;})();
@@ -233,23 +294,52 @@ function normName(n){return n.trim().charAt(0).toUpperCase()+n.trim().slice(1).t
 function loadState(){
   try{
     const r=localStorage.getItem(SK);
-    if(r){const d=JSON.parse(r);if(d.people)people=d.people;if(d.state){state={};people.forEach(p=>state[p]=d.state[p]||[]);}}
+    if(r){
+      const d=JSON.parse(r);
+      if(d.people) people=d.people;
+      if(d.state){state={}; people.forEach(p=>state[p]=d.state[p]||[]);}
+      if(d.userStatus) userStatus=d.userStatus;
+      if(d.userPartner) userPartner=d.userPartner;
+      if(d.userGender) userGender=d.userGender;
+      if(d.userSnap) userSnap=d.userSnap;
+      if(d.villas) villas=d.villas;
+    }
   }catch(e){}
 }
-function saveState(){try{localStorage.setItem(SK,JSON.stringify({people,state}));}catch(e){}}
+function saveState(){try{localStorage.setItem(SK,JSON.stringify({people,state,userStatus,userPartner,userGender,userSnap,villas}));}catch(e){}}
+
+function getDynamicCouples() {
+  const couplesMap = new Set();
+  const couples = [];
+  people.forEach(p => {
+    if(userStatus[p] === 'couple' && userPartner[p]) {
+      const p2 = userPartner[p];
+      const pair = [p, p2].sort((a,b) => a.localeCompare(b));
+      const pairId = pair.join('|').toLowerCase();
+      
+      if(!couplesMap.has(pairId)) {
+        couplesMap.add(pairId);
+        couples.push(pair);
+      }
+    }
+  });
+  return couples;
+}
 
 function heartsForDay(d){
   const presentLower=people.filter(p=>state[p]&&state[p].includes(d)).map(p=>p.toLowerCase());
   const hearts=[];
-  COUPLES.forEach(([a,b])=>{
+  const couples = getDynamicCouples();
+  
+  couples.forEach(([a,b])=>{
     if(presentLower.includes(a.toLowerCase())&&presentLower.includes(b.toLowerCase()))hearts.push('💕');
   });
   return hearts;
 }
 
-function closePromoModal() {
-  document.getElementById('promoModal').style.display = 'none';
-}
+/* Gestions des Modales */
+function closePromoModal() { document.getElementById('promoModal').style.display = 'none'; }
+function closeMatchModal() { document.getElementById('matchModal').style.display = 'none'; }
 
 function addPerson(){
   const inp=document.getElementById('addInput');
@@ -260,8 +350,19 @@ function addPerson(){
 }
 
 function deletePerson(name){
-  if(!confirm(`Supprimer ${name} et ses disponibilités ?`))return;
-  people=people.filter(p=>p!==name);delete state[name];
+  if(!confirm(`Supprimer ${name} et ses données ?`))return;
+  people=people.filter(p=>p!==name);
+  delete state[name]; delete userStatus[name]; delete userPartner[name]; delete userGender[name]; delete userSnap[name];
+  
+  Object.keys(userPartner).forEach(p => {
+    if(userPartner[p] === name) { delete userPartner[p]; userStatus[p] = null; }
+  });
+
+  // Retirer les votes de cette personne
+  villas.forEach(v => {
+    v.voters = v.voters.filter(voter => voter !== name);
+  });
+
   if(selectedPerson===name){selectedPerson=null;selDays=new Set();document.getElementById('selCard').style.display='none';}
   saveState();renderAll();
 }
@@ -271,23 +372,100 @@ function selectPerson(name){
   document.getElementById('selCard').style.display='block';
   document.getElementById('selName').textContent=name;
   document.getElementById('toast').style.display='none';
-  renderPeople();buildSelCal();
-  document.getElementById('selCard').scrollIntoView({behavior:'smooth',block:'nearest'});
   
-  // Affichage du popup incitatif
-  if(!promoSeen) {
-    document.getElementById('promoModal').style.display = 'flex';
-    promoSeen = true;
-  }
+  renderProfileForm(); renderPeople(); buildSelCal(); renderVillas(); // Rafraîchir les villas pour afficher les votes
+  
+  document.getElementById('selCard').scrollIntoView({behavior:'smooth',block:'nearest'});
+  if(!promoSeen) { document.getElementById('promoModal').style.display = 'flex'; promoSeen = true; }
 }
 
+function setGender(genId) { if(!selectedPerson) return; userGender[selectedPerson] = genId; saveState(); renderProfileForm(); renderPeople(); }
+function setStatus(statusId) { if(!selectedPerson) return; userStatus[selectedPerson] = statusId; if(statusId !== 'couple') { delete userPartner[selectedPerson]; } saveState(); renderProfileForm(); renderPeople(); renderAll(); }
+function handleSnapInput(val) { if(!selectedPerson) return; userSnap[selectedPerson] = val.trim(); saveState(); }
+
+function handlePartnerSelect(val) {
+  if(!selectedPerson) return;
+  if (val === '_new_') {
+    const newName = prompt("Quel est le prénom du ou de la partenaire ?");
+    if (newName && newName.trim() !== '') {
+      const normalized = normName(newName);
+      if (!people.includes(normalized)) { people.push(normalized); state[normalized] = []; }
+      userPartner[selectedPerson] = normalized;
+    }
+  } else { userPartner[selectedPerson] = val; }
+  saveState(); renderProfileForm(); renderAll();
+}
+
+function renderProfileForm() {
+  const container = document.getElementById('profileFormArea');
+  const cGender = userGender[selectedPerson];
+  const cStatus = userStatus[selectedPerson];
+  const cSnap = userSnap[selectedPerson] || '';
+  
+  let html = '';
+  html += `<div class="status-block"><div class="status-title">Je suis :</div><div class="status-group">
+      ${GENDERS.map(g => `<button class="status-btn ${cGender === g.id ? 'active' : ''}" onclick="setGender('${g.id}')">${g.label}</button>`).join('')}
+    </div></div>`;
+
+  html += `<div class="status-block"><div class="status-title">Mon mood d'Août :</div><div class="status-group">
+      ${STATUS_OPTIONS.map(opt => `<button class="status-btn ${cStatus === opt.id ? 'active' : ''}" onclick="setStatus('${opt.id}')">${opt.label}</button>`).join('')}
+    </div></div>`;
+
+  if (cStatus === 'couple') {
+    const currentPartner = userPartner[selectedPerson] || '';
+    let selectHtml = `<select class="profile-input" onchange="handlePartnerSelect(this.value)" style="margin-top:6px;">
+      <option value="" disabled ${!currentPartner ? 'selected' : ''}>Qui te supporte au quotidien ?</option>`;
+    people.forEach(p => { if(p !== selectedPerson) { selectHtml += `<option value="${p}" ${currentPartner === p ? 'selected' : ''}>${p}</option>`; } });
+    selectHtml += `<option value="_new_">+ Ajouter un autre prénom...</option></select>`;
+    html += selectHtml;
+  }
+
+  html += `<div class="status-block" style="margin-top:12px;"><div class="status-title">👻 Mon Snap (pour la science) :</div>
+    <input type="text" class="profile-input" placeholder="Ex: bossdu75" value="${cSnap}" onchange="handleSnapInput(this.value)"></div>`;
+
+  container.innerHTML = html;
+}
+
+function getEmojiForStatus(statusId) { const s = STATUS_OPTIONS.find(opt => opt.id === statusId); return s ? ` ${s.emoji}` : ''; }
+function isMatchableStatus(statusId) { const s = STATUS_OPTIONS.find(opt => opt.id === statusId); return s ? s.matchable : false; }
 function toggleDay(d){selDays.has(d)?selDays.delete(d):selDays.add(d);buildSelCal();}
+
+function checkMatches(p) {
+  if(!userStatus[p] || !isMatchableStatus(userStatus[p])) return;
+  if(!userGender[p]) return;
+  
+  const myDays = state[p] || [];
+  if(myDays.length === 0) return;
+  let matches = [];
+  
+  people.forEach(other => {
+    if(other === p) return;
+    if(!userStatus[other] || !isMatchableStatus(userStatus[other])) return;
+    if(!userGender[other] || userGender[other] === userGender[p]) return;
+    
+    const otherDays = state[other] || [];
+    const overlap = myDays.some(d => otherDays.includes(d));
+    
+    if(overlap) {
+      const snap = userSnap[other] ? userSnap[other] : 'Pas de snap 😢';
+      const icon = userGender[other] === 'M' ? '🙎‍♂️' : '🙎‍♀️';
+      matches.push({ name: other, snap: snap, icon: icon });
+    }
+  });
+
+  if(matches.length > 0) {
+    const listArea = document.getElementById('matchListArea');
+    listArea.innerHTML = matches.map(m => `<div class="match-item"><span>${m.icon} ${m.name}</span><span class="match-snap">👻 ${m.snap}</span></div>`).join('');
+    document.getElementById('matchModal').style.display = 'flex';
+  }
+}
 
 function handleSubmit(){
   if(!selectedPerson)return;
   state[selectedPerson]=[...selDays].sort((a,b)=>a-b);
-  saveState();buildRecapCal();renderPayments();renderPeople();
+  saveState(); buildRecapCal(); renderPayments(); renderPeople();
   showToast(`✓ ${selectedPerson} — ${selDays.size} jour${selDays.size>1?'s':''} enregistré${selDays.size>1?'s':''} !`,'ok');
+  setTimeout(() => { checkMatches(selectedPerson); }, 400);
 }
 
 function resetPerson(){
@@ -306,10 +484,8 @@ function renderPeople(){
   const g=document.getElementById('peopleGrid');
   g.innerHTML=people.map(p=>{
     const days=state[p]&&state[p].length>0?` (${state[p].length}j)`:'';
-    return `<div class="person-wrap">
-      <button class="person-btn${selectedPerson===p?' selected':''}" onclick="selectPerson('${p}')">${p}${days}</button>
-      <button class="del-btn" onclick="deletePerson('${p}')" title="Supprimer ${p}">✕</button>
-    </div>`;
+    const statusEmoji=getEmojiForStatus(userStatus[p]);
+    return `<div class="person-wrap"><button class="person-btn${selectedPerson===p?' selected':''}" onclick="selectPerson('${p}')">${p}${statusEmoji}${days}</button><button class="del-btn" onclick="deletePerson('${p}')" title="Supprimer ${p}">✕</button></div>`;
   }).join('');
 }
 
@@ -325,6 +501,10 @@ function buildSelCal(){
 }
 
 function buildRecapCal(){
+  const couples = getDynamicCouples();
+  const legendContainer = document.getElementById('coupleLegend');
+  legendContainer.innerHTML = couples.map(([a, b]) => `<span class="couple-tag">💕 ${a} + ${b}</span>`).join('');
+
   const el=document.getElementById('recapCal');el.innerHTML='';
   DOW.forEach(d=>{const h=document.createElement('div');h.className='cal-dow';h.textContent=d;el.appendChild(h);});
   for(let i=0;i<firstDow;i++){const e=document.createElement('div');e.className='cal-day empty';el.appendChild(e);}
@@ -334,24 +514,18 @@ function buildRecapCal(){
     let cls='cal-day';
     if(count>0)cls+=count<=7?' cg':' co';
     const cell=document.createElement('div');cell.className=cls;
-
     const num=document.createElement('div');num.className='day-num';num.textContent=d;
     const cnt=document.createElement('div');cnt.className='day-count';cnt.textContent=count>0?count+'p':'';
     cell.appendChild(num);cell.appendChild(cnt);
 
     const hearts=heartsForDay(d);
-    if(hearts.length>0){
-      const hb=document.createElement('div');hb.className='heart-badge';
-      hb.textContent=hearts.join('');
-      cell.appendChild(hb);
-    }
+    if(hearts.length>0){ const hb=document.createElement('div');hb.className='heart-badge'; hb.textContent=hearts.join(''); cell.appendChild(hb); }
 
     if(count>0){
       const tip=document.createElement('div');tip.className='tip';
       const lines=present.map(p=>p).join(' · ');
       const heartLine=hearts.length>0?`<div style="margin-top:3px;font-size:.85rem">${hearts.join(' ')}</div>`:'';
-      tip.innerHTML=lines+heartLine;
-      cell.appendChild(tip);
+      tip.innerHTML=lines+heartLine; cell.appendChild(tip);
     }
     el.appendChild(cell);
   }
@@ -361,46 +535,129 @@ function renderPayments(){
   const total=parseFloat(document.getElementById('totalCost').value)||0;
   const active=people.filter(p=>state[p]&&state[p].length>0);
   const tbody=document.getElementById('payBody');
-  
-  if(active.length===0){
-    tbody.innerHTML=`<tr><td colspan="4" class="empty-state">Aucune disponibilité renseignée 🌊</td></tr>`;
-    return;
-  }
+  if(active.length===0){ tbody.innerHTML=`<tr><td colspan="4" class="empty-state">Aucune disponibilité renseignée 🌊</td></tr>`; return; }
   
   const totalDays=active.reduce((s,p)=>s+state[p].length,0);
-  let rows='';
-  let gt=0;
+  let rows='', gt=0;
   
   active.forEach(p=>{
     const days=state[p].length;
     const ratio=totalDays>0?days/totalDays:0;
     let amt=total*ratio;
     let badge='';
+    const statusEmoji=getEmojiForStatus(userStatus[p]);
     
-    // Application de la réduction de 10% si plus de 7 jours
-    if(days > 7) {
-      amt = amt * 0.90; 
-      badge = '<span class="discount-badge">-10%</span>';
-    }
-    
+    if(days > 7) { amt = amt * 0.90; badge = '<span class="discount-badge">-10%</span>'; }
     gt+=amt;
-    rows+=`<tr>
-      <td class="name-c">${p}</td>
-      <td class="days-c">${days}j</td>
-      <td class="ratio-c">${(ratio*100).toFixed(1)}%</td>
-      <td class="amt-c">${amt.toFixed(2)} € ${badge}</td>
-    </tr>`;
+    rows+=`<tr><td class="name-c">${p}${statusEmoji}</td><td class="days-c">${days}j</td><td class="ratio-c">${(ratio*100).toFixed(1)}%</td><td class="amt-c">${amt.toFixed(2)} € ${badge}</td></tr>`;
   });
-  
-  rows+=`<tr class="total-row">
-    <td colspan="2">Total recouvré</td>
-    <td>-</td>
-    <td>${gt.toFixed(2)} €</td>
-  </tr>`;
+  rows+=`<tr class="total-row"><td colspan="2">Total recouvré</td><td>-</td><td>${gt.toFixed(2)} €</td></tr>`;
   tbody.innerHTML=rows;
 }
 
-function renderAll(){renderPeople();buildSelCal();buildRecapCal();renderPayments();}
+/* GESTION DES VILLAS */
+function addVilla() {
+  const name = document.getElementById('vName').value.trim();
+  const link = document.getElementById('vLink').value.trim();
+  const imgUrl = document.getElementById('vImg').value.trim();
+  const price = parseFloat(document.getElementById('vPrice').value);
+  const cap = parseInt(document.getElementById('vCap').value);
+
+  if(!name || !link || isNaN(price) || isNaN(cap)) {
+    alert("Merci de remplir au moins le nom, le lien, le prix et la capacité !");
+    return;
+  }
+
+  const defaultImg = "https://images.unsplash.com/photo-1512917774080-9991f1c4c750?auto=format&fit=crop&w=500&q=80"; // Image par défaut d'une belle maison
+
+  const newVilla = {
+    id: Date.now().toString(),
+    name: name,
+    link: link,
+    img: imgUrl !== '' ? imgUrl : defaultImg,
+    price: price,
+    capacity: cap,
+    voters: []
+  };
+
+  villas.push(newVilla);
+  saveState();
+  renderVillas();
+  
+  // Vider le formulaire
+  document.getElementById('vName').value = '';
+  document.getElementById('vLink').value = '';
+  document.getElementById('vImg').value = '';
+  document.getElementById('vPrice').value = '';
+  document.getElementById('vCap').value = '';
+}
+
+function deleteVilla(id) {
+  if(!confirm("Supprimer cette villa de la liste ?")) return;
+  villas = villas.filter(v => v.id !== id);
+  saveState();
+  renderVillas();
+}
+
+function voteVilla(id) {
+  if(!selectedPerson) {
+    alert("Sélectionne ton prénom tout en haut (dans 'Participants') pour pouvoir voter !");
+    return;
+  }
+  
+  const villa = villas.find(v => v.id === id);
+  if(!villa) return;
+
+  const hasVoted = villa.voters.includes(selectedPerson);
+  if(hasVoted) {
+    // Retirer le vote
+    villa.voters = villa.voters.filter(v => v !== selectedPerson);
+  } else {
+    // Ajouter le vote
+    villa.voters.push(selectedPerson);
+  }
+  
+  saveState();
+  renderVillas();
+}
+
+function renderVillas() {
+  const grid = document.getElementById('villaGrid');
+  
+  if(villas.length === 0) {
+    grid.innerHTML = `<div class="empty-state" style="grid-column: 1 / -1;">Aucune villa proposée pour le moment.</div>`;
+    return;
+  }
+
+  grid.innerHTML = villas.map(v => {
+    const pricePerPerson = Math.round(v.price / v.capacity);
+    const hasVoted = selectedPerson ? v.voters.includes(selectedPerson) : false;
+    const voteCount = v.voters.length;
+    const votersText = voteCount > 0 ? v.voters.join(', ') : 'Aucun vote';
+
+    return `
+      <div class="villa-card">
+        <button class="villa-del" onclick="deleteVilla('${v.id}')">✕</button>
+        <img src="${v.img}" alt="Villa" class="villa-img">
+        <div class="villa-info">
+          <div class="villa-name" title="${v.name}">${v.name}</div>
+          <div class="villa-specs">
+            <span class="villa-spec-item">👥 ${v.capacity} pers.</span>
+            <span class="villa-spec-item">💰 ${v.price}€ (${pricePerPerson}€/p)</span>
+          </div>
+          <a href="${v.link}" target="_blank" class="villa-link">Voir l'annonce ↗</a>
+          
+          <button class="villa-vote-btn ${hasVoted ? 'voted' : ''}" onclick="voteVilla('${v.id}')">
+            ${hasVoted ? '❤️ Coup de cœur' : '🤍 Voter'} (${voteCount})
+          </button>
+          <div class="villa-voters" title="${votersText}">${voteCount > 0 ? votersText : ''}</div>
+        </div>
+      </div>
+    `;
+  }).join('');
+}
+
+function renderAll(){renderPeople();buildSelCal();buildRecapCal();renderPayments();renderVillas();}
 
 loadState();renderAll();
 </script>
