@@ -251,13 +251,13 @@ header p{font-size:.9rem;color:#6a8f8c;margin-top:.3rem;font-weight:300}
 
 <script>
 
-  // ==========================================
+// ==========================================
 // 🔴 REMPLACE CE BLOC PAR TON CODE FIREBASE
 // ==========================================
 const firebaseConfig = {
   apiKey: "AIzaSyDD_Nj2nDBa_Ertoy7k9YjOV2HesLgbp6I",
   authDomain: "vacances-3bce4.firebaseapp.com",
-  databaseURL: "https://vacances-3bce4-default-rtdb.europe-west1.firebasedatabase.app", // <-- LA LIGNE MAGIQUE AJOUTÉE !
+  databaseURL: "https://vacances-3bce4-default-rtdb.europe-west1.firebasedatabase.app",
   projectId: "vacances-3bce4",
   storageBucket: "vacances-3bce4.firebasestorage.app",
   messagingSenderId: "416205104205",
@@ -265,10 +265,6 @@ const firebaseConfig = {
 };
 // ==========================================
 
-firebase.initializeApp(firebaseConfig);
-const db = firebase.database();
-const dbRef = db.ref('vacances_aout');
-  
 firebase.initializeApp(firebaseConfig);
 const db = firebase.database();
 const dbRef = db.ref('vacances_aout');
@@ -581,3 +577,4 @@ function renderAll(){
 </script>
 </body>
 </html>
+</script>
