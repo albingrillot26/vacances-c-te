@@ -38,12 +38,6 @@ header p{font-size:.9rem;color:var(--soft);margin-top:.3rem;font-weight:300}
 .countdown-bar .vibe{font-size:.88rem;color:var(--dark);font-weight:500}
 .vibe-emoji{font-size:1.2rem}
 
-/* ===== MOOD BAR ===== */
-.mood-section{background:rgba(255,255,255,.8);border-radius:12px;padding:12px 14px;margin-bottom:.8rem;border:1px solid rgba(178,223,219,.5)}
-.mood-title{font-size:.8rem;color:var(--soft);font-weight:500;margin-bottom:6px}
-.mood-bar{height:8px;border-radius:999px;background:#e0f2f1;overflow:hidden;margin-bottom:4px}
-.mood-fill{height:100%;border-radius:999px;background:linear-gradient(90deg,#80cbc4,#26a69a);transition:width .8s cubic-bezier(.34,1.56,.64,1)}
-.mood-label{font-size:.78rem;color:var(--teal);font-weight:600}
 
 /* ===== CARDS ===== */
 .card{background:rgba(255,255,255,.85);backdrop-filter:blur(8px);border-radius:20px;padding:1.4rem 1.5rem;margin-bottom:1.1rem;border:1px solid rgba(255,255,255,.9);box-shadow:0 4px 24px rgba(100,180,160,.08);animation:fadeIn .5s ease both}
@@ -231,11 +225,7 @@ header p{font-size:.9rem;color:var(--soft);margin-top:.3rem;font-weight:300}
 <!-- Participants -->
 <div class="card">
   <h2><span class="dot dp"></span>Participants</h2>
-  <div class="mood-section">
-    <div class="mood-title">🌡️ Température du groupe</div>
-    <div class="mood-bar"><div class="mood-fill" id="moodFill" style="width:0%"></div></div>
-    <div class="mood-label" id="moodLabel">En attente...</div>
-  </div>
+
   <div class="people-grid" id="peopleGrid">Chargement...</div>
   <div class="missing-box" id="missingBox" style="display:none">
     <strong>👀 Pas encore de dispo :</strong>
@@ -311,13 +301,13 @@ header p{font-size:.9rem;color:var(--soft);margin-top:.3rem;font-weight:300}
 <!-- Paiements -->
 <div class="card">
   <h2><span class="dot dg"></span>Répartition des coûts</h2>
-  <div class="goal-bar-wrap" id="goalBarWrap" style="display:none">
+  <div class="goal-bar-wrap" id="goalBarWrap" style="display:block">
     <div class="goal-bar-top">
-      <span class="goal-bar-label">💸 Budget couvert</span>
-      <span class="goal-bar-pct" id="goalPct">0%</span>
+      <span class="goal-bar-label">🏠 Places occupées dans la villa</span>
+      <span class="goal-bar-pct" id="goalPct">0 / 8</span>
     </div>
     <div class="goal-bar"><div class="goal-fill" id="goalFill" style="width:0%"></div></div>
-    <div class="goal-note" id="goalNote"></div>
+    <div class="goal-note" id="goalNote">En attente des inscriptions...</div>
   </div>
   <div class="cost-row">
     <label>Coût total du séjour :</label>
@@ -407,7 +397,8 @@ const VIBES = [
   {days:1,emoji:'🎉',text:'DEMAIN !! Mode vacances ACTIVÉ'},
   {days:0,emoji:'🐚',text:'C\'est MAINTENANT ! YALLAH !!'},
 ];
-const MOOD_LABELS = ['Ça démarre 🌱','Le groupe se forme 👀','Ça prend forme 🌊','Bonne équipe 🌞','Full House 🎉','Complet ou presque ! 🔥'];
+const MAX_VILLA_PLACES = 8;
+
 
 // ===== STATE =====
 let people=[...DEFAULT_PEOPLE];
@@ -458,10 +449,10 @@ function updateCountdown(){
   const diff=target-now;
   if(diff<=0){
     document.getElementById('cdDays').textContent='0';
-    document.getElementById('cdHours').textContent='0';
-    document.getElementById('cdMins').textContent='0';
+    document.getElementById('cdHours').textContent='00';
+    document.getElementById('cdMins').textContent='00';
     document.getElementById('vibeEmoji').textContent='🐚';
-    document.getElementById('vibeText').textContent="C'est MAINTENANT ! YALLAH !!";
+    document.getElementById('vibeText').textContent="On est en vacances !! YALLAH !!";
     return;
   }
   const days=Math.floor(diff/(1000*60*60*24));
@@ -496,14 +487,6 @@ function heartsForDay(d){
   return hearts;
 }
 
-// ===== MOOD =====
-function updateMood(){
-  const withDays=people.filter(p=>state[p]&&state[p].length>0).length;
-  const pct=Math.min(100,Math.round(withDays/Math.max(people.length,1)*100));
-  document.getElementById('moodFill').style.width=pct+'%';
-  const idx=Math.min(MOOD_LABELS.length-1,Math.floor(pct/100*(MOOD_LABELS.length-1)+.5));
-  document.getElementById('moodLabel').textContent=`${withDays}/${people.length} inscrits — ${MOOD_LABELS[idx]}`;
-}
 
 // ===== MISSING =====
 function updateMissing(){
@@ -535,7 +518,7 @@ function renderPeople(){
     const emo=getEmojiForStatus(userStatus[p]);
     return `<div class="person-wrap"><button class="person-btn${selectedPerson===p?' selected':''}" onclick="selectPerson('${p}')">${p}${emo}${days}</button><button class="del-btn" onclick="deletePerson('${p}')" title="Supprimer">✕</button></div>`;
   }).join('');
-  updateMood();updateMissing();
+  updateMissing();
 }
 
 // ===== SELECT PERSON =====
@@ -736,20 +719,22 @@ function renderPayments(){
   const total=totalCostVal||0;
   const active=people.filter(p=>state[p]&&state[p].length>0);
   const tbody=document.getElementById('payBody');
-  // Goal bar
-  const gw=document.getElementById('goalBarWrap');
-  if(total>0&&active.length>0){
-    const totalCollected=active.reduce((s,p)=>{
-      const days=state[p].length,ratio=active.reduce((a,x)=>a+state[x].length,0)>0?days/active.reduce((a,x)=>a+state[x].length,0):0;
-      let amt=total*ratio;if(days>7)amt*=.9;return s+amt;
-    },0);
-    const pct=Math.min(100,Math.round(totalCollected/total*100));
-    document.getElementById('goalPct').textContent=pct+'%';
-    document.getElementById('goalFill').style.width=pct+'%';
-    const diff=total-totalCollected;
-    document.getElementById('goalNote').textContent=diff>0.5?`Il manque encore ${diff.toFixed(0)}€ à collecter (réductions incluses)`:'✓ Budget couvert avec les réductions !';
-    gw.style.display='block';
-  }else{gw.style.display='none';}
+  // ===== BARRE PLACES VILLA =====
+  const occupied=people.filter(p=>state[p]&&state[p].length>0).length;
+  const pct=Math.min(100,Math.round(occupied/MAX_VILLA_PLACES*100));
+  document.getElementById('goalPct').textContent=`${occupied} / ${MAX_VILLA_PLACES}`;
+  document.getElementById('goalFill').style.width=pct+'%';
+  const remaining=MAX_VILLA_PLACES-occupied;
+  let note='';
+  if(occupied===0) note='Personne n\'a encore renseigné ses dispo 👀';
+  else if(occupied<MAX_VILLA_PLACES) note=`Il reste ${remaining} place${remaining>1?'s':''} — qui vient encore ?`;
+  else note='La villa est complète ! On va être serrés comme des sardines 🐟';
+  document.getElementById('goalNote').textContent=note;
+  // Couleur dynamique selon remplissage
+  const fill=document.getElementById('goalFill');
+  if(occupied>=MAX_VILLA_PLACES) fill.style.background='linear-gradient(90deg,#f48fb1,#f06292)';
+  else if(occupied>=6) fill.style.background='linear-gradient(90deg,#ffb74d,#fb8c00)';
+  else fill.style.background='linear-gradient(90deg,var(--teal-mid),var(--teal))';
 
   if(active.length===0){tbody.innerHTML=`<tr><td colspan="4" class="empty-state">Aucune disponibilité renseignée 🌊</td></tr>`;
     document.getElementById('costHint').textContent='';return;}
