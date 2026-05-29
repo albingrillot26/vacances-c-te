@@ -38,7 +38,6 @@ header p{font-size:.9rem;color:var(--soft);margin-top:.3rem;font-weight:300}
 .countdown-bar .vibe{font-size:.88rem;color:var(--dark);font-weight:500}
 .vibe-emoji{font-size:1.2rem}
 
-
 /* ===== CARDS ===== */
 .card{background:rgba(255,255,255,.85);backdrop-filter:blur(8px);border-radius:20px;padding:1.4rem 1.5rem;margin-bottom:1.1rem;border:1px solid rgba(255,255,255,.9);box-shadow:0 4px 24px rgba(100,180,160,.08);animation:fadeIn .5s ease both}
 .card h2{font-family:'Playfair Display',serif;font-size:1.1rem;color:#2e7d72;margin-bottom:1rem;display:flex;align-items:center;gap:8px}
@@ -330,7 +329,9 @@ header p{font-size:.9rem;color:var(--soft);margin-top:.3rem;font-weight:300}
     <div style="font-size:3rem;margin-bottom:.5rem">🏆</div>
     <h3 style="color:var(--teal)">Gros bavard ?!</h3>
     <p>Tu es prêt à venir en stage salafiste pendant un mois 👑</p>
-    <button class="btn-close-modal" style="background:linear-gradient(135deg,#80cbc4,#26a69a)" onclick="document.getElementById('superModal').style.display='none'">Je me convertis</button>
+    
+    <!-- C'EST ICI LA CORRECTION (l'ouverture des matchs après fermeture) 👇 -->
+    <button class="btn-close-modal" style="background:linear-gradient(135deg,#80cbc4,#26a69a)" onclick="document.getElementById('superModal').style.display='none'; setTimeout(()=>checkMatches(selectedPerson), 400);">Je me convertis</button>
   </div>
 </div>
 
@@ -378,7 +379,6 @@ const VIBES = [
   {days:0,emoji:'🐚',text:'C\'est MAINTENANT ! YALLAH !!'},
 ];
 const MAX_VILLA_PLACES = 8;
-
 
 // ===== STATE =====
 let people=[...DEFAULT_PEOPLE];
@@ -466,7 +466,6 @@ function heartsForDay(d){
   getDynamicCouples().forEach(([a,b])=>{if(pl.includes(a.toLowerCase())&&pl.includes(b.toLowerCase()))hearts.push('💕');});
   return hearts;
 }
-
 
 // ===== MISSING =====
 function updateMissing(){
@@ -607,9 +606,16 @@ function handleSubmit(){
   state[selectedPerson]=[...selDays].sort((a,b)=>a-b);
   saveState();
   showToast(`✓ ${selectedPerson} — ${selDays.size} jour${selDays.size>1?'s':''} enregistré${selDays.size>1?'s':''} !`,'ok');
-  if(selDays.size>=28)setTimeout(()=>document.getElementById('superModal').style.display='flex',600);
-  else setTimeout(()=>checkMatches(selectedPerson),400);
+  
+  // Correction ici : On s'assure d'ouvrir la blague Salafiste SI >= 28 jours, sinon les Matchs directs.
+  // (Le bouton de la blague relancera les matchs à sa fermeture)
+  if(selDays.size>=28) {
+      setTimeout(()=>document.getElementById('superModal').style.display='flex',600);
+  } else {
+      setTimeout(()=>checkMatches(selectedPerson),400);
+  }
 }
+
 function resetPerson(){
   if(!selectedPerson)return;
   selDays=new Set();state[selectedPerson]=[];
