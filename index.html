@@ -130,7 +130,7 @@ header p{font-size:.9rem;color:var(--soft);margin-top:.3rem;font-weight:300}
 .villa-voters{font-size:.65rem;color:var(--pink);margin-top:4px;text-align:center;min-height:14px}
 .podium-crown{font-size:1rem;position:absolute;top:-10px;left:50%;transform:translateX(-50%)}
 
-/* ===== PAIEMENTS ===== */
+/* ===== PAIEMENTS & AWARDS ===== */
 .cost-row{display:flex;align-items:center;gap:10px;margin-bottom:.8rem;flex-wrap:wrap}
 .cost-row label{font-size:.88rem;color:var(--mid);font-weight:500;white-space:nowrap}
 .cost-input{padding:8px 12px;border-radius:10px;border:1.5px solid var(--pale);font-family:'DM Sans',sans-serif;font-size:.95rem;font-weight:600;color:#2e7d72;width:130px;outline:none;background:white}
@@ -147,6 +147,13 @@ header p{font-size:.9rem;color:var(--soft);margin-top:.3rem;font-weight:300}
 .total-row td{font-weight:700;color:#2e7d72;border-top:2px solid var(--teal-mid);background:rgba(128,203,196,.06)}
 .empty-state{text-align:center;color:#9dbfbc;font-size:.86rem;padding:1.2rem 0;font-style:italic}
 .discount-badge{background:var(--pink-light);color:#c2185b;font-size:.65rem;padding:3px 6px;border-radius:6px;font-weight:700;margin-left:6px;vertical-align:middle;display:inline-block;}
+
+.awards-container { display: flex; gap: 8px; margin-top: 1.5rem; flex-wrap: wrap; }
+.award-card { flex: 1; min-width: 105px; background: linear-gradient(135deg, #fff8e1, #ffecb3); border: 1px solid #ffe082; border-radius: 12px; padding: 12px 8px; text-align: center; box-shadow: 0 4px 10px rgba(255,160,0,0.1); }
+.award-icon { font-size: 1.8rem; margin-bottom: 4px; }
+.award-title { font-size: 0.65rem; color: #f57c00; font-weight: 700; text-transform: uppercase; letter-spacing: 0.5px; }
+.award-winner { font-family: 'Playfair Display', serif; font-size: 1.1rem; color: #e65100; font-weight: 700; margin-top: 4px; }
+.award-sub { font-size: 0.75rem; color: #fb8c00; font-weight: 600; margin-top: 2px; }
 
 /* Barre de progression séjour */
 .goal-bar-wrap{margin-bottom:1rem;padding:12px 14px;background:rgba(255,255,255,.6);border-radius:12px;border:1px dashed var(--pale)}
@@ -308,7 +315,7 @@ header p{font-size:.9rem;color:var(--soft);margin-top:.3rem;font-weight:300}
   </div>
 </div>
 
-<!-- Paiements -->
+<!-- Paiements & Awards -->
 <div class="card">
   <h2><span class="dot dg"></span>Répartition des coûts</h2>
   <div class="goal-bar-wrap" id="goalBarWrap" style="display:block">
@@ -329,6 +336,17 @@ header p{font-size:.9rem;color:var(--soft);margin-top:.3rem;font-weight:300}
     <thead><tr><th>Prénom</th><th>Jours</th><th>Ratio</th><th>À payer</th></tr></thead>
     <tbody id="payBody"></tbody>
   </table>
+  
+  <!-- Zone des Trophées -->
+  <div id="awardsArea" class="awards-container"></div>
+</div>
+
+<!-- Roulette des Corvées -->
+<div class="card" style="text-align:center; padding-bottom: 2rem;">
+  <h2 style="justify-content:center"><span class="dot" style="background:#e53935"></span>Roulette des Corvées 🎯</h2>
+  <p style="font-size:.85rem;color:var(--soft);margin-bottom:1.2rem">Qui va descendre les poubelles, chercher le pain ou faire la vaisselle ?</p>
+  <div id="rouletteResult" style="font-family:'Playfair Display', serif; font-size:2.5rem; color:var(--red); font-weight:700; height:4.5rem; display:flex; align-items:center; justify-content:center; margin-bottom:1.5rem; background:var(--pink-light); border-radius:16px; border:2px dashed var(--pink); box-shadow:inset 0 4px 10px rgba(0,0,0,0.05);">?</div>
+  <button class="btn-submit" style="background:linear-gradient(135deg, #e53935, #c62828); box-shadow:0 4px 14px rgba(229,57,53,.3); width: 80%; padding: 14px; font-size: 1rem;" onclick="spinRoulette()">Lancer la Roulette 🎲</button>
 </div>
 
 <!-- Modales -->
@@ -451,7 +469,6 @@ dbRef.on('value',(snapshot)=>{
     if(d.userGender) userGender=d.userGender; else userGender={};
     if(d.userSnap) userSnap=d.userSnap; else userSnap={};
     if(d.villas) villas=d.villas; else villas=[];
-    // PRIX PERSISTANT
     if(d.totalCost !== undefined && d.totalCost !== null){
       totalCostVal=d.totalCost;
       const inp=document.getElementById('totalCost');
@@ -470,6 +487,39 @@ function handleCostInput(){
   clearTimeout(window._costTimer);
   window._costTimer=setTimeout(()=>{saveState();},800);
   renderPayments();
+}
+
+// ===== ROULETTE LOGIC =====
+let isSpinning = false;
+function spinRoulette() {
+  if(isSpinning) return;
+  const active = people.filter(p => state[p] && state[p].length > 0);
+  if(active.length < 2) {
+    alert("Il faut au moins 2 participants avec des jours enregistrés pour lancer la roulette !");
+    return;
+  }
+  
+  isSpinning = true;
+  const res = document.getElementById('rouletteResult');
+  let spins = 0;
+  
+  // Animation de décélération
+  function spin() {
+    res.textContent = active[Math.floor(Math.random() * active.length)];
+    spins++;
+    
+    if(spins < 20) {
+      setTimeout(spin, 50); // Rapide au début
+    } else if (spins < 30) {
+      setTimeout(spin, 50 + (spins - 20) * 30); // Ralentit petit à petit
+    } else {
+      // Résultat final
+      isSpinning = false;
+      res.style.animation = 'none';
+      setTimeout(() => res.style.animation = 'tada 1s', 10);
+    }
+  }
+  spin();
 }
 
 // ===== COUNTDOWN =====
@@ -560,7 +610,6 @@ function selectPerson(name){
   renderProfileForm();buildSelCal();renderPeople();renderVillas();
   renderChatMessages();
   
-  // Fun fact
   const ff=document.getElementById('funFact');
   if(FUN_FACTS[name]){ff.textContent=FUN_FACTS[name];ff.classList.add('show');}else{ff.classList.remove('show');}
   document.getElementById('selCard').scrollIntoView({behavior:'smooth',block:'nearest'});
@@ -626,7 +675,6 @@ function buildSelCal(){
     const num=document.createElement('div');num.className='day-num';num.textContent=d;
     cell.appendChild(num);
     
-    // Ajout d'une étoile si le jour est très peu rempli (< 4) pour inciter les gens
     if(count < 4) {
       const star=document.createElement('div');
       star.style.cssText="font-size:0.65rem; position:absolute; bottom:2px;";
@@ -655,7 +703,6 @@ function buildRecapCal(){
     const hearts=heartsForDay(d);
     if(hearts.length>0){const hb=document.createElement('div');hb.className='heart-badge';hb.textContent=hearts.join('');cell.appendChild(hb);}
     
-    // NOUVEAUTÉ : Clic sur le jour pour voir la liste des présents sur mobile
     cell.onclick = () => showDayDetails(d, present, hearts);
     
     if(count>0){
@@ -762,11 +809,13 @@ function renderVillas(){
   }).join('');
 }
 
-// ===== PAIEMENTS =====
+// ===== PAIEMENTS & AWARDS =====
 function renderPayments(){
   const total=totalCostVal||0;
   const active=people.filter(p=>state[p]&&state[p].length>0);
   const tbody=document.getElementById('payBody');
+  const awardsArea=document.getElementById('awardsArea');
+  
   // ===== BARRE TAUX DE REMPLISSAGE =====
   const totalPersonDays = people.reduce((s,p)=>s+(state[p]?state[p].length:0), 0);
   const maxPersonDays = DAYS * MAX_VILLA_PLACES;
@@ -786,6 +835,7 @@ function renderPayments(){
   if(active.length===0){
     tbody.innerHTML=`<tr><td colspan="4" class="empty-state">Aucune disponibilité renseignée 🌊</td></tr>`;
     document.getElementById('costHint').textContent='';
+    awardsArea.innerHTML='';
     return;
   }
   
@@ -800,7 +850,7 @@ function renderPayments(){
     const ratio = totalDays > 0 ? days / totalDays : 0;
     let amt = total * ratio;
     
-    if(days >= 21) { // 3 SEMAINES MINIMUM POUR LA REDUC
+    if(days >= 21) { 
       amt *= 0.90; 
       badges[p] = '<span class="discount-badge">-10%</span>'; 
     } else {
@@ -820,7 +870,7 @@ function renderPayments(){
     badges[albin] += '<span class="discount-badge" style="background:#fff3e0;color:#e65100">+ Part de Léa 👑</span>';
   }
 
-  // 3. Affichage final
+  // 3. Affichage final du tableau
   let rows='', gt=0;
   active.forEach(p=>{
     const days=state[p].length;
@@ -834,6 +884,17 @@ function renderPayments(){
     rows+=`<tr class="total-row"><td colspan="2">Total recouvré</td><td>—</td><td>${gt.toFixed(2)} €</td></tr>`;
   }
   tbody.innerHTML=rows;
+
+  // 4. Les Trophées (Awards) 🏆
+  let squatteur = active.reduce((a,b) => state[a].length > state[b].length ? a : b);
+  let filante = active.reduce((a,b) => state[a].length < state[b].length ? a : b);
+  let mecene = active.reduce((a,b) => amounts[a] > amounts[b] ? a : b);
+
+  awardsArea.innerHTML = `
+    <div class="award-card"><div class="award-icon">🏕️</div><div class="award-title">Le Squatteur</div><div class="award-winner">${squatteur}</div><div class="award-sub">${state[squatteur].length} jours</div></div>
+    <div class="award-card"><div class="award-icon">☄️</div><div class="award-title">L'Étoile Filante</div><div class="award-winner">${filante}</div><div class="award-sub">${state[filante].length} jours</div></div>
+    <div class="award-card"><div class="award-icon">💎</div><div class="award-title">Le Mécène</div><div class="award-winner">${mecene}</div><div class="award-sub">${amounts[mecene].toFixed(0)} €</div></div>
+  `;
 }
 
 // ===== CHAT LOGIC =====
@@ -874,7 +935,6 @@ chatRef.limitToLast(50).on('value', (snapshot) => {
   
   renderChatMessages();
 
-  // Notification badge
   if(!isChatOpen && currentChatMsgs.length > lastChatCount && lastChatCount > 0) {
     const newMsgs = currentChatMsgs.length - lastChatCount;
     const badge = document.getElementById('chatBadge');
