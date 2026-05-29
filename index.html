@@ -146,7 +146,7 @@ header p{font-size:.9rem;color:var(--soft);margin-top:.3rem;font-weight:300}
 .ratio-c{color:var(--soft);font-size:.78rem}
 .total-row td{font-weight:700;color:#2e7d72;border-top:2px solid var(--teal-mid);background:rgba(128,203,196,.06)}
 .empty-state{text-align:center;color:#9dbfbc;font-size:.86rem;padding:1.2rem 0;font-style:italic}
-.discount-badge{background:var(--pink-light);color:#c2185b;font-size:.65rem;padding:3px 6px;border-radius:6px;font-weight:700;margin-left:6px;vertical-align:middle}
+.discount-badge{background:var(--pink-light);color:#c2185b;font-size:.65rem;padding:3px 6px;border-radius:6px;font-weight:700;margin-left:6px;vertical-align:middle;display:inline-block;}
 
 /* Barre de progression séjour */
 .goal-bar-wrap{margin-bottom:1rem;padding:12px 14px;background:rgba(255,255,255,.6);border-radius:12px;border:1px dashed var(--pale)}
@@ -330,7 +330,6 @@ header p{font-size:.9rem;color:var(--soft);margin-top:.3rem;font-weight:300}
     <h3 style="color:var(--teal)">Gros bavard ?!</h3>
     <p>Tu es prêt à venir en stage salafiste pendant un mois 👑</p>
     
-    <!-- C'EST ICI LA CORRECTION (l'ouverture des matchs après fermeture) 👇 -->
     <button class="btn-close-modal" style="background:linear-gradient(135deg,#80cbc4,#26a69a)" onclick="document.getElementById('superModal').style.display='none'; setTimeout(()=>checkMatches(selectedPerson), 400);">Je me convertis</button>
   </div>
 </div>
@@ -607,8 +606,6 @@ function handleSubmit(){
   saveState();
   showToast(`✓ ${selectedPerson} — ${selDays.size} jour${selDays.size>1?'s':''} enregistré${selDays.size>1?'s':''} !`,'ok');
   
-  // Correction ici : On s'assure d'ouvrir la blague Salafiste SI >= 28 jours, sinon les Matchs directs.
-  // (Le bouton de la blague relancera les matchs à sa fermeture)
   if(selDays.size>=28) {
       setTimeout(()=>document.getElementById('superModal').style.display='flex',600);
   } else {
@@ -685,15 +682,14 @@ function renderVillas(){
   }).join('');
 }
 
-// ===== PAIEMENTS =====
+// ===== PAIEMENTS (Mise à jour du GOAT) =====
 function renderPayments(){
   const total=totalCostVal||0;
   const active=people.filter(p=>state[p]&&state[p].length>0);
   const tbody=document.getElementById('payBody');
   // ===== BARRE TAUX DE REMPLISSAGE =====
-  // 100% = chaque jour de août est rempli à 8 personnes
   const totalPersonDays = people.reduce((s,p)=>s+(state[p]?state[p].length:0), 0);
-  const maxPersonDays = DAYS * MAX_VILLA_PLACES; // 31 * 8 = 248
+  const maxPersonDays = DAYS * MAX_VILLA_PLACES;
   const pct = Math.min(100, Math.round(totalPersonDays / maxPersonDays * 100));
   const avgPerDay = DAYS > 0 ? (totalPersonDays / DAYS).toFixed(1) : 0;
   document.getElementById('goalPct').textContent = `${pct}%`;
@@ -702,23 +698,58 @@ function renderPayments(){
   if(totalPersonDays===0) note='Personne n\'a encore renseigné ses dispo 👀';
   else note=`Moyenne de ${avgPerDay} pers./jour sur août (max 8 places)`;
   document.getElementById('goalNote').textContent=note;
-  // Couleur dynamique
   const fill=document.getElementById('goalFill');
   if(pct>=90) fill.style.background='linear-gradient(90deg,#f48fb1,#f06292)';
   else if(pct>=60) fill.style.background='linear-gradient(90deg,#ffb74d,#fb8c00)';
   else fill.style.background='linear-gradient(90deg,var(--teal-mid),var(--teal))';
 
-  if(active.length===0){tbody.innerHTML=`<tr><td colspan="4" class="empty-state">Aucune disponibilité renseignée 🌊</td></tr>`;
-    document.getElementById('costHint').textContent='';return;}
+  if(active.length===0){
+    tbody.innerHTML=`<tr><td colspan="4" class="empty-state">Aucune disponibilité renseignée 🌊</td></tr>`;
+    document.getElementById('costHint').textContent='';
+    return;
+  }
+  
   const totalDays=active.reduce((s,p)=>s+state[p].length,0);
-  let rows='',gt=0;
+  
+  // 1. Pré-calcul des montants de base
+  let amounts = {};
+  let badges = {};
+  
   active.forEach(p=>{
-    const days=state[p].length,ratio=totalDays>0?days/totalDays:0;
-    let amt=total*ratio,badge='';
-    if(days>7){amt*=.9;badge='<span class="discount-badge">-10%</span>';}
-    gt+=amt;
-    rows+=`<tr><td class="name-c">${p}${getEmojiForStatus(userStatus[p])}</td><td class="days-c">${days}j</td><td class="ratio-c">${(ratio*100).toFixed(1)}%</td><td class="amt-c">${total>0?amt.toFixed(2)+' €'+badge:'—'}</td></tr>`;
+    const days = state[p].length;
+    const ratio = totalDays > 0 ? days / totalDays : 0;
+    let amt = total * ratio;
+    
+    if(days > 7) { 
+      amt *= 0.90; 
+      badges[p] = '<span class="discount-badge">-10%</span>'; 
+    } else {
+      badges[p] = '';
+    }
+    amounts[p] = amt;
   });
+
+  // 2. Règle du GOAT 🐐 : Albin régale Léa
+  const albin = active.find(p => p.toLowerCase() === 'albin');
+  const lea = active.find(p => p.toLowerCase() === 'léa' || p.toLowerCase() === 'lea');
+
+  if (albin && lea && amounts[lea] > 0) {
+    amounts[albin] += amounts[lea]; // Albin absorbe la dette
+    amounts[lea] = 0; // Léa paye 0
+    badges[lea] += '<span class="discount-badge" style="background:#e8f5e9;color:#2e7d32">Régalée par le GOAT 🐐</span>';
+    badges[albin] += '<span class="discount-badge" style="background:#fff3e0;color:#e65100">+ Part de Léa 👑</span>';
+  }
+
+  // 3. Affichage final
+  let rows='', gt=0;
+  active.forEach(p=>{
+    const days=state[p].length;
+    const ratio=totalDays>0?days/totalDays:0;
+    const finalAmt = amounts[p];
+    gt += finalAmt;
+    rows+=`<tr><td class="name-c">${p}${getEmojiForStatus(userStatus[p])}</td><td class="days-c">${days}j</td><td class="ratio-c">${(ratio*100).toFixed(1)}%</td><td class="amt-c">${total>0?finalAmt.toFixed(2)+' €'+badges[p]:'—'}</td></tr>`;
+  });
+  
   if(total>0){
     rows+=`<tr class="total-row"><td colspan="2">Total recouvré</td><td>—</td><td>${gt.toFixed(2)} €</td></tr>`;
   }
