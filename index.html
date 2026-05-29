@@ -22,8 +22,12 @@ body{font-family:'DM Sans',sans-serif;background:transparent}
 .wrap{padding:1.5rem 1rem 3rem;position:relative;z-index:1}
 .content{max-width:740px;margin:0 auto}
 
+/* ===== MUSIC TOGGLE ===== */
+.music-toggle { position: absolute; top: 15px; right: 15px; background: rgba(255,255,255,0.8); border: 1.5px solid var(--teal); color: var(--teal); border-radius: 50px; padding: 6px 12px; font-size: 0.85rem; font-family: 'DM Sans', sans-serif; font-weight: 600; cursor: pointer; z-index: 100; backdrop-filter: blur(4px); transition: all 0.2s; }
+.music-toggle:hover { background: var(--teal); color: white; }
+
 /* ===== HEADER ===== */
-header{text-align:center;margin-bottom:2rem;animation:slideDown .6s ease}
+header{text-align:center;margin-bottom:2rem;animation:slideDown .6s ease; margin-top: 1rem;}
 @keyframes slideDown{from{opacity:0;transform:translateY(-20px)}to{opacity:1;transform:translateY(0)}}
 header h1{font-family:'Playfair Display',serif;font-size:2.2rem;color:var(--dark);line-height:1.2;background:linear-gradient(135deg,#2e7d72,#c2185b);-webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text}
 header p{font-size:.9rem;color:var(--soft);margin-top:.3rem;font-weight:300}
@@ -128,6 +132,7 @@ header p{font-size:.9rem;color:var(--soft);margin-top:.3rem;font-weight:300}
 .villa-vote-btn{margin-top:6px;border:1px solid #f8bbd0;background:white;color:#c2185b;padding:5px;border-radius:8px;font-size:.75rem;font-weight:600;cursor:pointer;display:flex;align-items:center;justify-content:center;gap:4px;transition:all .2s;font-family:'DM Sans',sans-serif}
 .villa-vote-btn.voted{background:var(--pink-light);border-color:var(--pink)}
 .villa-voters{font-size:.65rem;color:var(--pink);margin-top:4px;text-align:center;min-height:14px}
+.podium-crown{font-size:1rem;position:absolute;top:-10px;left:50%;transform:translateX(-50%)}
 
 /* ===== PAIEMENTS & AWARDS ===== */
 .cost-row{display:flex;align-items:center;gap:10px;margin-bottom:.8rem;flex-wrap:wrap}
@@ -224,8 +229,13 @@ header p{font-size:.9rem;color:var(--soft);margin-top:.3rem;font-weight:300}
 </style>
 </head>
 <body>
+<!-- MUSIQUE DE FOND -->
+<audio id="bgMusic" loop src="https://cdn.pixabay.com/download/audio/2022/05/27/audio_1808fbf07a.mp3?filename=summer-party-110025.mp3"></audio>
+
 <div class="bg"></div>
 <div class="wrap"><div class="content">
+
+<button class="music-toggle" id="musicToggle" onclick="toggleMusic()">🔇 Mettre l'ambiance</button>
 
 <header>
   <div style="font-size:2.2rem;margin-bottom:.5rem">🐚</div>
@@ -431,6 +441,40 @@ const db = firebase.database();
 const dbRef = db.ref('vacances_aout');
 const chatRef = db.ref('vacances_aout_chat');
 
+// ===== LOGIQUE AUDIO =====
+let musicPlaying = false;
+const bgMusic = document.getElementById('bgMusic');
+const musicToggleBtn = document.getElementById('musicToggle');
+
+// On force un volume raisonnable
+bgMusic.volume = 0.3; 
+
+function toggleMusic() {
+  if (musicPlaying) {
+    bgMusic.pause();
+    musicToggleBtn.innerHTML = "🔇 Mettre l'ambiance";
+    musicPlaying = false;
+  } else {
+    bgMusic.play().then(() => {
+      musicToggleBtn.innerHTML = "🔊 Couper le son";
+      musicPlaying = true;
+    }).catch(e => console.log("L'autoplay a été bloqué par le navigateur."));
+  }
+}
+
+// Essaie de lancer la musique au tout premier clic de l'utilisateur n'importe où sur la page
+document.body.addEventListener('click', function firstInteraction() {
+  if (!musicPlaying) {
+    bgMusic.play().then(() => {
+      musicPlaying = true;
+      musicToggleBtn.innerHTML = "🔊 Couper le son";
+    }).catch(e => {}); // On ignore l'erreur si c'est encore bloqué
+  }
+  // On retire l'écouteur après le premier clic pour ne pas spammer la fonction
+  document.body.removeEventListener('click', firstInteraction);
+}, { once: true });
+
+
 // ===== CONSTANTES =====
 const DEFAULT_PEOPLE=['Albin'];
 const YEAR=2026,MONTH=7,DAYS=31;
@@ -508,7 +552,6 @@ function renderWheel() {
   const active = people.filter(p => state[p] && state[p].length > 0);
   const wheel = document.getElementById('rouletteWheel');
   
-  // Appliquer la rotation actuelle pour éviter que ça "saute" visuellement lors d'un rechargement Firebase
   wheel.style.transform = `rotate(${currentWheelRotation}deg)`;
 
   if(active.length < 2) {
@@ -527,8 +570,6 @@ function renderWheel() {
     const endAngle = (i + 1) * angle;
     conicStr.push(`${color} ${startAngle}deg ${endAngle}deg`);
 
-    // Positionnement des textes sur la roue (transform-origin est 0 0, donc on calcule le milieu de la part)
-    // -90 pour aligner correctement le texte avec le conic-gradient qui commence à midi (12h)
     const textAngle = startAngle + (angle / 2) - 90;
     labelsHtml += `<div class="wheel-label" style="transform: rotate(${textAngle}deg) translate(35px, -50%);">${p}</div>`;
   });
@@ -549,19 +590,16 @@ function spinRoulette() {
   document.getElementById('rouletteWinner').textContent = "Ça tourne...";
   document.getElementById('rouletteWinner').style.animation = 'none';
 
-  // Calcul du nouvel angle
-  const extraSpins = 5 * 360; // 5 tours complets
-  const randomAngle = Math.floor(Math.random() * 360); // Position finale aléatoire
+  const extraSpins = 5 * 360; 
+  const randomAngle = Math.floor(Math.random() * 360); 
   currentWheelRotation += extraSpins + randomAngle;
 
   const wheel = document.getElementById('rouletteWheel');
   wheel.style.transform = `rotate(${currentWheelRotation}deg)`;
 
-  // À la fin de la transition (4 secondes)
   setTimeout(() => {
     isSpinning = false;
     
-    // Calcul mathématique de la part gagnante sous le pointeur (le pointeur est à 0° / en haut)
     const normalizedRot = currentWheelRotation % 360;
     const pointerAngle = (360 - normalizedRot) % 360;
     const anglePerSlice = 360 / active.length;
