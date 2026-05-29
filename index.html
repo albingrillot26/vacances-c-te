@@ -128,7 +128,6 @@ header p{font-size:.9rem;color:var(--soft);margin-top:.3rem;font-weight:300}
 .villa-vote-btn{margin-top:6px;border:1px solid #f8bbd0;background:white;color:#c2185b;padding:5px;border-radius:8px;font-size:.75rem;font-weight:600;cursor:pointer;display:flex;align-items:center;justify-content:center;gap:4px;transition:all .2s;font-family:'DM Sans',sans-serif}
 .villa-vote-btn.voted{background:var(--pink-light);border-color:var(--pink)}
 .villa-voters{font-size:.65rem;color:var(--pink);margin-top:4px;text-align:center;min-height:14px}
-.podium-crown{font-size:1rem;position:absolute;top:-10px;left:50%;transform:translateX(-50%)}
 
 /* ===== PAIEMENTS & AWARDS ===== */
 .cost-row{display:flex;align-items:center;gap:10px;margin-bottom:.8rem;flex-wrap:wrap}
@@ -154,6 +153,12 @@ header p{font-size:.9rem;color:var(--soft);margin-top:.3rem;font-weight:300}
 .award-title { font-size: 0.65rem; color: #f57c00; font-weight: 700; text-transform: uppercase; letter-spacing: 0.5px; }
 .award-winner { font-family: 'Playfair Display', serif; font-size: 1.1rem; color: #e65100; font-weight: 700; margin-top: 4px; }
 .award-sub { font-size: 0.75rem; color: #fb8c00; font-weight: 600; margin-top: 2px; }
+
+/* ===== ROULETTE DES CORVÉES ===== */
+.wheel-container { position:relative; width: 220px; height: 220px; margin: 1rem auto; border-radius:50%; border: 4px solid white; box-shadow: 0 4px 15px rgba(0,0,0,0.15); overflow:hidden; }
+.wheel-pointer { position:absolute; top:-15px; left:50%; transform:translateX(-50%); width:0; height:0; border-left:15px solid transparent; border-right:15px solid transparent; border-top:25px solid var(--red); z-index:10; filter:drop-shadow(0 3px 3px rgba(0,0,0,0.3)); }
+.wheel { width:100%; height:100%; border-radius:50%; position:relative; transition: transform 4s cubic-bezier(0.2, 0.8, 0.2, 1); }
+.wheel-label { position:absolute; top:50%; left:50%; transform-origin: 0 0; font-weight:700; color:white; font-size:0.95rem; text-shadow: 1px 1px 2px rgba(0,0,0,0.7); white-space:nowrap; }
 
 /* Barre de progression séjour */
 .goal-bar-wrap{margin-bottom:1rem;padding:12px 14px;background:rgba(255,255,255,.6);border-radius:12px;border:1px dashed var(--pale)}
@@ -341,11 +346,17 @@ header p{font-size:.9rem;color:var(--soft);margin-top:.3rem;font-weight:300}
   <div id="awardsArea" class="awards-container"></div>
 </div>
 
-<!-- Roulette des Corvées -->
+<!-- Roulette des Corvées VISUELLE -->
 <div class="card" style="text-align:center; padding-bottom: 2rem;">
   <h2 style="justify-content:center"><span class="dot" style="background:#e53935"></span>Roulette des Corvées 🎯</h2>
   <p style="font-size:.85rem;color:var(--soft);margin-bottom:1.2rem">Qui va descendre les poubelles, chercher le pain ou faire la vaisselle ?</p>
-  <div id="rouletteResult" style="font-family:'Playfair Display', serif; font-size:2.5rem; color:var(--red); font-weight:700; height:4.5rem; display:flex; align-items:center; justify-content:center; margin-bottom:1.5rem; background:var(--pink-light); border-radius:16px; border:2px dashed var(--pink); box-shadow:inset 0 4px 10px rgba(0,0,0,0.05);">?</div>
+  
+  <div class="wheel-container">
+    <div class="wheel-pointer"></div>
+    <div class="wheel" id="rouletteWheel"></div>
+  </div>
+  
+  <div id="rouletteWinner" style="font-family:'Playfair Display', serif; font-size:1.3rem; color:var(--red); height:2rem; margin-bottom:1rem; font-weight:600;">Prêt à tourner ?</div>
   <button class="btn-submit" style="background:linear-gradient(135deg, #e53935, #c62828); box-shadow:0 4px 14px rgba(229,57,53,.3); width: 80%; padding: 14px; font-size: 1rem;" onclick="spinRoulette()">Lancer la Roulette 🎲</button>
 </div>
 
@@ -448,6 +459,7 @@ const VIBES = [
   {days:0,emoji:'🐚',text:'C\'est MAINTENANT ! YALLAH !!'},
 ];
 const MAX_VILLA_PLACES = 8;
+const WHEEL_COLORS = ['#f06292', '#26a69a', '#fb8c00', '#7e57c2', '#ff9800', '#e91e63', '#80cbc4', '#4a8c87'];
 
 // ===== STATE =====
 let people=[...DEFAULT_PEOPLE];
@@ -455,6 +467,8 @@ let state={},userStatus={},userPartner={},userGender={},userSnap={},villas=[];
 let totalCostVal=0;
 DEFAULT_PEOPLE.forEach(p=>state[p]=[]);
 let selectedPerson=null,selDays=new Set(),promoSeen=false;
+let currentWheelRotation = 0;
+let isSpinning = false;
 const firstDow=(()=>{const d=new Date(YEAR,MONTH,1).getDay();return d===0?6:d-1;})();
 function normName(n){return n.trim().charAt(0).toUpperCase()+n.trim().slice(1).toLowerCase();}
 
@@ -489,8 +503,40 @@ function handleCostInput(){
   renderPayments();
 }
 
-// ===== ROULETTE LOGIC =====
-let isSpinning = false;
+// ===== ROULETTE VISUELLE LOGIC =====
+function renderWheel() {
+  const active = people.filter(p => state[p] && state[p].length > 0);
+  const wheel = document.getElementById('rouletteWheel');
+  
+  // Appliquer la rotation actuelle pour éviter que ça "saute" visuellement lors d'un rechargement Firebase
+  wheel.style.transform = `rotate(${currentWheelRotation}deg)`;
+
+  if(active.length < 2) {
+    wheel.style.background = '#e8f5e9';
+    wheel.innerHTML = '<div style="position:absolute; top:50%; left:50%; transform:translate(-50%,-50%); text-align:center; font-size:0.85rem; color:#6a8f8c; font-weight:600;">Minimum 2<br>participants</div>';
+    return;
+  }
+
+  const angle = 360 / active.length;
+  let conicStr = [];
+  let labelsHtml = '';
+
+  active.forEach((p, i) => {
+    const color = WHEEL_COLORS[i % WHEEL_COLORS.length];
+    const startAngle = i * angle;
+    const endAngle = (i + 1) * angle;
+    conicStr.push(`${color} ${startAngle}deg ${endAngle}deg`);
+
+    // Positionnement des textes sur la roue (transform-origin est 0 0, donc on calcule le milieu de la part)
+    // -90 pour aligner correctement le texte avec le conic-gradient qui commence à midi (12h)
+    const textAngle = startAngle + (angle / 2) - 90;
+    labelsHtml += `<div class="wheel-label" style="transform: rotate(${textAngle}deg) translate(35px, -50%);">${p}</div>`;
+  });
+
+  wheel.style.background = `conic-gradient(${conicStr.join(', ')})`;
+  wheel.innerHTML = labelsHtml;
+}
+
 function spinRoulette() {
   if(isSpinning) return;
   const active = people.filter(p => state[p] && state[p].length > 0);
@@ -500,26 +546,32 @@ function spinRoulette() {
   }
   
   isSpinning = true;
-  const res = document.getElementById('rouletteResult');
-  let spins = 0;
-  
-  // Animation de décélération
-  function spin() {
-    res.textContent = active[Math.floor(Math.random() * active.length)];
-    spins++;
+  document.getElementById('rouletteWinner').textContent = "Ça tourne...";
+  document.getElementById('rouletteWinner').style.animation = 'none';
+
+  // Calcul du nouvel angle
+  const extraSpins = 5 * 360; // 5 tours complets
+  const randomAngle = Math.floor(Math.random() * 360); // Position finale aléatoire
+  currentWheelRotation += extraSpins + randomAngle;
+
+  const wheel = document.getElementById('rouletteWheel');
+  wheel.style.transform = `rotate(${currentWheelRotation}deg)`;
+
+  // À la fin de la transition (4 secondes)
+  setTimeout(() => {
+    isSpinning = false;
     
-    if(spins < 20) {
-      setTimeout(spin, 50); // Rapide au début
-    } else if (spins < 30) {
-      setTimeout(spin, 50 + (spins - 20) * 30); // Ralentit petit à petit
-    } else {
-      // Résultat final
-      isSpinning = false;
-      res.style.animation = 'none';
-      setTimeout(() => res.style.animation = 'tada 1s', 10);
-    }
-  }
-  spin();
+    // Calcul mathématique de la part gagnante sous le pointeur (le pointeur est à 0° / en haut)
+    const normalizedRot = currentWheelRotation % 360;
+    const pointerAngle = (360 - normalizedRot) % 360;
+    const anglePerSlice = 360 / active.length;
+    const winnerIndex = Math.floor(pointerAngle / anglePerSlice);
+    const winner = active[winnerIndex];
+
+    const res = document.getElementById('rouletteWinner');
+    res.innerHTML = `Victime désignée : <strong style="color:var(--teal)">${winner}</strong> 💀`;
+    setTimeout(() => res.style.animation = 'tada 1s', 10);
+  }, 4000);
 }
 
 // ===== COUNTDOWN =====
@@ -981,7 +1033,7 @@ function closeMatchModal(){document.getElementById('matchModal').style.display='
 function renderAll(){
   renderPeople();
   if(selectedPerson)renderProfileForm();
-  buildRecapCal();renderPayments();renderVillas();
+  buildRecapCal();renderPayments();renderVillas();renderWheel();
 }
 </script>
 </body>
