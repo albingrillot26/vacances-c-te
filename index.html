@@ -263,6 +263,7 @@ header p{font-size:.9rem;color:var(--soft);margin-top:.3rem;font-weight:300}
     <button class="qs-btn" onclick="quickSelect('w4')">24–31</button>
     <button class="qs-btn" onclick="quickSelect('none')" style="color:#e53935;border-color:#ef9a9a">Aucun</button>
   </div>
+  <p style="font-size:.8rem;color:var(--orange);margin-bottom:.8rem;font-weight:600;text-align:center;background:#fff3e0;padding:8px;border-radius:8px">💡 Les jours marqués d'une 🌟 manquent d'ambiance (< 4 pers). Viens les sauver !</p>
   <div class="month-title">Août 2026</div>
   <div class="cal-grid" id="selCal"></div>
   <div class="easter-egg" id="easterEgg">🎉 t'es soit un gros salafiste soit une petite conne 🐚</div>
@@ -276,6 +277,7 @@ header p{font-size:.9rem;color:var(--soft);margin-top:.3rem;font-weight:300}
 <!-- Récap calendrier -->
 <div class="card">
   <h2><span class="dot da"></span>Calendrier des présences</h2>
+  <p style="font-size:.8rem;color:var(--soft);margin-bottom:.8rem">Clique sur une journée pour voir qui y participe.</p>
   <div class="legend">
     <div class="leg-item"><div class="leg-dot lg"></div>1–7 personnes</div>
     <div class="leg-item"><div class="leg-dot lo"></div>8+ personnes</div>
@@ -330,14 +332,14 @@ header p{font-size:.9rem;color:var(--soft);margin-top:.3rem;font-weight:300}
 </div>
 
 <!-- Modales -->
-<div class="modal-overlay" id="promoModal">
+<div class="modal-overlay" id="promoModal" onclick="if(event.target===this)this.style.display='none'">
   <div class="modal-content">
     <h3>Fais pas ton Kassim ! 🦭</h3>
-    <p>Reste plus d'une semaine et bénéficie d'une <strong>réduction de 10%</strong> sur ta part ! Moins tu payes, plus t'as de budget rosé 🥂</p>
+    <p>Reste <strong>3 semaines ou plus (21 jours)</strong> et bénéficie d'une <strong>réduction de 10%</strong> sur ta part ! Moins tu payes, plus t'as de budget rosé 🥂</p>
     <button class="btn-close-modal" onclick="closePromoModal()">Génial, j'en profite !</button>
   </div>
 </div>
-<div class="modal-overlay" id="matchModal">
+<div class="modal-overlay" id="matchModal" onclick="if(event.target===this)this.style.display='none'">
   <div class="modal-content match">
     <h3>🔥 Alerte Match !</h3>
     <p>Tes dates croisent celles de quelques célibs compatibles. C'est le moment de glisser dans les DM :</p>
@@ -345,13 +347,21 @@ header p{font-size:.9rem;color:var(--soft);margin-top:.3rem;font-weight:300}
     <button class="btn-close-modal match-btn" onclick="closeMatchModal()">C'est noté ! 😏</button>
   </div>
 </div>
-<div class="modal-overlay" id="superModal">
+<div class="modal-overlay" id="superModal" onclick="if(event.target===this){this.style.display='none'; setTimeout(()=>checkMatches(selectedPerson), 400);}">
   <div class="modal-content">
     <div style="font-size:3rem;margin-bottom:.5rem">🏆</div>
     <h3 style="color:var(--teal)">Gros bavard ?!</h3>
     <p>Tu es prêt à venir en stage salafiste pendant un mois 👑</p>
-    
     <button class="btn-close-modal" style="background:linear-gradient(135deg,#80cbc4,#26a69a)" onclick="document.getElementById('superModal').style.display='none'; setTimeout(()=>checkMatches(selectedPerson), 400);">Je me convertis</button>
+  </div>
+</div>
+
+<!-- NOUVELLE MODALE : DÉTAIL DU JOUR -->
+<div class="modal-overlay" id="dayModal" onclick="if(event.target===this)this.style.display='none'">
+  <div class="modal-content" style="padding:1.5rem">
+    <h3 id="dayModalTitle" style="color:var(--teal)"></h3>
+    <p id="dayModalContent" style="text-align:left;line-height:1.8"></p>
+    <button class="btn-close-modal" onclick="document.getElementById('dayModal').style.display='none'">Fermer</button>
   </div>
 </div>
 
@@ -390,7 +400,7 @@ const firebaseConfig = {
 firebase.initializeApp(firebaseConfig);
 const db = firebase.database();
 const dbRef = db.ref('vacances_aout');
-const chatRef = db.ref('vacances_aout_chat'); // Nouvelle base de données séparée pour le chat
+const chatRef = db.ref('vacances_aout_chat');
 
 // ===== CONSTANTES =====
 const DEFAULT_PEOPLE=['Albin'];
@@ -528,7 +538,7 @@ function deletePerson(name){
   people=people.filter(p=>p!==name);delete state[name];delete userStatus[name];delete userPartner[name];delete userGender[name];delete userSnap[name];
   Object.keys(userPartner).forEach(p=>{if(userPartner[p]===name){delete userPartner[p];userStatus[p]=null;}});
   villas.forEach(v=>{if(v.voters)v.voters=v.voters.filter(v2=>v2!==name);});
-  if(selectedPerson===name){selectedPerson=null;selDays=new Set();document.getElementById('selCard').style.display='none'; renderChatMessages();} // Update chat if user deleted
+  if(selectedPerson===name){selectedPerson=null;selDays=new Set();document.getElementById('selCard').style.display='none'; renderChatMessages();} 
   saveState();
 }
 function renderPeople(){
@@ -548,7 +558,7 @@ function selectPerson(name){
   document.getElementById('toast').style.display='none';
   document.getElementById('easterEgg').style.display='none';
   renderProfileForm();buildSelCal();renderPeople();renderVillas();
-  renderChatMessages(); // Rafraîchit le chat pour définir "mes messages"
+  renderChatMessages();
   
   // Fun fact
   const ff=document.getElementById('funFact');
@@ -611,9 +621,20 @@ function buildSelCal(){
   DOW.forEach(d=>{const h=document.createElement('div');h.className='cal-dow';h.textContent=d;el.appendChild(h);});
   for(let i=0;i<firstDow;i++){const e=document.createElement('div');e.className='cal-day empty';el.appendChild(e);}
   for(let d=1;d<=DAYS;d++){
+    const count=people.filter(p=>state[p]&&state[p].includes(d)).length;
     const cell=document.createElement('div');cell.className='cal-day'+(selDays.has(d)?' selected':'');
     const num=document.createElement('div');num.className='day-num';num.textContent=d;
-    cell.appendChild(num);cell.onclick=()=>toggleDay(d);el.appendChild(cell);
+    cell.appendChild(num);
+    
+    // Ajout d'une étoile si le jour est très peu rempli (< 4) pour inciter les gens
+    if(count < 4) {
+      const star=document.createElement('div');
+      star.style.cssText="font-size:0.65rem; position:absolute; bottom:2px;";
+      star.textContent='🌟';
+      cell.appendChild(star);
+    }
+    
+    cell.onclick=()=>toggleDay(d);el.appendChild(cell);
   }
 }
 
@@ -633,6 +654,10 @@ function buildRecapCal(){
     cell.appendChild(num);cell.appendChild(cnt);
     const hearts=heartsForDay(d);
     if(hearts.length>0){const hb=document.createElement('div');hb.className='heart-badge';hb.textContent=hearts.join('');cell.appendChild(hb);}
+    
+    // NOUVEAUTÉ : Clic sur le jour pour voir la liste des présents sur mobile
+    cell.onclick = () => showDayDetails(d, present, hearts);
+    
     if(count>0){
       const tip=document.createElement('div');tip.className='tip';
       tip.innerHTML=present.join(' · ')+(hearts.length>0?`<div style="margin-top:3px">${hearts.join(' ')}</div>`:'');
@@ -640,6 +665,18 @@ function buildRecapCal(){
     }
     el.appendChild(cell);
   }
+}
+
+function showDayDetails(d, present, hearts){
+  if(present.length === 0){
+    document.getElementById('dayModalContent').innerHTML = "<span style='color:var(--soft)'>Personne n'est encore prévu ce jour-là. 😴</span>";
+  } else {
+    let lines = present.map(p => `• <strong>${p}</strong> ${getEmojiForStatus(userStatus[p])}`).join('<br>');
+    if(hearts.length > 0) lines += `<br><br><span style="font-size:0.85rem;color:var(--pink)">${hearts.join(' ')}</span>`;
+    document.getElementById('dayModalContent').innerHTML = lines;
+  }
+  document.getElementById('dayModalTitle').textContent = `Le ${d} Août`;
+  document.getElementById('dayModal').style.display = 'flex';
 }
 
 // ===== SUBMIT / RESET =====
@@ -725,7 +762,7 @@ function renderVillas(){
   }).join('');
 }
 
-// ===== PAIEMENTS (Mise à jour du GOAT) =====
+// ===== PAIEMENTS =====
 function renderPayments(){
   const total=totalCostVal||0;
   const active=people.filter(p=>state[p]&&state[p].length>0);
@@ -763,7 +800,7 @@ function renderPayments(){
     const ratio = totalDays > 0 ? days / totalDays : 0;
     let amt = total * ratio;
     
-    if(days > 7) { 
+    if(days >= 21) { // 3 SEMAINES MINIMUM POUR LA REDUC
       amt *= 0.90; 
       badges[p] = '<span class="discount-badge">-10%</span>'; 
     } else {
@@ -777,8 +814,8 @@ function renderPayments(){
   const lea = active.find(p => p.toLowerCase() === 'léa' || p.toLowerCase() === 'lea');
 
   if (albin && lea && amounts[lea] > 0) {
-    amounts[albin] += amounts[lea]; // Albin absorbe la dette
-    amounts[lea] = 0; // Léa paye 0
+    amounts[albin] += amounts[lea];
+    amounts[lea] = 0;
     badges[lea] += '<span class="discount-badge" style="background:#e8f5e9;color:#2e7d32">Régalée par le GOAT 🐐</span>';
     badges[albin] += '<span class="discount-badge" style="background:#fff3e0;color:#e65100">+ Part de Léa 👑</span>';
   }
@@ -855,7 +892,6 @@ function renderChatMessages() {
   }
   
   container.innerHTML = currentChatMsgs.map(msg => {
-    // Si l'utilisateur n'a pas cliqué sur son nom, personne n'est considéré comme "Moi"
     const isMine = selectedPerson && msg.sender === selectedPerson;
     const d = new Date(msg.timestamp);
     const time = `${String(d.getHours()).padStart(2,'0')}:${String(d.getMinutes()).padStart(2,'0')}`;
