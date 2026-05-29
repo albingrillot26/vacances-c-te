@@ -113,14 +113,6 @@ header p{font-size:.9rem;color:var(--soft);margin-top:.3rem;font-weight:300}
 .couple-legend{display:flex;flex-wrap:wrap;gap:8px;margin-bottom:.9rem}
 .couple-tag{font-size:.75rem;background:var(--pink-light);color:#c2185b;border-radius:999px;padding:4px 12px;font-weight:500;border:1px solid #f8bbd0}
 
-/* ===== PEAK DAYS ===== */
-.peak-section{margin-top:1rem;padding:12px 14px;background:linear-gradient(135deg,rgba(240,98,146,.07),rgba(38,166,154,.07));border-radius:12px;border:1px dashed rgba(128,203,196,.5)}
-.peak-title{font-size:.8rem;font-weight:600;color:#2e7d72;margin-bottom:6px}
-.peak-tags{display:flex;flex-wrap:wrap;gap:6px}
-.peak-tag{font-size:.75rem;padding:3px 10px;border-radius:999px;font-weight:600}
-.peak-tag.green{background:#e8f5e9;color:#2e7d32;border:1px solid #a5d6a7}
-.peak-tag.orange{background:#fff3e0;color:#e65100;border:1px solid #ffcc80}
-
 /* ===== VILLAS ===== */
 .villa-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(200px,1fr));gap:12px;margin-bottom:1rem}
 .villa-card{background:white;border:1.5px solid var(--pale);border-radius:14px;overflow:hidden;display:flex;flex-direction:column;position:relative;transition:transform .2s,box-shadow .2s}
@@ -272,10 +264,6 @@ header p{font-size:.9rem;color:var(--soft);margin-top:.3rem;font-weight:300}
   <div class="couple-legend" id="coupleLegend"></div>
   <div class="month-title">Août 2025</div>
   <div class="cal-grid" id="recapCal"></div>
-  <div class="peak-section" id="peakSection" style="display:none">
-    <div class="peak-title">📊 Moments clés</div>
-    <div class="peak-tags" id="peakTags"></div>
-  </div>
 </div>
 
 <!-- Villas -->
@@ -303,7 +291,7 @@ header p{font-size:.9rem;color:var(--soft);margin-top:.3rem;font-weight:300}
   <h2><span class="dot dg"></span>Répartition des coûts</h2>
   <div class="goal-bar-wrap" id="goalBarWrap" style="display:block">
     <div class="goal-bar-top">
-      <span class="goal-bar-label">🏠 Places occupées dans la villa</span>
+      <span class="goal-bar-label">🏠 Taux de remplissage de la villa</span>
       <span class="goal-bar-pct" id="goalPct">0 / 8</span>
     </div>
     <div class="goal-bar"><div class="goal-fill" id="goalFill" style="width:0%"></div></div>
@@ -448,11 +436,11 @@ function updateCountdown(){
   const target=new Date(2025,7,1,0,0,0);
   const diff=target-now;
   if(diff<=0){
-    document.getElementById('cdDays').textContent='0';
-    document.getElementById('cdHours').textContent='00';
-    document.getElementById('cdMins').textContent='00';
+    document.getElementById('cdDays').closest('.countdown-units').style.display='none';
     document.getElementById('vibeEmoji').textContent='🐚';
     document.getElementById('vibeText').textContent="On est en vacances !! YALLAH !!";
+    document.getElementById('vibeText').style.fontWeight='700';
+    document.getElementById('vibeText').style.fontSize='1.1rem';
     return;
   }
   const days=Math.floor(diff/(1000*60*60*24));
@@ -602,10 +590,9 @@ function buildRecapCal(){
   const el=document.getElementById('recapCal');el.innerHTML='';
   DOW.forEach(d=>{const h=document.createElement('div');h.className='cal-dow';h.textContent=d;el.appendChild(h);});
   for(let i=0;i<firstDow;i++){const e=document.createElement('div');e.className='cal-day empty';el.appendChild(e);}
-  const dayCounts=[];
   for(let d=1;d<=DAYS;d++){
     const present=people.filter(p=>state[p]&&state[p].includes(d));
-    const count=present.length;dayCounts.push({d,count});
+    const count=present.length;
     let cls='cal-day';if(count>0)cls+=count<=7?' cg':' co';
     const cell=document.createElement('div');cell.className=cls;
     const num=document.createElement('div');num.className='day-num';num.textContent=d;
@@ -620,20 +607,6 @@ function buildRecapCal(){
     }
     el.appendChild(cell);
   }
-  // Peak days
-  renderPeakDays(dayCounts);
-}
-function renderPeakDays(dayCounts){
-  const filled=dayCounts.filter(x=>x.count>0);
-  if(filled.length===0){document.getElementById('peakSection').style.display='none';return;}
-  document.getElementById('peakSection').style.display='block';
-  const maxCount=Math.max(...filled.map(x=>x.count));
-  const peaks=filled.filter(x=>x.count===maxCount);
-  const quiets=filled.filter(x=>x.count===Math.min(...filled.map(x=>x.count)));
-  let tags='';
-  peaks.forEach(x=>tags+=`<span class="peak-tag orange">🔥 ${x.d} août — ${x.count} pers.</span>`);
-  quiets.forEach(x=>tags+=`<span class="peak-tag green">🌿 ${x.d} août — ${x.count} pers.</span>`);
-  document.getElementById('peakTags').innerHTML=tags;
 }
 
 // ===== SUBMIT / RESET =====
@@ -719,21 +692,22 @@ function renderPayments(){
   const total=totalCostVal||0;
   const active=people.filter(p=>state[p]&&state[p].length>0);
   const tbody=document.getElementById('payBody');
-  // ===== BARRE PLACES VILLA =====
-  const occupied=people.filter(p=>state[p]&&state[p].length>0).length;
-  const pct=Math.min(100,Math.round(occupied/MAX_VILLA_PLACES*100));
-  document.getElementById('goalPct').textContent=`${occupied} / ${MAX_VILLA_PLACES}`;
-  document.getElementById('goalFill').style.width=pct+'%';
-  const remaining=MAX_VILLA_PLACES-occupied;
+  // ===== BARRE TAUX DE REMPLISSAGE =====
+  // 100% = chaque jour de août est rempli à 8 personnes
+  const totalPersonDays = people.reduce((s,p)=>s+(state[p]?state[p].length:0), 0);
+  const maxPersonDays = DAYS * MAX_VILLA_PLACES; // 31 * 8 = 248
+  const pct = Math.min(100, Math.round(totalPersonDays / maxPersonDays * 100));
+  const avgPerDay = DAYS > 0 ? (totalPersonDays / DAYS).toFixed(1) : 0;
+  document.getElementById('goalPct').textContent = `${pct}%`;
+  document.getElementById('goalFill').style.width = pct+'%';
   let note='';
-  if(occupied===0) note='Personne n\'a encore renseigné ses dispo 👀';
-  else if(occupied<MAX_VILLA_PLACES) note=`Il reste ${remaining} place${remaining>1?'s':''} — qui vient encore ?`;
-  else note='La villa est complète ! On va être serrés comme des sardines 🐟';
+  if(totalPersonDays===0) note='Personne n\'a encore renseigné ses dispo 👀';
+  else note=`Moyenne de ${avgPerDay} pers./jour sur août (max 8 places)`;
   document.getElementById('goalNote').textContent=note;
-  // Couleur dynamique selon remplissage
+  // Couleur dynamique
   const fill=document.getElementById('goalFill');
-  if(occupied>=MAX_VILLA_PLACES) fill.style.background='linear-gradient(90deg,#f48fb1,#f06292)';
-  else if(occupied>=6) fill.style.background='linear-gradient(90deg,#ffb74d,#fb8c00)';
+  if(pct>=90) fill.style.background='linear-gradient(90deg,#f48fb1,#f06292)';
+  else if(pct>=60) fill.style.background='linear-gradient(90deg,#ffb74d,#fb8c00)';
   else fill.style.background='linear-gradient(90deg,var(--teal-mid),var(--teal))';
 
   if(active.length===0){tbody.innerHTML=`<tr><td colspan="4" class="empty-state">Aucune disponibilité renseignée 🌊</td></tr>`;
