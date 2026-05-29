@@ -3,162 +3,244 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Objectif Villa sur la côte</title>
-
-<!-- SCRIPTS FIREBASE (Pour la base de données en temps réel) -->
+<title>Objectif Villa sur la côte 🐚</title>
 <script src="https://www.gstatic.com/firebasejs/10.11.0/firebase-app-compat.js"></script>
 <script src="https://www.gstatic.com/firebasejs/10.11.0/firebase-database-compat.js"></script>
-
 <style>
-@import url('https://fonts.googleapis.com/css2?family=Playfair+Display:wght@400;600&family=DM+Sans:wght@300;400;500;600&display=swap');
+@import url('https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,400;0,600;0,700;1,400&family=DM+Sans:wght@300;400;500;600&display=swap');
+:root{
+  --pink:#f06292;--pink-light:#fce4ec;--pink-mid:#f48fb1;
+  --teal:#26a69a;--teal-light:#e8f5e9;--teal-mid:#80cbc4;
+  --orange:#fb8c00;--purple:#7e57c2;--red:#e53935;
+  --dark:#2e4a47;--mid:#4a8c87;--soft:#6a8f8c;--pale:#b2dfdb;
+}
 *{box-sizing:border-box;margin:0;padding:0}
-.wrap{font-family:'DM Sans',sans-serif;padding:1.5rem 1rem 3rem;background:transparent;position:relative}
-.bg{position:fixed;inset:0;background:linear-gradient(160deg,#fce4ec 0%,#e8f5e9 45%,#b2dfdb 100%);z-index:0}
-.content{position:relative;z-index:1;max-width:740px;margin:0 auto}
-header{text-align:center;margin-bottom:2rem}
-header h1{font-family:'Playfair Display',serif;font-size:2rem;color:#2e7d72;line-height:1.2}
-header p{font-size:.9rem;color:#6a8f8c;margin-top:.3rem;font-weight:300}
-.card{background:rgba(255,255,255,.85);backdrop-filter:blur(8px);border-radius:18px;padding:1.4rem 1.5rem;margin-bottom:1.1rem;border:1px solid rgba(255,255,255,.9);box-shadow:0 4px 20px rgba(100,180,160,.08)}
+html{scroll-behavior:smooth}
+body{font-family:'DM Sans',sans-serif;background:transparent}
+.bg{position:fixed;inset:0;background:linear-gradient(160deg,#fce4ec 0%,#f3faf3 45%,#b2dfdb 100%);z-index:0}
+.bg::before{content:'';position:fixed;inset:0;background:url("data:image/svg+xml,%3Csvg width='60' height='60' viewBox='0 0 60 60' xmlns='http://www.w3.org/2000/svg'%3E%3Cg fill='none' fill-rule='evenodd'%3E%3Cg fill='%2380cbc4' fill-opacity='0.06'%3E%3Ccircle cx='30' cy='30' r='4'/%3E%3C/g%3E%3C/g%3E%3C/svg%3E");z-index:0}
+.wrap{padding:1.5rem 1rem 3rem;position:relative;z-index:1}
+.content{max-width:740px;margin:0 auto}
+
+/* ===== HEADER ===== */
+header{text-align:center;margin-bottom:2rem;animation:slideDown .6s ease}
+@keyframes slideDown{from{opacity:0;transform:translateY(-20px)}to{opacity:1;transform:translateY(0)}}
+header h1{font-family:'Playfair Display',serif;font-size:2.2rem;color:var(--dark);line-height:1.2;background:linear-gradient(135deg,#2e7d72,#c2185b);-webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text}
+header p{font-size:.9rem;color:var(--soft);margin-top:.3rem;font-weight:300}
+
+/* ===== COUNTDOWN ===== */
+.countdown-bar{background:linear-gradient(135deg,rgba(240,98,146,.12),rgba(38,166,154,.12));border:1px solid rgba(128,203,196,.4);border-radius:14px;padding:14px 18px;margin-bottom:1.1rem;display:flex;align-items:center;justify-content:space-between;flex-wrap:wrap;gap:10px;animation:fadeIn .8s ease .2s both}
+@keyframes fadeIn{from{opacity:0;transform:translateY(10px)}to{opacity:1;transform:translateY(0)}}
+.countdown-units{display:flex;gap:12px}
+.cd-unit{text-align:center}
+.cd-num{font-family:'Playfair Display',serif;font-size:1.6rem;font-weight:700;color:var(--teal);line-height:1}
+.cd-label{font-size:.65rem;text-transform:uppercase;letter-spacing:.8px;color:var(--soft)}
+.countdown-bar .vibe{font-size:.88rem;color:var(--dark);font-weight:500}
+.vibe-emoji{font-size:1.2rem}
+
+/* ===== MOOD BAR ===== */
+.mood-section{background:rgba(255,255,255,.8);border-radius:12px;padding:12px 14px;margin-bottom:.8rem;border:1px solid rgba(178,223,219,.5)}
+.mood-title{font-size:.8rem;color:var(--soft);font-weight:500;margin-bottom:6px}
+.mood-bar{height:8px;border-radius:999px;background:#e0f2f1;overflow:hidden;margin-bottom:4px}
+.mood-fill{height:100%;border-radius:999px;background:linear-gradient(90deg,#80cbc4,#26a69a);transition:width .8s cubic-bezier(.34,1.56,.64,1)}
+.mood-label{font-size:.78rem;color:var(--teal);font-weight:600}
+
+/* ===== CARDS ===== */
+.card{background:rgba(255,255,255,.85);backdrop-filter:blur(8px);border-radius:20px;padding:1.4rem 1.5rem;margin-bottom:1.1rem;border:1px solid rgba(255,255,255,.9);box-shadow:0 4px 24px rgba(100,180,160,.08);animation:fadeIn .5s ease both}
 .card h2{font-family:'Playfair Display',serif;font-size:1.1rem;color:#2e7d72;margin-bottom:1rem;display:flex;align-items:center;gap:8px}
 .dot{width:8px;height:8px;border-radius:50%;flex-shrink:0}
-.dp{background:#f06292}.dt{background:#26a69a}.da{background:#fb8c00}.dg{background:#7e57c2}.dv{background:#ff9800}
+.dp{background:var(--pink)}.dt{background:var(--teal)}.da{background:var(--orange)}.dg{background:var(--purple)}.dv{background:#ff9800}.dr{background:#e91e63}
 
+/* ===== PEOPLE ===== */
 .people-grid{display:flex;flex-wrap:wrap;gap:8px;margin-bottom:.9rem}
 .person-wrap{position:relative;display:inline-flex;align-items:center}
-.person-btn{padding:8px 32px 8px 16px;border-radius:999px;border:1.5px solid #b2dfdb;background:white;font-family:'DM Sans',sans-serif;font-size:.85rem;font-weight:500;color:#4a8c87;cursor:pointer;transition:all .15s}
-.person-btn:hover{border-color:#f06292;color:#c2185b;background:#fce4ec}
-.person-btn.selected{background:linear-gradient(135deg,#f48fb1,#f06292);border-color:transparent;color:white;font-weight:600;box-shadow:0 3px 10px rgba(240,98,146,.3)}
+.person-btn{padding:8px 32px 8px 16px;border-radius:999px;border:1.5px solid var(--pale);background:white;font-family:'DM Sans',sans-serif;font-size:.85rem;font-weight:500;color:var(--mid);cursor:pointer;transition:all .15s;position:relative}
+.person-btn:hover{border-color:var(--pink);color:#c2185b;background:var(--pink-light)}
+.person-btn.selected{background:linear-gradient(135deg,var(--pink-mid),var(--pink));border-color:transparent;color:white;font-weight:600;box-shadow:0 3px 10px rgba(240,98,146,.3)}
 .del-btn{position:absolute;right:8px;width:16px;height:16px;border-radius:50%;border:none;background:rgba(100,160,155,.3);color:#2e7d72;font-size:10px;cursor:pointer;display:flex;align-items:center;justify-content:center;font-weight:700;line-height:1;padding:0;transition:background .15s}
-.del-btn:hover{background:#e53935;color:white}
+.del-btn:hover{background:var(--red);color:white}
 .person-btn.selected~.del-btn{background:rgba(255,255,255,.3);color:white}
-.person-btn.selected~.del-btn:hover{background:#e53935;color:white}
+.person-btn.selected~.del-btn:hover{background:var(--red);color:white}
+
+/* Badge manquant */
+.missing-box{background:#fff8e1;border:1px dashed #ffcc80;border-radius:10px;padding:10px 14px;margin-top:.5rem;font-size:.8rem;color:#e65100}
+.missing-box strong{display:block;margin-bottom:4px;font-size:.82rem}
 
 .add-form{display:flex;gap:8px;align-items:center;margin-top:.5rem}
-.add-input{flex:1;padding:9px 14px;border-radius:999px;border:1.5px solid #b2dfdb;font-family:'DM Sans',sans-serif;font-size:.88rem;color:#2e4a47;outline:none;background:white;transition:border-color .15s}
-.add-input:focus{border-color:#26a69a}
-.add-btn{padding:9px 18px;border-radius:999px;border:none;background:linear-gradient(135deg,#80cbc4,#26a69a);color:white;font-family:'DM Sans',sans-serif;font-size:.85rem;font-weight:600;cursor:pointer;white-space:nowrap;transition:opacity .15s}
-.add-btn:hover{opacity:.88}
+.add-input{flex:1;padding:9px 14px;border-radius:999px;border:1.5px solid var(--pale);font-family:'DM Sans',sans-serif;font-size:.88rem;color:var(--dark);outline:none;background:white;transition:border-color .15s}
+.add-input:focus{border-color:var(--teal)}
+.add-btn{padding:9px 18px;border-radius:999px;border:none;background:linear-gradient(135deg,var(--teal-mid),var(--teal));color:white;font-family:'DM Sans',sans-serif;font-size:.85rem;font-weight:600;cursor:pointer;white-space:nowrap;transition:opacity .15s,transform .15s}
+.add-btn:hover{opacity:.88;transform:scale(1.02)}
 
-/* Styles du profil */
-.status-section {margin-bottom: 1.2rem; padding: 12px; background: rgba(255,255,255,0.7); border-radius: 12px; border: 1px dashed #80cbc4;}
-.status-block {margin-bottom: 12px;}
-.status-block:last-child {margin-bottom: 0;}
-.status-title {font-size: 0.85rem; color: #2e7d72; font-weight: 600; margin-bottom: 6px; display: flex; align-items: center; gap: 5px;}
-.status-group {display: flex; gap: 6px; flex-wrap: wrap;}
-.status-btn {padding: 6px 12px; border-radius: 999px; border: 1px solid #b2dfdb; font-size: 0.78rem; cursor: pointer; background: white; color: #4a8c87; transition: all 0.2s;}
-.status-btn:hover {background: #e8f5e9;}
-.status-btn.active {background: #fce4ec; border-color: #f06292; color: #c2185b; font-weight: 600;}
+/* ===== PROFIL ===== */
+.status-section{margin-bottom:1.2rem;padding:12px;background:rgba(255,255,255,.7);border-radius:12px;border:1px dashed var(--teal-mid)}
+.status-block{margin-bottom:12px}
+.status-block:last-child{margin-bottom:0}
+.status-title{font-size:.85rem;color:#2e7d72;font-weight:600;margin-bottom:6px;display:flex;align-items:center;gap:5px}
+.status-group{display:flex;gap:6px;flex-wrap:wrap}
+.status-btn{padding:6px 12px;border-radius:999px;border:1px solid var(--pale);font-size:.78rem;cursor:pointer;background:white;color:var(--mid);transition:all .2s;font-family:'DM Sans',sans-serif}
+.status-btn:hover{background:var(--teal-light)}
+.status-btn.active{background:var(--pink-light);border-color:var(--pink);color:#c2185b;font-weight:600}
+.profile-input{width:100%;padding:8px 12px;border-radius:8px;border:1.5px solid var(--pale);font-family:'DM Sans',sans-serif;font-size:.85rem;color:#2e7d72;outline:none;background:white;transition:border-color .15s}
+.profile-input:focus{border-color:var(--pink)}
 
-.profile-input { width: 100%; padding: 8px 12px; border-radius: 8px; border: 1.5px solid #b2dfdb; font-family: 'DM Sans', sans-serif; font-size: 0.85rem; color: #2e7d72; outline: none; background: white; transition: border-color 0.15s; }
-.profile-input:focus { border-color: #f06292; }
+/* Fun fact perso */
+.fun-fact{background:linear-gradient(135deg,rgba(240,98,146,.08),rgba(38,166,154,.08));border-radius:10px;padding:10px 14px;font-size:.8rem;color:var(--dark);margin-top:10px;border:1px solid rgba(240,98,146,.15);font-style:italic;display:none}
+.fun-fact.show{display:block}
 
-/* Styles pour les Villas */
-.villa-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(220px, 1fr)); gap: 12px; margin-bottom: 1rem; }
-.villa-card { background: white; border: 1.5px solid #b2dfdb; border-radius: 12px; overflow: hidden; display: flex; flex-direction: column; position: relative; transition: transform 0.15s;}
-.villa-card:hover { transform: translateY(-3px); box-shadow: 0 6px 15px rgba(100,180,160,.15); }
-.villa-img { width: 100%; height: 130px; object-fit: cover; background: #e8f5e9; border-bottom: 1.5px solid #b2dfdb; }
-.villa-info { padding: 10px; display: flex; flex-direction: column; flex: 1; }
-.villa-name { font-family: 'Playfair Display', serif; font-size: 1rem; color: #2e7d72; font-weight: 600; margin-bottom: 4px; white-space: nowrap; overflow: hidden; text-overflow: ellipsis;}
-.villa-specs { font-size: 0.75rem; color: #6a8f8c; margin-bottom: 8px; display: flex; gap: 8px; flex-wrap: wrap; }
-.villa-spec-item { background: #e8f5e9; padding: 2px 6px; border-radius: 4px; color: #2e7d32; font-weight: 600; }
-.villa-link { text-decoration: none; font-size: 0.8rem; color: white; background: #26a69a; padding: 6px; border-radius: 6px; text-align: center; font-weight: 600; margin-top: auto; transition: opacity 0.15s; }
-.villa-link:hover { opacity: 0.85; }
-.villa-del { position: absolute; top: 6px; right: 6px; background: rgba(255,255,255,0.9); border: none; width: 24px; height: 24px; border-radius: 50%; color: #e53935; cursor: pointer; font-weight: bold; display: flex; align-items: center; justify-content: center; box-shadow: 0 2px 5px rgba(0,0,0,0.1); }
-.villa-vote-btn { margin-top: 6px; border: 1px solid #f8bbd0; background: white; color: #c2185b; padding: 4px; border-radius: 6px; font-size: 0.75rem; font-weight: 600; cursor: pointer; display: flex; align-items: center; justify-content: center; gap: 4px; transition: all 0.2s;}
-.villa-vote-btn.voted { background: #fce4ec; border-color: #f06292; }
-.villa-voters { font-size: 0.65rem; color: #f06292; margin-top: 4px; text-align: center; }
-
+/* ===== CALENDRIER ===== */
 .month-title{font-family:'Playfair Display',serif;font-size:1rem;color:#2e7d72;text-align:center;margin-bottom:.6rem;font-weight:600}
 .cal-grid{display:grid;grid-template-columns:repeat(7,1fr);gap:3px}
-.cal-dow{text-align:center;font-size:.68rem;font-weight:600;color:#6a8f8c;text-transform:uppercase;letter-spacing:.4px;padding:4px 0}
-.cal-day{aspect-ratio:1;border-radius:9px;border:1.5px solid #b2dfdb;background:white;display:flex;flex-direction:column;align-items:center;justify-content:center;cursor:pointer;transition:all .15s;position:relative;min-width:0;overflow:visible}
+.cal-dow{text-align:center;font-size:.68rem;font-weight:600;color:var(--soft);text-transform:uppercase;letter-spacing:.4px;padding:4px 0}
+.cal-day{aspect-ratio:1;border-radius:9px;border:1.5px solid var(--pale);background:white;display:flex;flex-direction:column;align-items:center;justify-content:center;cursor:pointer;transition:all .15s;position:relative;min-width:0;overflow:visible}
 .cal-day.empty{background:transparent;border-color:transparent;cursor:default}
-.cal-day.selected{background:linear-gradient(135deg,#80cbc4,#26a69a);border-color:transparent}
+.cal-day.selected{background:linear-gradient(135deg,var(--teal-mid),var(--teal));border-color:transparent}
 .cal-day.selected .day-num{color:white}
-.day-num{font-size:.82rem;font-weight:600;line-height:1;color:#2e4a47}
+.day-num{font-size:.82rem;font-weight:600;line-height:1;color:var(--dark)}
 .day-count{font-size:.6rem;font-weight:600;margin-top:1px}
-.cal-day.cg{background:#e8f5e9;border-color:#a5d6a7}
-.cal-day.cg .day-num{color:#2e7d32}
-.cal-day.cg .day-count{color:#388e3c}
-.cal-day.co{background:#fff3e0;border-color:#ffcc80}
-.cal-day.co .day-num{color:#e65100}
-.cal-day.co .day-count{color:#ef6c00}
-
-/* Heart badge */
-.heart-badge{position:absolute;top:-6px;right:-5px;font-size:.75rem;line-height:1;pointer-events:none;filter:drop-shadow(0 1px 2px rgba(240,98,146,.4));z-index:2}
-/* Tooltip */
-.tip{position:absolute;bottom:calc(100% + 8px);left:50%;transform:translateX(-50%);background:#2e4a47;color:white;border-radius:8px;padding:6px 10px;font-size:.72rem;pointer-events:none;z-index:20;opacity:0;transition:opacity .15s;line-height:1.6;white-space:nowrap;text-align:center}
+.cal-day.cg{background:#e8f5e9;border-color:#a5d6a7}.cal-day.cg .day-num{color:#2e7d32}.cal-day.cg .day-count{color:#388e3c}
+.cal-day.co{background:#fff3e0;border-color:#ffcc80}.cal-day.co .day-num{color:#e65100}.cal-day.co .day-count{color:#ef6c00}
+.heart-badge{position:absolute;top:-6px;right:-5px;font-size:.75rem;line-height:1;pointer-events:none;filter:drop-shadow(0 1px 2px rgba(240,98,146,.4));z-index:2;animation:heartPop .4s cubic-bezier(.34,1.56,.64,1)}
+@keyframes heartPop{from{transform:scale(0)}to{transform:scale(1)}}
+.tip{position:absolute;bottom:calc(100% + 8px);left:50%;transform:translateX(-50%);background:var(--dark);color:white;border-radius:8px;padding:6px 10px;font-size:.72rem;pointer-events:none;z-index:20;opacity:0;transition:opacity .15s;line-height:1.6;white-space:nowrap;text-align:center}
 .cal-day:hover .tip{opacity:1}
-.tip::after{content:'';position:absolute;top:100%;left:50%;transform:translateX(-50%);border:4px solid transparent;border-top-color:#2e4a47}
+.tip::after{content:'';position:absolute;top:100%;left:50%;transform:translateX(-50%);border:4px solid transparent;border-top-color:var(--dark)}
 
+/* Sélection rapide */
+.quick-select{display:flex;gap:6px;flex-wrap:wrap;margin-bottom:.8rem}
+.qs-btn{padding:5px 12px;border-radius:8px;border:1px solid var(--pale);background:white;font-size:.75rem;font-weight:600;color:var(--mid);cursor:pointer;transition:all .15s;font-family:'DM Sans',sans-serif}
+.qs-btn:hover{background:var(--teal-light);border-color:var(--teal-mid)}
+
+/* ===== LÉGENDE ===== */
 .legend{display:flex;gap:10px;flex-wrap:wrap;margin-bottom:.8rem;align-items:center}
-.leg-item{display:flex;align-items:center;gap:5px;font-size:.75rem;color:#4a8c87}
+.leg-item{display:flex;align-items:center;gap:5px;font-size:.75rem;color:var(--mid)}
 .leg-dot{width:12px;height:12px;border-radius:3px}
 .lg{background:#c8e6c9}.lo{background:#ffe0b2}
+.couple-legend{display:flex;flex-wrap:wrap;gap:8px;margin-bottom:.9rem}
+.couple-tag{font-size:.75rem;background:var(--pink-light);color:#c2185b;border-radius:999px;padding:4px 12px;font-weight:500;border:1px solid #f8bbd0}
 
-.btn-row{display:flex;gap:8px;margin-top:.7rem}
-.btn-submit{flex:1;padding:12px;border-radius:12px;border:none;background:linear-gradient(135deg,#f48fb1 0%,#26a69a 100%);color:white;font-family:'DM Sans',sans-serif;font-size:.9rem;font-weight:600;cursor:pointer;transition:opacity .2s,transform .15s;box-shadow:0 4px 14px rgba(240,98,146,.2)}
-.btn-submit:hover{opacity:.9;transform:translateY(-1px)}
-.btn-submit:active{transform:scale(.98)}
-.btn-reset{padding:12px 16px;border-radius:12px;border:1.5px solid #ef9a9a;background:white;font-family:'DM Sans',sans-serif;font-size:.88rem;font-weight:600;color:#e53935;cursor:pointer;transition:all .15s;white-space:nowrap}
-.btn-reset:hover{background:#ffebee;border-color:#e53935}
-.toast{display:none;border-radius:10px;padding:10px 16px;font-size:.86rem;font-weight:500;margin-top:.6rem;text-align:center;animation:fadeUp .3s ease}
-.toast.ok{background:linear-gradient(135deg,#26a69a,#43a047);color:white}
-.toast.del{background:#ffebee;color:#c62828;border:1px solid #ef9a9a}
-@keyframes fadeUp{from{opacity:0;transform:translateY(5px)}to{opacity:1;transform:translateY(0)}}
+/* ===== PEAK DAYS ===== */
+.peak-section{margin-top:1rem;padding:12px 14px;background:linear-gradient(135deg,rgba(240,98,146,.07),rgba(38,166,154,.07));border-radius:12px;border:1px dashed rgba(128,203,196,.5)}
+.peak-title{font-size:.8rem;font-weight:600;color:#2e7d72;margin-bottom:6px}
+.peak-tags{display:flex;flex-wrap:wrap;gap:6px}
+.peak-tag{font-size:.75rem;padding:3px 10px;border-radius:999px;font-weight:600}
+.peak-tag.green{background:#e8f5e9;color:#2e7d32;border:1px solid #a5d6a7}
+.peak-tag.orange{background:#fff3e0;color:#e65100;border:1px solid #ffcc80}
 
-.cost-row{display:flex;align-items:center;gap:10px;margin-bottom:1rem;flex-wrap:wrap}
-.cost-row label{font-size:.88rem;color:#4a8c87;font-weight:500;white-space:nowrap}
-.cost-input{padding:8px 12px;border-radius:10px;border:1.5px solid #b2dfdb;font-family:'DM Sans',sans-serif;font-size:.95rem;font-weight:600;color:#2e7d72;width:120px;outline:none;background:white}
-.cost-input:focus{border-color:#26a69a}
+/* ===== VILLAS ===== */
+.villa-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(200px,1fr));gap:12px;margin-bottom:1rem}
+.villa-card{background:white;border:1.5px solid var(--pale);border-radius:14px;overflow:hidden;display:flex;flex-direction:column;position:relative;transition:transform .2s,box-shadow .2s}
+.villa-card:hover{transform:translateY(-4px);box-shadow:0 8px 20px rgba(100,180,160,.18)}
+.villa-rank{position:absolute;top:8px;left:8px;background:rgba(0,0,0,.65);color:white;border-radius:8px;padding:3px 8px;font-size:.75rem;font-weight:700;backdrop-filter:blur(4px)}
+.villa-img{width:100%;height:120px;object-fit:cover;background:#e8f5e9;border-bottom:1.5px solid var(--pale)}
+.villa-info{padding:10px;display:flex;flex-direction:column;flex:1}
+.villa-name{font-family:'Playfair Display',serif;font-size:.95rem;color:#2e7d72;font-weight:600;margin-bottom:4px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.villa-specs{font-size:.75rem;color:var(--soft);margin-bottom:8px;display:flex;gap:6px;flex-wrap:wrap}
+.villa-spec-item{background:#e8f5e9;padding:2px 6px;border-radius:4px;color:#2e7d32;font-weight:600}
+.villa-link{text-decoration:none;font-size:.8rem;color:white;background:var(--teal);padding:6px;border-radius:8px;text-align:center;font-weight:600;margin-top:auto;transition:opacity .15s}
+.villa-link:hover{opacity:.85}
+.villa-del{position:absolute;top:6px;right:6px;background:rgba(255,255,255,.9);border:none;width:24px;height:24px;border-radius:50%;color:var(--red);cursor:pointer;font-weight:bold;display:flex;align-items:center;justify-content:center;box-shadow:0 2px 5px rgba(0,0,0,.1)}
+.villa-vote-btn{margin-top:6px;border:1px solid #f8bbd0;background:white;color:#c2185b;padding:5px;border-radius:8px;font-size:.75rem;font-weight:600;cursor:pointer;display:flex;align-items:center;justify-content:center;gap:4px;transition:all .2s;font-family:'DM Sans',sans-serif}
+.villa-vote-btn.voted{background:var(--pink-light);border-color:var(--pink)}
+.villa-voters{font-size:.65rem;color:var(--pink);margin-top:4px;text-align:center;min-height:14px}
+.podium-crown{font-size:1rem;position:absolute;top:-10px;left:50%;transform:translateX(-50%)}
+
+/* ===== PAIEMENTS ===== */
+.cost-row{display:flex;align-items:center;gap:10px;margin-bottom:.8rem;flex-wrap:wrap}
+.cost-row label{font-size:.88rem;color:var(--mid);font-weight:500;white-space:nowrap}
+.cost-input{padding:8px 12px;border-radius:10px;border:1.5px solid var(--pale);font-family:'DM Sans',sans-serif;font-size:.95rem;font-weight:600;color:#2e7d72;width:130px;outline:none;background:white}
+.cost-input:focus{border-color:var(--teal)}
+.cost-hint{font-size:.75rem;color:var(--soft);margin-bottom:1rem;font-style:italic}
 .pay-table{width:100%;border-collapse:collapse}
-.pay-table th{font-size:.72rem;font-weight:600;text-transform:uppercase;letter-spacing:.6px;color:#6a8f8c;padding:6px 8px;text-align:left;border-bottom:1.5px solid #b2dfdb}
-.pay-table td{padding:8px;font-size:.85rem;border-bottom:1px solid rgba(178,223,219,.4);color:#2e4a47;vertical-align:middle}
+.pay-table th{font-size:.72rem;font-weight:600;text-transform:uppercase;letter-spacing:.6px;color:var(--soft);padding:6px 8px;text-align:left;border-bottom:1.5px solid var(--pale)}
+.pay-table td{padding:8px;font-size:.85rem;border-bottom:1px solid rgba(178,223,219,.4);color:var(--dark);vertical-align:middle}
 .pay-table tr:last-child td{border-bottom:none}
 .name-c{font-weight:600;color:#2e7d72;font-family:'Playfair Display',serif}
-.days-c{color:#26a69a;font-weight:600}
+.days-c{color:var(--teal);font-weight:600}
 .amt-c{font-weight:700;color:#c2185b}
-.ratio-c{color:#6a8f8c;font-size:.78rem}
-.total-row td{font-weight:700;color:#2e7d72;border-top:2px solid #80cbc4}
+.ratio-c{color:var(--soft);font-size:.78rem}
+.total-row td{font-weight:700;color:#2e7d72;border-top:2px solid var(--teal-mid);background:rgba(128,203,196,.06)}
 .empty-state{text-align:center;color:#9dbfbc;font-size:.86rem;padding:1.2rem 0;font-style:italic}
+.discount-badge{background:var(--pink-light);color:#c2185b;font-size:.65rem;padding:3px 6px;border-radius:6px;font-weight:700;margin-left:6px;vertical-align:middle}
 
-/* Couples legend */
-.couple-legend{display:flex;flex-wrap:wrap;gap:8px;margin-bottom:.9rem}
-.couple-tag{font-size:.75rem;background:#fce4ec;color:#c2185b;border-radius:999px;padding:4px 12px;font-weight:500;border:1px solid #f8bbd0}
+/* Barre de progression séjour */
+.goal-bar-wrap{margin-bottom:1rem;padding:12px 14px;background:rgba(255,255,255,.6);border-radius:12px;border:1px dashed var(--pale)}
+.goal-bar-top{display:flex;justify-content:space-between;align-items:center;margin-bottom:6px}
+.goal-bar-label{font-size:.8rem;color:var(--soft);font-weight:500}
+.goal-bar-pct{font-size:.85rem;font-weight:700;color:var(--teal)}
+.goal-bar{height:10px;border-radius:999px;background:#e0f2f1;overflow:hidden}
+.goal-fill{height:100%;border-radius:999px;background:linear-gradient(90deg,var(--pink-mid),var(--teal));transition:width 1s cubic-bezier(.34,1.56,.64,1)}
+.goal-note{font-size:.75rem;color:var(--soft);margin-top:5px;font-style:italic}
 
-/* Styles pour les modales (Popup) */
-.modal-overlay { position: fixed; inset: 0; background: rgba(46, 74, 71, 0.7); z-index: 100; display: none; align-items: center; justify-content: center; backdrop-filter: blur(4px); }
-.modal-content { background: white; padding: 2rem; border-radius: 18px; max-width: 420px; width: 90%; text-align: center; margin: 1rem; box-shadow: 0 10px 30px rgba(0,0,0,0.2); animation: popIn 0.3s cubic-bezier(0.175, 0.885, 0.32, 1.275); }
-.modal-content h3 { font-family: 'Playfair Display', serif; color: #c2185b; margin-bottom: 0.8rem; font-size: 1.6rem; }
-.modal-content.match h3 { color: #ff3d00; font-size: 1.8rem; }
-.modal-content p { color: #2e4a47; font-size: 0.95rem; margin-bottom: 1.2rem; line-height: 1.5; }
-.match-list { background: #fff3e0; border: 1px dashed #ffb74d; border-radius: 10px; padding: 12px; margin-bottom: 1.5rem; text-align: left; }
-.match-item { font-size: 0.9rem; color: #e65100; font-weight: 600; margin-bottom: 6px; display: flex; justify-content: space-between; border-bottom: 1px solid rgba(255,183,77,0.4); padding-bottom: 6px; }
-.match-item:last-child { margin-bottom: 0; border-bottom: none; padding-bottom: 0; }
-.match-snap { font-family: monospace; background: white; padding: 2px 6px; border-radius: 4px; color: #333; }
+/* ===== BOUTONS ===== */
+.btn-row{display:flex;gap:8px;margin-top:.7rem}
+.btn-submit{flex:1;padding:12px;border-radius:12px;border:none;background:linear-gradient(135deg,var(--pink-mid) 0%,var(--teal) 100%);color:white;font-family:'DM Sans',sans-serif;font-size:.9rem;font-weight:600;cursor:pointer;transition:opacity .2s,transform .15s;box-shadow:0 4px 14px rgba(240,98,146,.2)}
+.btn-submit:hover{opacity:.9;transform:translateY(-1px)}
+.btn-submit:active{transform:scale(.98)}
+.btn-reset{padding:12px 16px;border-radius:12px;border:1.5px solid #ef9a9a;background:white;font-family:'DM Sans',sans-serif;font-size:.88rem;font-weight:600;color:var(--red);cursor:pointer;transition:all .15s;white-space:nowrap}
+.btn-reset:hover{background:#ffebee;border-color:var(--red)}
 
-.btn-close-modal { padding: 12px 24px; border-radius: 999px; border: none; background: linear-gradient(135deg, #f48fb1, #f06292); color: white; font-family: 'DM Sans', sans-serif; font-size: 0.95rem; font-weight: 600; cursor: pointer; transition: transform 0.15s, box-shadow 0.15s; width: 100%; }
-.btn-close-modal.match-btn { background: linear-gradient(135deg, #ff9100, #ff3d00); box-shadow: 0 4px 14px rgba(255,61,0,.3); }
-.btn-close-modal:hover { transform: translateY(-2px); box-shadow: 0 6px 18px rgba(0,0,0,.15); }
-@keyframes popIn { from { transform: scale(0.8); opacity: 0; } to { transform: scale(1); opacity: 1; } }
-.discount-badge { background: #fce4ec; color: #c2185b; font-size: 0.65rem; padding: 3px 6px; border-radius: 6px; font-weight: 700; margin-left: 6px; vertical-align: middle; }
+/* ===== TOASTS ===== */
+.toast{display:none;border-radius:10px;padding:10px 16px;font-size:.86rem;font-weight:500;margin-top:.6rem;text-align:center;animation:fadeIn .3s ease}
+.toast.ok{background:linear-gradient(135deg,var(--teal),#43a047);color:white}
+.toast.del{background:#ffebee;color:#c62828;border:1px solid #ef9a9a}
+
+/* ===== MODALES ===== */
+.modal-overlay{position:fixed;inset:0;background:rgba(46,74,71,.75);z-index:100;display:none;align-items:center;justify-content:center;backdrop-filter:blur(5px)}
+.modal-content{background:white;padding:2rem;border-radius:22px;max-width:420px;width:90%;text-align:center;margin:1rem;box-shadow:0 15px 40px rgba(0,0,0,.2);animation:popIn .35s cubic-bezier(.175,.885,.32,1.275)}
+@keyframes popIn{from{transform:scale(.7) translateY(20px);opacity:0}to{transform:scale(1) translateY(0);opacity:1}}
+.modal-content h3{font-family:'Playfair Display',serif;color:#c2185b;margin-bottom:.8rem;font-size:1.6rem}
+.modal-content.match h3{color:#ff3d00;font-size:1.8rem}
+.modal-content p{color:var(--dark);font-size:.93rem;margin-bottom:1.2rem;line-height:1.55}
+.match-list{background:#fff3e0;border:1px dashed #ffb74d;border-radius:10px;padding:12px;margin-bottom:1.5rem;text-align:left}
+.match-item{font-size:.88rem;color:#e65100;font-weight:600;margin-bottom:6px;display:flex;justify-content:space-between;border-bottom:1px solid rgba(255,183,77,.4);padding-bottom:6px}
+.match-item:last-child{margin-bottom:0;border-bottom:none;padding-bottom:0}
+.match-snap{font-family:monospace;background:white;padding:2px 8px;border-radius:4px;color:#333;font-size:.82rem}
+.btn-close-modal{padding:12px 24px;border-radius:999px;border:none;background:linear-gradient(135deg,var(--pink-mid),var(--pink));color:white;font-family:'DM Sans',sans-serif;font-size:.95rem;font-weight:600;cursor:pointer;width:100%;transition:transform .15s,box-shadow .15s}
+.btn-close-modal.match-btn{background:linear-gradient(135deg,#ff9100,#ff3d00);box-shadow:0 4px 14px rgba(255,61,0,.3)}
+.btn-close-modal:hover{transform:translateY(-2px);box-shadow:0 6px 18px rgba(0,0,0,.15)}
+
+/* Easter egg */
+.easter-egg{display:none;font-size:1.2rem;text-align:center;padding:8px;animation:tada 1s}
+@keyframes tada{0%{transform:scale(1)}10%{transform:scale(.9) rotate(-3deg)}20%{transform:scale(1.1) rotate(3deg)}40%{transform:scale(1.1) rotate(-3deg)}60%{transform:scale(1.1) rotate(3deg)}80%{transform:scale(1.05) rotate(-2deg)}100%{transform:scale(1) rotate(0)}}
 </style>
 </head>
 <body>
-
 <div class="bg"></div>
 <div class="wrap"><div class="content">
 
 <header>
-  <div style="font-size:2rem;margin-bottom:.4rem">🐚</div>
+  <div style="font-size:2.2rem;margin-bottom:.5rem">🐚</div>
   <h1>Objectif Villa sur la côte</h1>
-  <p>Sélectionne tes jours, enregistre et visualise qui vient quand</p>
+  <p>Coordonne les arrivées, visualise les présences, règle les comptes</p>
 </header>
+
+<!-- Compte à rebours -->
+<div class="countdown-bar">
+  <div>
+    <div class="vibe-emoji" id="vibeEmoji">🌊</div>
+    <div class="vibe" id="vibeText">Chargement...</div>
+  </div>
+  <div class="countdown-units">
+    <div class="cd-unit"><div class="cd-num" id="cdDays">--</div><div class="cd-label">jours</div></div>
+    <div class="cd-unit"><div class="cd-num" id="cdHours">--</div><div class="cd-label">heures</div></div>
+    <div class="cd-unit"><div class="cd-num" id="cdMins">--</div><div class="cd-label">mins</div></div>
+  </div>
+</div>
 
 <!-- Participants -->
 <div class="card">
   <h2><span class="dot dp"></span>Participants</h2>
-  <div class="people-grid" id="peopleGrid">Chargement en cours...</div>
+  <div class="mood-section">
+    <div class="mood-title">🌡️ Température du groupe</div>
+    <div class="mood-bar"><div class="mood-fill" id="moodFill" style="width:0%"></div></div>
+    <div class="mood-label" id="moodLabel">En attente...</div>
+  </div>
+  <div class="people-grid" id="peopleGrid">Chargement...</div>
+  <div class="missing-box" id="missingBox" style="display:none">
+    <strong>👀 Pas encore de dispo :</strong>
+    <span id="missingNames"></span>
+  </div>
   <div class="add-form">
     <input class="add-input" id="addInput" type="text" placeholder="Ajouter un prénom..." maxlength="20" onkeydown="if(event.key==='Enter')addPerson()">
     <button class="add-btn" onclick="addPerson()">+ Ajouter</button>
@@ -167,15 +249,23 @@ header p{font-size:.9rem;color:#6a8f8c;margin-top:.3rem;font-weight:300}
 
 <!-- Sélection jours -->
 <div class="card" id="selCard" style="display:none">
-  <h2><span class="dot dt"></span>Profil & Jours — <span id="selName" style="color:#f06292"></span></h2>
-  
+  <h2><span class="dot dt"></span>Profil & Jours — <span id="selName" style="color:var(--pink)"></span></h2>
   <div class="status-section" id="profileFormArea"></div>
-
-  <p style="font-size:.8rem;color:#6a8f8c;margin-bottom:.8rem">Clique sur les jours où tu seras présent·e</p>
+  <div class="fun-fact" id="funFact"></div>
+  <p style="font-size:.8rem;color:var(--soft);margin-bottom:.6rem;margin-top:.8rem">🗓️ Clique sur les jours où tu seras présent·e</p>
+  <div class="quick-select">
+    <button class="qs-btn" onclick="quickSelect('all')">Tout août</button>
+    <button class="qs-btn" onclick="quickSelect('w1')">1–7</button>
+    <button class="qs-btn" onclick="quickSelect('w2')">8–15</button>
+    <button class="qs-btn" onclick="quickSelect('w3')">16–23</button>
+    <button class="qs-btn" onclick="quickSelect('w4')">24–31</button>
+    <button class="qs-btn" onclick="quickSelect('none')" style="color:#e53935;border-color:#ef9a9a">Aucun</button>
+  </div>
   <div class="month-title">Août 2025</div>
   <div class="cal-grid" id="selCal"></div>
+  <div class="easter-egg" id="easterEgg">🎉 SIESTE NATIONALE ! T'as pris tout le mois ?! Respect absolu 🐚</div>
   <div class="btn-row">
-    <button class="btn-reset" onclick="resetPerson()">✕ Effacer mes jours</button>
+    <button class="btn-reset" onclick="resetPerson()">✕ Effacer</button>
     <button class="btn-submit" onclick="handleSubmit()">Enregistrer 🌊</button>
   </div>
   <div class="toast ok" id="toast"></div>
@@ -187,31 +277,33 @@ header p{font-size:.9rem;color:#6a8f8c;margin-top:.3rem;font-weight:300}
   <div class="legend">
     <div class="leg-item"><div class="leg-dot lg"></div>1–7 personnes</div>
     <div class="leg-item"><div class="leg-dot lo"></div>8+ personnes</div>
-    <div class="leg-item" style="margin-left:4px">💕 couple ensemble</div>
+    <div class="leg-item" style="margin-left:4px">💕 couple réuni</div>
   </div>
   <div class="couple-legend" id="coupleLegend"></div>
   <div class="month-title">Août 2025</div>
   <div class="cal-grid" id="recapCal"></div>
+  <div class="peak-section" id="peakSection" style="display:none">
+    <div class="peak-title">📊 Moments clés</div>
+    <div class="peak-tags" id="peakTags"></div>
+  </div>
 </div>
 
 <!-- Villas -->
 <div class="card">
   <h2><span class="dot dv"></span>Villas en vue 🏡</h2>
-  <p style="font-size:.8rem;color:#6a8f8c;margin-bottom:1rem">Propose les pépites que tu as trouvées (sélectionne ton prénom en haut pour pouvoir voter !)</p>
-  
+  <p style="font-size:.8rem;color:var(--soft);margin-bottom:1rem">Propose les pépites que tu as trouvées. Vote pour tes coups de cœur !</p>
   <div class="villa-grid" id="villaGrid"></div>
-
-  <div style="margin-top: 1rem; padding-top: 1.2rem; border-top: 1.5px dashed #b2dfdb;">
-    <p style="font-size: .88rem; color: #2e7d72; font-weight: 600; margin-bottom: .8rem;">Ajouter une trouvaille :</p>
-    <div style="display: flex; flex-direction: column; gap: 8px;">
-      <input type="text" id="vName" class="profile-input" placeholder="Nom de la villa (ex: Mas provençal)">
-      <input type="url" id="vLink" class="profile-input" placeholder="Lien de l'annonce (Airbnb, Booking...)">
-      <input type="url" id="vImg" class="profile-input" placeholder="Lien d'une image (optionnel)">
-      <div style="display: flex; gap: 8px;">
+  <div style="margin-top:1rem;padding-top:1.2rem;border-top:1.5px dashed var(--pale)">
+    <p style="font-size:.88rem;color:#2e7d72;font-weight:600;margin-bottom:.8rem">➕ Ajouter une trouvaille :</p>
+    <div style="display:flex;flex-direction:column;gap:8px">
+      <input type="text" id="vName" class="profile-input" placeholder="Nom de la villa">
+      <input type="url" id="vLink" class="profile-input" placeholder="Lien annonce (Airbnb, Booking...)">
+      <input type="url" id="vImg" class="profile-input" placeholder="Lien image (optionnel)">
+      <div style="display:flex;gap:8px">
         <input type="number" id="vPrice" class="profile-input" placeholder="Prix total (€)">
         <input type="number" id="vCap" class="profile-input" placeholder="Capacité (pers.)">
       </div>
-      <button class="add-btn" style="width:100%; justify-content:center; margin-top:4px;" onclick="addVilla()">+ Ajouter à la liste</button>
+      <button class="add-btn" style="width:100%;border-radius:10px;padding:10px" onclick="addVilla()">+ Ajouter à la liste</button>
     </div>
   </div>
 </div>
@@ -219,245 +311,297 @@ header p{font-size:.9rem;color:#6a8f8c;margin-top:.3rem;font-weight:300}
 <!-- Paiements -->
 <div class="card">
   <h2><span class="dot dg"></span>Répartition des coûts</h2>
+  <div class="goal-bar-wrap" id="goalBarWrap" style="display:none">
+    <div class="goal-bar-top">
+      <span class="goal-bar-label">💸 Budget couvert</span>
+      <span class="goal-bar-pct" id="goalPct">0%</span>
+    </div>
+    <div class="goal-bar"><div class="goal-fill" id="goalFill" style="width:0%"></div></div>
+    <div class="goal-note" id="goalNote"></div>
+  </div>
   <div class="cost-row">
     <label>Coût total du séjour :</label>
-    <input class="cost-input" type="number" id="totalCost" value="1000" min="0" oninput="renderPayments()">
-    <span style="font-size:.88rem;color:#6a8f8c">€</span>
+    <input class="cost-input" type="number" id="totalCost" min="0" placeholder="Ex: 3500" oninput="handleCostInput()">
+    <span style="font-size:.88rem;color:var(--soft)">€</span>
   </div>
+  <p class="cost-hint" id="costHint"></p>
   <table class="pay-table">
     <thead><tr><th>Prénom</th><th>Jours</th><th>Ratio</th><th>À payer</th></tr></thead>
     <tbody id="payBody"></tbody>
   </table>
 </div>
 
-<!-- Popups -->
+<!-- Modales -->
 <div class="modal-overlay" id="promoModal">
   <div class="modal-content">
-    <h3>Fais pas ton Kassim !</h3>
-    <p>Reste plus d'une semaine et bénéficie d'une réduction de 10% ! 🐚</p>
+    <h3>Fais pas ton Kassim ! 🦭</h3>
+    <p>Reste plus d'une semaine et bénéficie d'une <strong>réduction de 10%</strong> sur ta part ! Moins tu payes, plus t'as de budget rosé 🥂</p>
     <button class="btn-close-modal" onclick="closePromoModal()">Génial, j'en profite !</button>
   </div>
 </div>
 <div class="modal-overlay" id="matchModal">
   <div class="modal-content match">
     <h3>🔥 Alerte Match !</h3>
-    <p>Tes dates se croisent avec d'autres célibs ! C'est le moment de glisser dans les DM :</p>
+    <p>Tes dates croisent celles de quelques célibs compatibles. C'est le moment de glisser dans les DM :</p>
     <div class="match-list" id="matchListArea"></div>
     <button class="btn-close-modal match-btn" onclick="closeMatchModal()">C'est noté ! 😏</button>
   </div>
 </div>
+<div class="modal-overlay" id="superModal">
+  <div class="modal-content">
+    <div style="font-size:3rem;margin-bottom:.5rem">🏆</div>
+    <h3 style="color:var(--teal)">Tout le mois ?!</h3>
+    <p>T'as vraiment sélectionné tout août ? Soit t'as zéro obligations dans la vie, soit tu sais exactement ce que tu fais. Dans les deux cas, respect total. 👑</p>
+    <button class="btn-close-modal" style="background:linear-gradient(135deg,#80cbc4,#26a69a)" onclick="document.getElementById('superModal').style.display='none'">Je règne sur la villa</button>
+  </div>
+</div>
 
 </div></div>
-
 <script>
-
-// ==========================================
-// 🔴 REMPLACE CE BLOC PAR TON CODE FIREBASE
-// ==========================================
+// ===== CONFIG FIREBASE =====
 const firebaseConfig = {
   apiKey: "AIzaSyDD_Nj2nDBa_Ertoy7k9YjOV2HesLgbp6I",
   authDomain: "vacances-3bce4.firebaseapp.com",
-  databaseURL: "https://vacances-3bce4-default-rtdb.europe-west1.firebasedatabase.app", // LA VRAIE ADRESSE EST LÀ !
+  databaseURL: "https://vacances-3bce4-default-rtdb.europe-west1.firebasedatabase.app",
   projectId: "vacances-3bce4",
   storageBucket: "vacances-3bce4.firebasestorage.app",
   messagingSenderId: "416205104205",
   appId: "1:416205104205:web:06841f15ec3a141f30a804"
 };
-// ==========================================
 firebase.initializeApp(firebaseConfig);
 const db = firebase.database();
 const dbRef = db.ref('vacances_aout');
 
+// ===== CONSTANTES =====
 const DEFAULT_PEOPLE=['Albin','Léa','Lilie'];
 const YEAR=2025,MONTH=7,DAYS=31;
 const DOW=['Lun','Mar','Mer','Jeu','Ven','Sam','Dim'];
-const GENDERS = [{ id: 'M', label: 'Mec 🙎‍♂️' }, { id: 'F', label: 'Meuf 🙎‍♀️' }];
-const STATUS_OPTIONS = [
-  { id: 'couple', label: 'Maqué(e) et menotté(e) 💍', emoji: '💍', matchable: false },
-  { id: 'charo', label: 'En mode charo cet été 🦈', emoji: '🦈', matchable: true },
-  { id: 'toxic', label: 'Célib mais focus sur mon ex 🤡', emoji: '🤡', matchable: true },
-  { id: 'desespoir', label: 'Célib depuis la préhistoire 🦕', emoji: '🦕', matchable: true },
-  { id: 'open', label: 'Ouvert(e) à toute proposition 🥂', emoji: '🥂', matchable: true }
+const GENDERS=[{id:'M',label:'Mec 🙎‍♂️'},{id:'F',label:'Meuf 🙎‍♀️'}];
+const STATUS_OPTIONS=[
+  {id:'couple',label:'Maqué(e) et menotté(e) 💍',emoji:'💍',matchable:false},
+  {id:'charo',label:'En mode charo cet été 🦈',emoji:'🦈',matchable:true},
+  {id:'toxic',label:'Célib mais focus sur mon ex 🤡',emoji:'🤡',matchable:true},
+  {id:'desespoir',label:'Célib depuis la préhistoire 🦕',emoji:'🦕',matchable:true},
+  {id:'open',label:'Ouvert(e) à toute proposition 🥂',emoji:'🥂',matchable:true}
 ];
+const FUN_FACTS = {
+  'Albin': "🏃 Albin qui arrive tôt ? C'est pour les bons spots de transats, évidemment.",
+  'Léa': "💅 Si Léa est là, la villa est automatiquement classée 5 étoiles.",
+  'Lilie': "🌸 Lilie en vacances = programme danse de plage imposé à tout le groupe.",
+  'Noé': "🎸 Noé va encore squatter la terrasse avec sa guitare à 23h.",
+  'Charles': "📸 Charles va prendre 400 photos et en poster exactement 2.",
+  'Kassim': "⏰ Kassim qui arrive... à l'heure ? Nouvelle année, nouvelles surprises.",
+  'Clément': "🍕 Clément a déjà repéré les restos sur Maps. Il a une liste de 47 adresses.",
+  'HB': "🎯 HB est déjà en mode organisation logistique. Tableau Excel en cours.",
+  'Titouan': "🏄 Titouan sera dans l'eau avant même d'avoir posé ses bagages.",
+  'Nathan': "😴 Nathan : arrivée prévue J+2, soirée ratée J+1 mais dodo de compet.",
+  'Vincent': "🤙 Vincent apporte bonne humeur et playlist certifiée banger.",
+};
+const VIBES = [
+  {days:100,emoji:'😴',text:'Encore loin... Z\'endors-toi pas'},
+  {days:60,emoji:'🌅',text:'Dans deux mois ! Commence à stresser'},
+  {days:30,emoji:'🏖️',text:'Plus qu\'un mois ! La hype monte'},
+  {days:14,emoji:'🔥',text:'Deux semaines ! T\'as fait ta valise ?'},
+  {days:7,emoji:'🚀',text:'Une semaine ! Panique générale autorisée'},
+  {days:3,emoji:'💥',text:'3 jours !! On lâche TOUT'},
+  {days:1,emoji:'🎉',text:'DEMAIN !! Mode vacances ACTIVÉ'},
+  {days:0,emoji:'🐚',text:'C\'est MAINTENANT ! YALLAH !!'},
+];
+const MOOD_LABELS = ['Ça démarre 🌱','Le groupe se forme 👀','Ça prend forme 🌊','Bonne équipe 🌞','Full House 🎉','Complet ou presque ! 🔥'];
 
+// ===== STATE =====
 let people=[...DEFAULT_PEOPLE];
-let state={};
-let userStatus={}; let userPartner={}; let userGender={}; let userSnap={}; let villas=[];
-
-DEFAULT_PEOPLE.forEach(p=>{ if(!state[p]) state[p]=[]; });
-
-let selectedPerson=null;
-let selDays=new Set();
-let promoSeen = false;
-
+let state={},userStatus={},userPartner={},userGender={},userSnap={},villas=[];
+let totalCostVal=0;
+DEFAULT_PEOPLE.forEach(p=>state[p]=[]);
+let selectedPerson=null,selDays=new Set(),promoSeen=false;
 const firstDow=(()=>{const d=new Date(YEAR,MONTH,1).getDay();return d===0?6:d-1;})();
 function normName(n){return n.trim().charAt(0).toUpperCase()+n.trim().slice(1).toLowerCase();}
 
-// --- SYNCHRONISATION TEMPS RÉEL (MAGIE FIREBASE) ---
-dbRef.on('value', (snapshot) => {
-  const d = snapshot.val();
-  if(d) {
+// ===== FIREBASE SYNC =====
+dbRef.on('value',(snapshot)=>{
+  const d=snapshot.val();
+  if(d){
     if(d.people) people=d.people;
-    if(d.state){state={}; people.forEach(p=>state[p]=d.state[p]||[]);}
+    if(d.state){state={};people.forEach(p=>state[p]=d.state[p]||[]);}
     if(d.userStatus) userStatus=d.userStatus; else userStatus={};
     if(d.userPartner) userPartner=d.userPartner; else userPartner={};
     if(d.userGender) userGender=d.userGender; else userGender={};
     if(d.userSnap) userSnap=d.userSnap; else userSnap={};
     if(d.villas) villas=d.villas; else villas=[];
+    // PRIX PERSISTANT : on charge depuis Firebase, on ne l'écrase pas
+    if(d.totalCost !== undefined && d.totalCost !== null){
+      totalCostVal=d.totalCost;
+      const inp=document.getElementById('totalCost');
+      if(inp && document.activeElement!==inp) inp.value=totalCostVal||'';
+    }
   }
-  renderAll(); // On rafraîchit l'affichage dès que quelqu'un fait une modif !
+  renderAll();
 });
 
 function saveState(){
-  // On envoie tout à la base de données
-  dbRef.set({ people, state, userStatus, userPartner, userGender, userSnap, villas });
+  dbRef.set({people,state,userStatus,userPartner,userGender,userSnap,villas,totalCost:totalCostVal});
 }
-// ---------------------------------------------------
+function handleCostInput(){
+  const val=parseFloat(document.getElementById('totalCost').value)||0;
+  totalCostVal=val;
+  // Sauvegarde après 800ms d'inactivité pour pas flood Firebase
+  clearTimeout(window._costTimer);
+  window._costTimer=setTimeout(()=>{saveState();},800);
+  renderPayments();
+}
 
-function getDynamicCouples() {
-  const couplesMap = new Set();
-  const couples = [];
-  people.forEach(p => {
-    if(userStatus[p] === 'couple' && userPartner[p]) {
-      const pair = [p, userPartner[p]].sort((a,b) => a.localeCompare(b));
-      const pairId = pair.join('|').toLowerCase();
-      if(!couplesMap.has(pairId)) { couplesMap.add(pairId); couples.push(pair); }
+// ===== COUNTDOWN =====
+function updateCountdown(){
+  const now=new Date();
+  const target=new Date(2025,7,1,0,0,0);
+  const diff=target-now;
+  if(diff<=0){
+    document.getElementById('cdDays').textContent='0';
+    document.getElementById('cdHours').textContent='0';
+    document.getElementById('cdMins').textContent='0';
+    document.getElementById('vibeEmoji').textContent='🐚';
+    document.getElementById('vibeText').textContent="C'est MAINTENANT ! YALLAH !!";
+    return;
+  }
+  const days=Math.floor(diff/(1000*60*60*24));
+  const hours=Math.floor((diff%(1000*60*60*24))/(1000*60*60));
+  const mins=Math.floor((diff%(1000*60*60))/(1000*60));
+  document.getElementById('cdDays').textContent=days;
+  document.getElementById('cdHours').textContent=String(hours).padStart(2,'0');
+  document.getElementById('cdMins').textContent=String(mins).padStart(2,'0');
+  const vibe=VIBES.find(v=>days<=v.days)||VIBES[0];
+  document.getElementById('vibeEmoji').textContent=vibe.emoji;
+  document.getElementById('vibeText').textContent=vibe.text;
+}
+updateCountdown();
+setInterval(updateCountdown,30000);
+
+// ===== COUPLES =====
+function getDynamicCouples(){
+  const set=new Set(),couples=[];
+  people.forEach(p=>{
+    if(userStatus[p]==='couple'&&userPartner[p]){
+      const pair=[p,userPartner[p]].sort((a,b)=>a.localeCompare(b));
+      const id=pair.join('|').toLowerCase();
+      if(!set.has(id)){set.add(id);couples.push(pair);}
     }
   });
   return couples;
 }
-
 function heartsForDay(d){
-  const presentLower=people.filter(p=>state[p]&&state[p].includes(d)).map(p=>p.toLowerCase());
+  const pl=people.filter(p=>state[p]&&state[p].includes(d)).map(p=>p.toLowerCase());
   const hearts=[];
-  getDynamicCouples().forEach(([a,b])=>{
-    if(presentLower.includes(a.toLowerCase())&&presentLower.includes(b.toLowerCase()))hearts.push('💕');
-  });
+  getDynamicCouples().forEach(([a,b])=>{if(pl.includes(a.toLowerCase())&&pl.includes(b.toLowerCase()))hearts.push('💕');});
   return hearts;
 }
 
-function closePromoModal() { document.getElementById('promoModal').style.display = 'none'; }
-function closeMatchModal() { document.getElementById('matchModal').style.display = 'none'; }
-
-function addPerson(){
-  const inp=document.getElementById('addInput'); const name=normName(inp.value);
-  if(!name||people.includes(name))return;
-  people.push(name); state[name]=[]; inp.value=''; saveState();
+// ===== MOOD =====
+function updateMood(){
+  const withDays=people.filter(p=>state[p]&&state[p].length>0).length;
+  const pct=Math.min(100,Math.round(withDays/Math.max(people.length,1)*100));
+  document.getElementById('moodFill').style.width=pct+'%';
+  const idx=Math.min(MOOD_LABELS.length-1,Math.floor(pct/100*(MOOD_LABELS.length-1)+.5));
+  document.getElementById('moodLabel').textContent=`${withDays}/${people.length} inscrits — ${MOOD_LABELS[idx]}`;
 }
 
+// ===== MISSING =====
+function updateMissing(){
+  const missing=people.filter(p=>!state[p]||state[p].length===0);
+  const box=document.getElementById('missingBox');
+  if(missing.length>0&&people.length>0){
+    box.style.display='block';
+    document.getElementById('missingNames').textContent=missing.join(', ')+' — on vous attend ! 👀';
+  }else{box.style.display='none';}
+}
+
+// ===== PEOPLE =====
+function addPerson(){
+  const inp=document.getElementById('addInput');const name=normName(inp.value);
+  if(!name||people.includes(name))return;
+  people.push(name);state[name]=[];inp.value='';saveState();
+}
 function deletePerson(name){
-  if(!confirm(`Supprimer ${name} et ses données pour tout le monde ?`))return;
-  people=people.filter(p=>p!==name);
-  delete state[name]; delete userStatus[name]; delete userPartner[name]; delete userGender[name]; delete userSnap[name];
-  Object.keys(userPartner).forEach(p => { if(userPartner[p] === name) { delete userPartner[p]; userStatus[p] = null; } });
-  villas.forEach(v => { if(v.voters) v.voters = v.voters.filter(voter => voter !== name); });
+  if(!confirm(`Supprimer ${name} et toutes ses données ?`))return;
+  people=people.filter(p=>p!==name);delete state[name];delete userStatus[name];delete userPartner[name];delete userGender[name];delete userSnap[name];
+  Object.keys(userPartner).forEach(p=>{if(userPartner[p]===name){delete userPartner[p];userStatus[p]=null;}});
+  villas.forEach(v=>{if(v.voters)v.voters=v.voters.filter(v2=>v2!==name);});
   if(selectedPerson===name){selectedPerson=null;selDays=new Set();document.getElementById('selCard').style.display='none';}
   saveState();
 }
+function renderPeople(){
+  document.getElementById('peopleGrid').innerHTML=people.map(p=>{
+    const days=state[p]&&state[p].length>0?` (${state[p].length}j)`:'';
+    const emo=getEmojiForStatus(userStatus[p]);
+    return `<div class="person-wrap"><button class="person-btn${selectedPerson===p?' selected':''}" onclick="selectPerson('${p}')">${p}${emo}${days}</button><button class="del-btn" onclick="deletePerson('${p}')" title="Supprimer">✕</button></div>`;
+  }).join('');
+  updateMood();updateMissing();
+}
 
+// ===== SELECT PERSON =====
 function selectPerson(name){
   selectedPerson=name;selDays=new Set(state[name]||[]);
   document.getElementById('selCard').style.display='block';
   document.getElementById('selName').textContent=name;
   document.getElementById('toast').style.display='none';
-  renderProfileForm(); buildSelCal(); renderPeople(); renderVillas();
+  document.getElementById('easterEgg').style.display='none';
+  renderProfileForm();buildSelCal();renderPeople();renderVillas();
+  // Fun fact
+  const ff=document.getElementById('funFact');
+  if(FUN_FACTS[name]){ff.textContent=FUN_FACTS[name];ff.classList.add('show');}else{ff.classList.remove('show');}
   document.getElementById('selCard').scrollIntoView({behavior:'smooth',block:'nearest'});
-  if(!promoSeen) { document.getElementById('promoModal').style.display = 'flex'; promoSeen = true; }
+  if(!promoSeen){document.getElementById('promoModal').style.display='flex';promoSeen=true;}
 }
 
-function setGender(genId) { if(!selectedPerson) return; userGender[selectedPerson] = genId; saveState(); }
-function setStatus(statusId) { if(!selectedPerson) return; userStatus[selectedPerson] = statusId; if(statusId !== 'couple') { delete userPartner[selectedPerson]; } saveState(); }
-function handleSnapInput(val) { if(!selectedPerson) return; userSnap[selectedPerson] = val.trim(); saveState(); }
-
-function handlePartnerSelect(val) {
-  if(!selectedPerson) return;
-  if (val === '_new_') {
-    const newName = prompt("Quel est le prénom du ou de la partenaire ?");
-    if (newName && newName.trim() !== '') {
-      const normalized = normName(newName);
-      if (!people.includes(normalized)) { people.push(normalized); state[normalized] = []; }
-      userPartner[selectedPerson] = normalized;
-    }
-  } else { userPartner[selectedPerson] = val; }
-  saveState();
-}
-
-function renderProfileForm() {
-  if(!selectedPerson) return;
-  const container = document.getElementById('profileFormArea');
-  const cGender = userGender[selectedPerson]; const cStatus = userStatus[selectedPerson]; const cSnap = userSnap[selectedPerson] || '';
-  
-  let html = `<div class="status-block"><div class="status-title">Je suis :</div><div class="status-group">
-      ${GENDERS.map(g => `<button class="status-btn ${cGender === g.id ? 'active' : ''}" onclick="setGender('${g.id}')">${g.label}</button>`).join('')}
-    </div></div>`;
-
-  html += `<div class="status-block"><div class="status-title">Mon mood d'Août :</div><div class="status-group">
-      ${STATUS_OPTIONS.map(opt => `<button class="status-btn ${cStatus === opt.id ? 'active' : ''}" onclick="setStatus('${opt.id}')">${opt.label}</button>`).join('')}
-    </div></div>`;
-
-  if (cStatus === 'couple') {
-    const currentPartner = userPartner[selectedPerson] || '';
-    let selectHtml = `<select class="profile-input" onchange="handlePartnerSelect(this.value)" style="margin-top:6px;">
-      <option value="" disabled ${!currentPartner ? 'selected' : ''}>Qui te supporte au quotidien ?</option>`;
-    people.forEach(p => { if(p !== selectedPerson) { selectHtml += `<option value="${p}" ${currentPartner === p ? 'selected' : ''}>${p}</option>`; } });
-    selectHtml += `<option value="_new_">+ Ajouter un autre prénom...</option></select>`;
-    html += selectHtml;
-  }
-
-  html += `<div class="status-block" style="margin-top:12px;"><div class="status-title">👻 Mon Snap (pour la science) :</div>
-    <input type="text" class="profile-input" placeholder="Ex: bossdu75" value="${cSnap}" onchange="handleSnapInput(this.value)"></div>`;
-  container.innerHTML = html;
-}
-
-function getEmojiForStatus(statusId) { const s = STATUS_OPTIONS.find(opt => opt.id === statusId); return s ? ` ${s.emoji}` : ''; }
-function isMatchableStatus(statusId) { const s = STATUS_OPTIONS.find(opt => opt.id === statusId); return s ? s.matchable : false; }
-function toggleDay(d){selDays.has(d)?selDays.delete(d):selDays.add(d);buildSelCal();}
-
-function checkMatches(p) {
-  if(!userStatus[p] || !isMatchableStatus(userStatus[p]) || !userGender[p]) return;
-  const myDays = state[p] || []; if(myDays.length === 0) return;
-  let matches = [];
-  people.forEach(other => {
-    if(other === p || !userStatus[other] || !isMatchableStatus(userStatus[other]) || !userGender[other] || userGender[other] === userGender[p]) return;
-    if(myDays.some(d => (state[other] || []).includes(d))) {
-      matches.push({ name: other, snap: userSnap[other] || 'Pas de snap 😢', icon: userGender[other] === 'M' ? '🙎‍♂️' : '🙎‍♀️' });
-    }
-  });
-
-  if(matches.length > 0) {
-    document.getElementById('matchListArea').innerHTML = matches.map(m => `<div class="match-item"><span>${m.icon} ${m.name}</span><span class="match-snap">👻 ${m.snap}</span></div>`).join('');
-    document.getElementById('matchModal').style.display = 'flex';
-  }
-}
-
-function handleSubmit(){
+// ===== PROFIL =====
+function setGender(g){if(!selectedPerson)return;userGender[selectedPerson]=g;saveState();}
+function setStatus(s){if(!selectedPerson)return;userStatus[selectedPerson]=s;if(s!=='couple')delete userPartner[selectedPerson];saveState();}
+function handleSnapInput(v){if(!selectedPerson)return;userSnap[selectedPerson]=v.trim();saveState();}
+function handlePartnerSelect(v){
   if(!selectedPerson)return;
-  state[selectedPerson]=[...selDays].sort((a,b)=>a-b);
+  if(v==='_new_'){const n=prompt("Prénom de ton/ta partenaire ?");if(n&&n.trim()){const norm=normName(n);if(!people.includes(norm)){people.push(norm);state[norm]=[];}userPartner[selectedPerson]=norm;}}
+  else userPartner[selectedPerson]=v;
   saveState();
-  showToast(`✓ ${selectedPerson} — Enregistré en ligne !`,'ok');
-  setTimeout(() => { checkMatches(selectedPerson); }, 400);
 }
-
-function resetPerson(){
+function renderProfileForm(){
   if(!selectedPerson)return;
-  selDays=new Set();state[selectedPerson]=[];
-  saveState();
-  showToast(`Jours effacés`,'del');
+  const cG=userGender[selectedPerson],cS=userStatus[selectedPerson],cSn=userSnap[selectedPerson]||'';
+  let html=`<div class="status-block"><div class="status-title">Je suis :</div><div class="status-group">
+    ${GENDERS.map(g=>`<button class="status-btn${cG===g.id?' active':''}" onclick="setGender('${g.id}')">${g.label}</button>`).join('')}
+  </div></div>`;
+  html+=`<div class="status-block"><div class="status-title">Mon mood d'Août :</div><div class="status-group">
+    ${STATUS_OPTIONS.map(o=>`<button class="status-btn${cS===o.id?' active':''}" onclick="setStatus('${o.id}')">${o.label}</button>`).join('')}
+  </div></div>`;
+  if(cS==='couple'){
+    const cp=userPartner[selectedPerson]||'';
+    let sel=`<select class="profile-input" onchange="handlePartnerSelect(this.value)" style="margin-top:6px"><option value="" disabled${!cp?' selected':''}>Qui te supporte au quotidien ?</option>`;
+    people.forEach(p=>{if(p!==selectedPerson)sel+=`<option value="${p}"${cp===p?' selected':''}>${p}</option>`;});
+    sel+=`<option value="_new_">+ Autre prénom...</option></select>`;
+    html+=sel;
+  }
+  html+=`<div class="status-block" style="margin-top:10px"><div class="status-title">👻 Snap (pour la science) :</div>
+    <input type="text" class="profile-input" placeholder="Ex: bossdu75" value="${cSn}" onchange="handleSnapInput(this.value)"></div>`;
+  document.getElementById('profileFormArea').innerHTML=html;
 }
+function getEmojiForStatus(s){const o=STATUS_OPTIONS.find(x=>x.id===s);return o?` ${o.emoji}`:''}
+function isMatchable(s){const o=STATUS_OPTIONS.find(x=>x.id===s);return o?o.matchable:false;}
 
-function showToast(msg,type){
-  const t=document.getElementById('toast');t.className='toast '+type;t.textContent=msg;t.style.display='block';
-  setTimeout(()=>t.style.display='none',2800);
+// ===== CALENDRIER SÉLECTION =====
+function quickSelect(mode){
+  if(mode==='all'){for(let i=1;i<=31;i++)selDays.add(i);}
+  else if(mode==='none'){selDays.clear();}
+  else if(mode==='w1'){for(let i=1;i<=7;i++)selDays.add(i);}
+  else if(mode==='w2'){for(let i=8;i<=15;i++)selDays.add(i);}
+  else if(mode==='w3'){for(let i=16;i<=23;i++)selDays.add(i);}
+  else if(mode==='w4'){for(let i=24;i<=31;i++)selDays.add(i);}
+  buildSelCal();checkEasterEgg();
 }
-
-function renderPeople(){
-  document.getElementById('peopleGrid').innerHTML=people.map(p=>{
-    const days=state[p]&&state[p].length>0?` (${state[p].length}j)`:'';
-    const statusEmoji=getEmojiForStatus(userStatus[p]);
-    return `<div class="person-wrap"><button class="person-btn${selectedPerson===p?' selected':''}" onclick="selectPerson('${p}')">${p}${statusEmoji}${days}</button><button class="del-btn" onclick="deletePerson('${p}')" title="Supprimer">✕</button></div>`;
-  }).join('');
+function checkEasterEgg(){
+  const egg=document.getElementById('easterEgg');
+  if(selDays.size>=28){egg.style.display='block';egg.style.animation='none';setTimeout(()=>egg.style.animation='tada 1s',10);}
+  else egg.style.display='none';
 }
-
+function toggleDay(d){selDays.has(d)?selDays.delete(d):selDays.add(d);buildSelCal();checkEasterEgg();}
 function buildSelCal(){
   const el=document.getElementById('selCal');el.innerHTML='';
   DOW.forEach(d=>{const h=document.createElement('div');h.className='cal-dow';h.textContent=d;el.appendChild(h);});
@@ -469,111 +613,176 @@ function buildSelCal(){
   }
 }
 
+// ===== CALENDRIER RÉCAP =====
 function buildRecapCal(){
-  document.getElementById('coupleLegend').innerHTML = getDynamicCouples().map(([a, b]) => `<span class="couple-tag">💕 ${a} + ${b}</span>`).join('');
+  document.getElementById('coupleLegend').innerHTML=getDynamicCouples().map(([a,b])=>`<span class="couple-tag">💕 ${a} + ${b}</span>`).join('');
   const el=document.getElementById('recapCal');el.innerHTML='';
   DOW.forEach(d=>{const h=document.createElement('div');h.className='cal-dow';h.textContent=d;el.appendChild(h);});
   for(let i=0;i<firstDow;i++){const e=document.createElement('div');e.className='cal-day empty';el.appendChild(e);}
+  const dayCounts=[];
   for(let d=1;d<=DAYS;d++){
-    const present=people.filter(p=>state[p]&&state[p].includes(d)); const count=present.length;
-    let cls='cal-day'; if(count>0)cls+=count<=7?' cg':' co';
+    const present=people.filter(p=>state[p]&&state[p].includes(d));
+    const count=present.length;dayCounts.push({d,count});
+    let cls='cal-day';if(count>0)cls+=count<=7?' cg':' co';
     const cell=document.createElement('div');cell.className=cls;
     const num=document.createElement('div');num.className='day-num';num.textContent=d;
     const cnt=document.createElement('div');cnt.className='day-count';cnt.textContent=count>0?count+'p':'';
     cell.appendChild(num);cell.appendChild(cnt);
-
     const hearts=heartsForDay(d);
-    if(hearts.length>0){ const hb=document.createElement('div');hb.className='heart-badge'; hb.textContent=hearts.join(''); cell.appendChild(hb); }
-
+    if(hearts.length>0){const hb=document.createElement('div');hb.className='heart-badge';hb.textContent=hearts.join('');cell.appendChild(hb);}
     if(count>0){
       const tip=document.createElement('div');tip.className='tip';
-      const lines=present.map(p=>p).join(' · ');
-      const heartLine=hearts.length>0?`<div style="margin-top:3px;font-size:.85rem">${hearts.join(' ')}</div>`:'';
-      tip.innerHTML=lines+heartLine; cell.appendChild(tip);
+      tip.innerHTML=present.join(' · ')+(hearts.length>0?`<div style="margin-top:3px">${hearts.join(' ')}</div>`:'');
+      cell.appendChild(tip);
     }
     el.appendChild(cell);
   }
+  // Peak days
+  renderPeakDays(dayCounts);
+}
+function renderPeakDays(dayCounts){
+  const filled=dayCounts.filter(x=>x.count>0);
+  if(filled.length===0){document.getElementById('peakSection').style.display='none';return;}
+  document.getElementById('peakSection').style.display='block';
+  const maxCount=Math.max(...filled.map(x=>x.count));
+  const peaks=filled.filter(x=>x.count===maxCount);
+  const quiets=filled.filter(x=>x.count===Math.min(...filled.map(x=>x.count)));
+  let tags='';
+  peaks.forEach(x=>tags+=`<span class="peak-tag orange">🔥 ${x.d} août — ${x.count} pers.</span>`);
+  quiets.forEach(x=>tags+=`<span class="peak-tag green">🌿 ${x.d} août — ${x.count} pers.</span>`);
+  document.getElementById('peakTags').innerHTML=tags;
 }
 
-function renderPayments(){
-  const total=parseFloat(document.getElementById('totalCost').value)||0;
-  const active=people.filter(p=>state[p]&&state[p].length>0);
-  const tbody=document.getElementById('payBody');
-  if(active.length===0){ tbody.innerHTML=`<tr><td colspan="4" class="empty-state">Aucune disponibilité renseignée 🌊</td></tr>`; return; }
-  
-  const totalDays=active.reduce((s,p)=>s+state[p].length,0);
-  let rows='', gt=0;
-  
-  active.forEach(p=>{
-    const days=state[p].length; const ratio=totalDays>0?days/totalDays:0; let amt=total*ratio; let badge='';
-    if(days > 7) { amt = amt * 0.90; badge = '<span class="discount-badge">-10%</span>'; }
-    gt+=amt;
-    rows+=`<tr><td class="name-c">${p}${getEmojiForStatus(userStatus[p])}</td><td class="days-c">${days}j</td><td class="ratio-c">${(ratio*100).toFixed(1)}%</td><td class="amt-c">${amt.toFixed(2)} € ${badge}</td></tr>`;
+// ===== SUBMIT / RESET =====
+function handleSubmit(){
+  if(!selectedPerson)return;
+  state[selectedPerson]=[...selDays].sort((a,b)=>a-b);
+  saveState();
+  showToast(`✓ ${selectedPerson} — ${selDays.size} jour${selDays.size>1?'s':''} enregistré${selDays.size>1?'s':''} !`,'ok');
+  if(selDays.size>=28)setTimeout(()=>document.getElementById('superModal').style.display='flex',600);
+  else setTimeout(()=>checkMatches(selectedPerson),400);
+}
+function resetPerson(){
+  if(!selectedPerson)return;
+  selDays=new Set();state[selectedPerson]=[];
+  saveState();showToast(`Jours de ${selectedPerson} effacés`,'del');
+}
+function showToast(msg,type){
+  const t=document.getElementById('toast');t.className='toast '+type;t.textContent=msg;t.style.display='block';
+  setTimeout(()=>t.style.display='none',3000);
+}
+
+// ===== MATCHES =====
+function checkMatches(p){
+  if(!userStatus[p]||!isMatchable(userStatus[p])||!userGender[p])return;
+  const myDays=state[p]||[];if(myDays.length===0)return;
+  const matches=[];
+  people.forEach(o=>{
+    if(o===p||!userStatus[o]||!isMatchable(userStatus[o])||!userGender[o]||userGender[o]===userGender[p])return;
+    if(myDays.some(d=>(state[o]||[]).includes(d)))
+      matches.push({name:o,snap:userSnap[o]||'Pas de snap 😢',icon:userGender[o]==='M'?'🙎‍♂️':'🙎‍♀️'});
   });
-  rows+=`<tr class="total-row"><td colspan="2">Total recouvré</td><td>-</td><td>${gt.toFixed(2)} €</td></tr>`;
-  tbody.innerHTML=rows;
+  if(matches.length>0){
+    document.getElementById('matchListArea').innerHTML=matches.map(m=>`<div class="match-item"><span>${m.icon} ${m.name}</span><span class="match-snap">👻 ${m.snap}</span></div>`).join('');
+    document.getElementById('matchModal').style.display='flex';
+  }
 }
 
-function addVilla() {
-  const name = document.getElementById('vName').value.trim(); const link = document.getElementById('vLink').value.trim();
-  const imgUrl = document.getElementById('vImg').value.trim(); const price = parseFloat(document.getElementById('vPrice').value);
-  const cap = parseInt(document.getElementById('vCap').value);
-
-  if(!name || !link || isNaN(price) || isNaN(cap)) { alert("Merci de remplir au moins le nom, le lien, le prix et la capacité !"); return; }
-  const defaultImg = "https://images.unsplash.com/photo-1512917774080-9991f1c4c750?auto=format&fit=crop&w=500&q=80";
-
-  villas.push({ id: Date.now().toString(), name: name, link: link, img: imgUrl !== '' ? imgUrl : defaultImg, price: price, capacity: cap, voters: [] });
+// ===== VILLAS =====
+function addVilla(){
+  const name=document.getElementById('vName').value.trim(),link=document.getElementById('vLink').value.trim();
+  const img=document.getElementById('vImg').value.trim(),price=parseFloat(document.getElementById('vPrice').value),cap=parseInt(document.getElementById('vCap').value);
+  if(!name||!link||isNaN(price)||isNaN(cap)){alert("Remplis au moins le nom, le lien, le prix et la capacité !");return;}
+  const defaultImg="https://images.unsplash.com/photo-1512917774080-9991f1c4c750?auto=format&fit=crop&w=500&q=80";
+  villas.push({id:Date.now().toString(),name,link,img:img||defaultImg,price,capacity:cap,voters:[]});
   saveState();
-  
-  document.getElementById('vName').value = ''; document.getElementById('vLink').value = ''; document.getElementById('vImg').value = '';
-  document.getElementById('vPrice').value = ''; document.getElementById('vCap').value = '';
+  ['vName','vLink','vImg','vPrice','vCap'].forEach(id=>document.getElementById(id).value='');
 }
-
-function deleteVilla(id) {
-  if(!confirm("Supprimer cette villa pour tout le monde ?")) return;
-  villas = villas.filter(v => v.id !== id); saveState();
-}
-
-function voteVilla(id) {
-  if(!selectedPerson) { alert("Sélectionne ton prénom tout en haut pour pouvoir voter !"); return; }
-  const villa = villas.find(v => v.id === id); if(!villa) return;
-  if(!villa.voters) villa.voters = [];
-  if(villa.voters.includes(selectedPerson)) { villa.voters = villa.voters.filter(v => v !== selectedPerson); } 
-  else { villa.voters.push(selectedPerson); }
+function deleteVilla(id){if(!confirm("Supprimer cette villa pour tout le groupe ?"))return;villas=villas.filter(v=>v.id!==id);saveState();}
+function voteVilla(id){
+  if(!selectedPerson){alert("Sélectionne ton prénom en haut pour voter !");return;}
+  const v=villas.find(v=>v.id===id);if(!v)return;
+  if(!v.voters)v.voters=[];
+  v.voters.includes(selectedPerson)?v.voters=v.voters.filter(x=>x!==selectedPerson):v.voters.push(selectedPerson);
   saveState();
 }
-
-function renderVillas() {
-  const grid = document.getElementById('villaGrid');
-  if(villas.length === 0) { grid.innerHTML = `<div class="empty-state" style="grid-column: 1 / -1;">Aucune villa proposée pour le moment.</div>`; return; }
-
-  grid.innerHTML = villas.map(v => {
-    const pricePerPerson = Math.round(v.price / v.capacity);
-    const vlist = v.voters || [];
-    const hasVoted = selectedPerson ? vlist.includes(selectedPerson) : false;
-    return `
-      <div class="villa-card">
-        <button class="villa-del" onclick="deleteVilla('${v.id}')">✕</button>
-        <img src="${v.img}" alt="Villa" class="villa-img">
-        <div class="villa-info">
-          <div class="villa-name" title="${v.name}">${v.name}</div>
-          <div class="villa-specs"><span class="villa-spec-item">👥 ${v.capacity} pers.</span><span class="villa-spec-item">💰 ${v.price}€ (${pricePerPerson}€/p)</span></div>
-          <a href="${v.link}" target="_blank" class="villa-link">Voir l'annonce ↗</a>
-          <button class="villa-vote-btn ${hasVoted ? 'voted' : ''}" onclick="voteVilla('${v.id}')">${hasVoted ? '❤️ Coup de cœur' : '🤍 Voter'} (${vlist.length})</button>
-          <div class="villa-voters" title="${vlist.length > 0 ? vlist.join(', ') : ''}">${vlist.length > 0 ? vlist.join(', ') : ''}</div>
-        </div>
+function renderVillas(){
+  const grid=document.getElementById('villaGrid');
+  if(villas.length===0){grid.innerHTML=`<div class="empty-state" style="grid-column:1/-1">Aucune villa proposée pour l'instant 🏡</div>`;return;}
+  const sorted=[...villas].sort((a,b)=>(b.voters||[]).length-(a.voters||[]).length);
+  const medals=['🥇','🥈','🥉'];
+  grid.innerHTML=sorted.map((v,i)=>{
+    const ppp=Math.round(v.price/v.capacity);
+    const voters=v.voters||[];
+    const hasVoted=selectedPerson&&voters.includes(selectedPerson);
+    const rank=medals[i]||`#${i+1}`;
+    return `<div class="villa-card">
+      <button class="villa-del" onclick="deleteVilla('${v.id}')">✕</button>
+      <div class="villa-rank">${rank}</div>
+      <img src="${v.img}" alt="Villa" class="villa-img" onerror="this.src='https://images.unsplash.com/photo-1512917774080-9991f1c4c750?auto=format&fit=crop&w=500&q=80'">
+      <div class="villa-info">
+        <div class="villa-name" title="${v.name}">${v.name}</div>
+        <div class="villa-specs"><span class="villa-spec-item">👥 ${v.capacity}p</span><span class="villa-spec-item">💰 ${v.price}€ (${ppp}€/p)</span></div>
+        <a href="${v.link}" target="_blank" style="text-decoration:none;font-size:.8rem;color:white;background:var(--teal);padding:6px;border-radius:8px;text-align:center;font-weight:600;margin-top:auto;display:block;transition:opacity .15s" onmouseenter="this.style.opacity='.85'" onmouseleave="this.style.opacity='1'">Voir l'annonce ↗</a>
+        <button class="villa-vote-btn${hasVoted?' voted':''}" onclick="voteVilla('${v.id}')">${hasVoted?'❤️ Coup de cœur':'🤍 Voter'} (${voters.length})</button>
+        <div class="villa-voters">${voters.length>0?voters.join(', '):''}</div>
       </div>
-    `;
+    </div>`;
   }).join('');
 }
 
-function renderAll(){
-  renderPeople(); 
-  // Ne pas appeler buildSelCal si la personne est en train d'éditer ses jours
-  if(selectedPerson) renderProfileForm();
-  buildRecapCal(); renderPayments(); renderVillas();
+// ===== PAIEMENTS =====
+function renderPayments(){
+  const total=totalCostVal||0;
+  const active=people.filter(p=>state[p]&&state[p].length>0);
+  const tbody=document.getElementById('payBody');
+  // Goal bar
+  const gw=document.getElementById('goalBarWrap');
+  if(total>0&&active.length>0){
+    const totalCollected=active.reduce((s,p)=>{
+      const days=state[p].length,ratio=active.reduce((a,x)=>a+state[x].length,0)>0?days/active.reduce((a,x)=>a+state[x].length,0):0;
+      let amt=total*ratio;if(days>7)amt*=.9;return s+amt;
+    },0);
+    const pct=Math.min(100,Math.round(totalCollected/total*100));
+    document.getElementById('goalPct').textContent=pct+'%';
+    document.getElementById('goalFill').style.width=pct+'%';
+    const diff=total-totalCollected;
+    document.getElementById('goalNote').textContent=diff>0.5?`Il manque encore ${diff.toFixed(0)}€ à collecter (réductions incluses)`:'✓ Budget couvert avec les réductions !';
+    gw.style.display='block';
+  }else{gw.style.display='none';}
+
+  if(active.length===0){tbody.innerHTML=`<tr><td colspan="4" class="empty-state">Aucune disponibilité renseignée 🌊</td></tr>`;
+    document.getElementById('costHint').textContent='';return;}
+  const totalDays=active.reduce((s,p)=>s+state[p].length,0);
+  let rows='',gt=0;
+  active.forEach(p=>{
+    const days=state[p].length,ratio=totalDays>0?days/totalDays:0;
+    let amt=total*ratio,badge='';
+    if(days>7){amt*=.9;badge='<span class="discount-badge">-10%</span>';}
+    gt+=amt;
+    rows+=`<tr><td class="name-c">${p}${getEmojiForStatus(userStatus[p])}</td><td class="days-c">${days}j</td><td class="ratio-c">${(ratio*100).toFixed(1)}%</td><td class="amt-c">${total>0?amt.toFixed(2)+' €'+badge:'—'}</td></tr>`;
+  });
+  if(total>0){
+    const hint=gt<total?`⚠️ Note : avec les réductions -10%, le total recouvré est ${gt.toFixed(0)}€ sur ${total}€ — les économies reviennent à ceux qui restent longtemps.`:'';
+    document.getElementById('costHint').textContent=hint;
+    rows+=`<tr class="total-row"><td colspan="2">Total recouvré</td><td>—</td><td>${gt.toFixed(2)} €</td></tr>`;
+  }
+  tbody.innerHTML=rows;
 }
+
+// ===== MODALES =====
+function closePromoModal(){document.getElementById('promoModal').style.display='none';}
+function closeMatchModal(){document.getElementById('matchModal').style.display='none';}
+
+// ===== RENDER ALL =====
+function renderAll(){
+  renderPeople();
+  if(selectedPerson)renderProfileForm();
+  buildRecapCal();renderPayments();renderVillas();
+}
+
+// Init champ prix avec valeur chargée (Firebase)
+// La valeur sera peuplée dès le premier snapshot Firebase
 </script>
 </body>
 </html>
-</script>
