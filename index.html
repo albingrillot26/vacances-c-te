@@ -245,7 +245,7 @@ header p{font-size:.9rem;color:var(--soft);margin-top:.3rem;font-weight:300}
   </div>
   <div class="month-title">Août 2026</div>
   <div class="cal-grid" id="selCal"></div>
-  <div class="easter-egg" id="easterEgg">🎉 t'es un tigre  🐚</div>
+  <div class="easter-egg" id="easterEgg">🎉 Je veux un Thomas le Grec  🐚</div>
   <div class="btn-row">
     <button class="btn-reset" onclick="resetPerson()">✕ Effacer</button>
     <button class="btn-submit" onclick="handleSubmit()">Enregistrer 🌊</button>
@@ -722,7 +722,7 @@ function renderPayments(){
     rows+=`<tr><td class="name-c">${p}${getEmojiForStatus(userStatus[p])}</td><td class="days-c">${days}j</td><td class="ratio-c">${(ratio*100).toFixed(1)}%</td><td class="amt-c">${total>0?amt.toFixed(2)+' €'+badge:'—'}</td></tr>`;
   });
   if(total>0){
-    const hint=gt<total?`⚠️ Note : avec les réductions -10%, le total recouvré est ${gt.toFixed(0)}€ sur ${total}€ — les économies reviennent à ceux qui restent longtemps.`:'';
+    const hint=gt<total?;
     document.getElementById('costHint').textContent=hint;
     rows+=`<tr class="total-row"><td colspan="2">Total recouvré</td><td>—</td><td>${gt.toFixed(2)} €</td></tr>`;
   }
