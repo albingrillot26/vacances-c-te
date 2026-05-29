@@ -245,7 +245,7 @@ header p{font-size:.9rem;color:var(--soft);margin-top:.3rem;font-weight:300}
   </div>
   <div class="month-title">Août 2026</div>
   <div class="cal-grid" id="selCal"></div>
-  <div class="easter-egg" id="easterEgg">🎉 SIESTE NATIONALE ! T'as pris tout le mois ?! Respect absolu 🐚</div>
+  <div class="easter-egg" id="easterEgg">🎉 t'es un tigre  🐚</div>
   <div class="btn-row">
     <button class="btn-reset" onclick="resetPerson()">✕ Effacer</button>
     <button class="btn-submit" onclick="handleSubmit()">Enregistrer 🌊</button>
@@ -329,8 +329,8 @@ header p{font-size:.9rem;color:var(--soft);margin-top:.3rem;font-weight:300}
   <div class="modal-content">
     <div style="font-size:3rem;margin-bottom:.5rem">🏆</div>
     <h3 style="color:var(--teal)">Tout le mois ?!</h3>
-    <p>T'as vraiment sélectionné tout août ? Soit t'as zéro obligations dans la vie, soit tu sais exactement ce que tu fais. Dans les deux cas, respect total. 👑</p>
-    <button class="btn-close-modal" style="background:linear-gradient(135deg,#80cbc4,#26a69a)" onclick="document.getElementById('superModal').style.display='none'">Je règne sur la villa</button>
+    <p> Bravo gros salafiste 👑</p>
+    <button class="btn-close-modal" style="background:linear-gradient(135deg,#80cbc4,#26a69a)" onclick="document.getElementById('superModal').style.display='none'">Je me convertis</button>
   </div>
 </div>
 
@@ -363,11 +363,11 @@ const STATUS_OPTIONS=[
   {id:'open',label:'Ouvert(e) à toute proposition 🥂',emoji:'🥂',matchable:true}
 ];
 const FUN_FACTS = {
-  'Albin': "🏃 Albin qui arrive tôt ? C'est pour les bons spots de transats, évidemment.",
-  'Léa': "💅 Si Léa est là, la villa est automatiquement classée 5 étoiles.",
+  'Albin': "🏃 Albin est le goat de la villa.",
+  'Léa': "💅 Si Léa est là, alors il fait beau.",
   'Lilie': "🌸 Lilie en vacances = programme danse de plage imposé à tout le groupe.",
   'Noé': "🎸 Noé va encore squatter la terrasse avec sa guitare à 23h.",
-  'Charles': "📸 Charles va prendre 400 photos et en poster exactement 2.",
+  'Charles': "📸 Charles, François me manque aussi.",
   'Kassim': "⏰ Kassim qui arrive... à l'heure ? Nouvelle année, nouvelles surprises.",
   'Clément': "🍕 Clément a déjà repéré les restos sur Maps. Il a une liste de 47 adresses.",
   'HB': "🎯 HB est déjà en mode organisation logistique. Tableau Excel en cours.",
@@ -376,14 +376,14 @@ const FUN_FACTS = {
   'Vincent': "🤙 Vincent apporte bonne humeur et playlist certifiée banger.",
 };
 const VIBES = [
-  {days:100,emoji:'😴',text:'Encore loin... Z\'endors-toi pas'},
-  {days:60,emoji:'🌅',text:'Dans deux mois ! Commence à stresser'},
-  {days:30,emoji:'🏖️',text:'Plus qu\'un mois ! La hype monte'},
+  {days:100,emoji:'😴',text:'Depechez vous bande de salafistes'},
+  {days:60,emoji:'🌅',text:'Deux mois guys !'},
+  {days:30,emoji:'🏖️',text:'Plus qu\'un mois !'},
   {days:14,emoji:'🔥',text:'Deux semaines ! T\'as fait ta valise ?'},
   {days:7,emoji:'🚀',text:'Une semaine ! Panique générale autorisée'},
   {days:3,emoji:'💥',text:'3 jours !! On lâche TOUT'},
   {days:1,emoji:'🎉',text:'DEMAIN !! Mode vacances ACTIVÉ'},
-  {days:0,emoji:'🐚',text:'C\'est MAINTENANT ! YALLAH !!'},
+  {days:0,emoji:'🐚',text:'C\'est MAINTENANT !!'},
 ];
 const MAX_VILLA_PLACES = 8;
 
@@ -482,7 +482,7 @@ function updateMissing(){
   const box=document.getElementById('missingBox');
   if(missing.length>0&&people.length>0){
     box.style.display='block';
-    document.getElementById('missingNames').textContent=missing.join(', ')+' — on vous attend ! 👀';
+    document.getElementById('missingNames').textContent=missing.join(', ')+'👀';
   }else{box.style.display='none';}
 }
 
@@ -550,7 +550,7 @@ function renderProfileForm(){
     sel+=`<option value="_new_">+ Autre prénom...</option></select>`;
     html+=sel;
   }
-  html+=`<div class="status-block" style="margin-top:10px"><div class="status-title">👻 Snap (pour la science) :</div>
+  html+=`<div class="status-block" style="margin-top:10px"><div class="status-title">👻 Snap :</div>
     <input type="text" class="profile-input" placeholder="Ex: bossdu75" value="${cSn}" onchange="handleSnapInput(this.value)"></div>`;
   document.getElementById('profileFormArea').innerHTML=html;
 }
