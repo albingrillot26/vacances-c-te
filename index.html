@@ -47,8 +47,6 @@ header p{font-size:.9rem;color:var(--soft);margin-top:.3rem;font-weight:300}
 .nav-tabs::-webkit-scrollbar { display: none; }
 .nav-tab { flex: 1; min-width: 80px; padding: 12px 10px; background: rgba(255,255,255,0.7); border: 1.5px solid var(--pale); border-radius: 14px; font-family: 'DM Sans', sans-serif; font-size: 0.85rem; font-weight: 600; color: var(--mid); cursor: pointer; white-space: nowrap; transition: all 0.2s; box-shadow: 0 4px 12px rgba(100,180,160,0.05); }
 .nav-tab.active { background: linear-gradient(135deg, var(--teal-mid), var(--teal)); color: white; border-color: transparent; box-shadow: 0 4px 14px rgba(38,166,154,0.3); transform: translateY(-2px); }
-
-/* Pages container */
 .page-section { display: none; animation: fadeIn 0.4s ease; }
 .page-section.active { display: block; }
 
@@ -69,7 +67,6 @@ header p{font-size:.9rem;color:var(--soft);margin-top:.3rem;font-weight:300}
 .person-btn.selected~.del-btn{background:rgba(255,255,255,.3);color:white}
 .person-btn.selected~.del-btn:hover{background:var(--red);color:white}
 
-/* Badge manquant */
 .missing-box{background:#fff8e1;border:1px dashed #ffcc80;border-radius:10px;padding:10px 14px;margin-top:.5rem;font-size:.8rem;color:#e65100}
 .missing-box strong{display:block;margin-bottom:4px;font-size:.82rem}
 
@@ -90,6 +87,8 @@ header p{font-size:.9rem;color:var(--soft);margin-top:.3rem;font-weight:300}
 .status-btn.active{background:var(--pink-light);border-color:var(--pink);color:#c2185b;font-weight:600}
 .profile-input{width:100%;padding:8px 12px;border-radius:8px;border:1.5px solid var(--pale);font-family:'DM Sans',sans-serif;font-size:.85rem;color:#2e7d72;outline:none;background:white;transition:border-color .15s}
 .profile-input:focus{border-color:var(--pink)}
+.fun-fact{background:linear-gradient(135deg,rgba(240,98,146,.08),rgba(38,166,154,.08));border-radius:10px;padding:10px 14px;font-size:.8rem;color:var(--dark);margin-top:10px;border:1px solid rgba(240,98,146,.15);font-style:italic;display:none}
+.fun-fact.show{display:block}
 
 /* ===== CALENDRIER ===== */
 .month-title{font-family:'Playfair Display',serif;font-size:1rem;color:#2e7d72;text-align:center;margin-bottom:.6rem;font-weight:600}
@@ -104,13 +103,10 @@ header p{font-size:.9rem;color:var(--soft);margin-top:.3rem;font-weight:300}
 .cal-day.cg{background:#e8f5e9;border-color:#a5d6a7}.cal-day.cg .day-num{color:#2e7d32}.cal-day.cg .day-count{color:#388e3c}
 .cal-day.co{background:#fff3e0;border-color:#ffcc80}.cal-day.co .day-num{color:#e65100}.cal-day.co .day-count{color:#ef6c00}
 .heart-badge{position:absolute;top:-6px;right:-5px;font-size:.75rem;line-height:1;pointer-events:none;filter:drop-shadow(0 1px 2px rgba(240,98,146,.4));z-index:2;animation:heartPop .4s cubic-bezier(.34,1.56,.64,1)}
-
-/* Sélection rapide */
+@keyframes heartPop{from{transform:scale(0)}to{transform:scale(1)}}
 .quick-select{display:flex;gap:6px;flex-wrap:wrap;margin-bottom:.8rem}
 .qs-btn{padding:5px 12px;border-radius:8px;border:1px solid var(--pale);background:white;font-size:.75rem;font-weight:600;color:var(--mid);cursor:pointer;transition:all .15s;font-family:'DM Sans',sans-serif}
 .qs-btn:hover{background:var(--teal-light);border-color:var(--teal-mid)}
-
-/* ===== LÉGENDE ===== */
 .legend{display:flex;gap:10px;flex-wrap:wrap;margin-bottom:.8rem;align-items:center}
 .leg-item{display:flex;align-items:center;gap:5px;font-size:.75rem;color:var(--mid)}
 .leg-dot{width:12px;height:12px;border-radius:3px}
@@ -160,7 +156,6 @@ header p{font-size:.9rem;color:var(--soft);margin-top:.3rem;font-weight:300}
 .cost-row label{font-size:.88rem;color:var(--mid);font-weight:500;white-space:nowrap}
 .cost-input{padding:8px 12px;border-radius:10px;border:1.5px solid var(--pale);font-family:'DM Sans',sans-serif;font-size:.95rem;font-weight:600;color:#2e7d72;width:130px;outline:none;background:white}
 .cost-input:focus{border-color:var(--teal)}
-.cost-hint{font-size:.75rem;color:var(--soft);margin-bottom:1rem;font-style:italic}
 .pay-table{width:100%;border-collapse:collapse}
 .pay-table th{font-size:.72rem;font-weight:600;text-transform:uppercase;letter-spacing:.6px;color:var(--soft);padding:6px 8px;text-align:left;border-bottom:1.5px solid var(--pale)}
 .pay-table td{padding:8px;font-size:.85rem;border-bottom:1px solid rgba(178,223,219,.4);color:var(--dark);vertical-align:middle}
@@ -180,13 +175,12 @@ header p{font-size:.9rem;color:var(--soft);margin-top:.3rem;font-weight:300}
 .award-winner { font-family: 'Playfair Display', serif; font-size: 1.1rem; color: #e65100; font-weight: 700; margin-top: 4px; }
 .award-sub { font-size: 0.75rem; color: #fb8c00; font-weight: 600; margin-top: 2px; }
 
-/* ===== ROULETTE DES CORVÉES ===== */
+/* ===== ROULETTE ===== */
 .wheel-container { position:relative; width: 220px; height: 220px; margin: 1rem auto; border-radius:50%; border: 4px solid white; box-shadow: 0 4px 15px rgba(0,0,0,0.15); overflow:hidden; }
 .wheel-pointer { position:absolute; top:-15px; left:50%; transform:translateX(-50%); width:0; height:0; border-left:15px solid transparent; border-right:15px solid transparent; border-top:25px solid var(--red); z-index:10; filter:drop-shadow(0 3px 3px rgba(0,0,0,0.3)); }
 .wheel { width:100%; height:100%; border-radius:50%; position:relative; transition: transform 4s cubic-bezier(0.2, 0.8, 0.2, 1); }
 .wheel-label { position:absolute; top:50%; left:50%; transform-origin: 0 0; font-weight:700; color:white; font-size:0.95rem; text-shadow: 1px 1px 2px rgba(0,0,0,0.7); white-space:nowrap; }
 
-/* Barre de progression séjour */
 .goal-bar-wrap{margin-bottom:1rem;padding:12px 14px;background:rgba(255,255,255,.6);border-radius:12px;border:1px dashed var(--pale)}
 .goal-bar-top{display:flex;justify-content:space-between;align-items:center;margin-bottom:6px}
 .goal-bar-label{font-size:.8rem;color:var(--soft);font-weight:500}
@@ -195,13 +189,25 @@ header p{font-size:.9rem;color:var(--soft);margin-top:.3rem;font-weight:300}
 .goal-fill{height:100%;border-radius:999px;background:linear-gradient(90deg,var(--pink-mid),var(--teal));transition:width 1s cubic-bezier(.34,1.56,.64,1)}
 .goal-note{font-size:.75rem;color:var(--soft);margin-top:5px;font-style:italic}
 
-/* ===== BOUTONS ===== */
+/* ===== BOUTONS & TOASTS ===== */
 .btn-row{display:flex;gap:8px;margin-top:.7rem}
 .btn-submit{flex:1;padding:12px;border-radius:12px;border:none;background:linear-gradient(135deg,var(--pink-mid) 0%,var(--teal) 100%);color:white;font-family:'DM Sans',sans-serif;font-size:.9rem;font-weight:600;cursor:pointer;transition:opacity .2s,transform .15s;box-shadow:0 4px 14px rgba(240,98,146,.2)}
 .btn-submit:hover{opacity:.9;transform:translateY(-1px)}
 .btn-submit:active{transform:scale(.98)}
 .btn-reset{padding:12px 16px;border-radius:12px;border:1.5px solid #ef9a9a;background:white;font-family:'DM Sans',sans-serif;font-size:.88rem;font-weight:600;color:var(--red);cursor:pointer;transition:all .15s;white-space:nowrap}
 .btn-reset:hover{background:#ffebee;border-color:var(--red)}
+.toast{display:none;border-radius:10px;padding:10px 16px;font-size:.86rem;font-weight:500;margin-top:.6rem;text-align:center;animation:fadeIn .3s ease}
+.toast.ok{background:linear-gradient(135deg,var(--teal),#43a047);color:white}
+.toast.del{background:#ffebee;color:#c62828;border:1px solid #ef9a9a}
+
+/* ===== MODALES ===== */
+.modal-overlay{position:fixed;inset:0;background:rgba(46,74,71,.75);z-index:100;display:none;align-items:center;justify-content:center;backdrop-filter:blur(5px)}
+.modal-content{background:white;padding:2rem;border-radius:22px;max-width:420px;width:90%;text-align:center;margin:1rem;box-shadow:0 15px 40px rgba(0,0,0,.2);animation:popIn .35s cubic-bezier(.175,.885,.32,1.275)}
+@keyframes popIn{from{transform:scale(.7) translateY(20px);opacity:0}to{transform:scale(1) translateY(0);opacity:1}}
+.modal-content h3{font-family:'Playfair Display',serif;color:#c2185b;margin-bottom:.8rem;font-size:1.6rem}
+.modal-content p{color:var(--dark);font-size:.93rem;margin-bottom:1.2rem;line-height:1.55}
+.btn-close-modal{padding:12px 24px;border-radius:999px;border:none;background:linear-gradient(135deg,var(--pink-mid),var(--pink));color:white;font-family:'DM Sans',sans-serif;font-size:.95rem;font-weight:600;cursor:pointer;width:100%;transition:transform .15s,box-shadow .15s}
+.btn-close-modal:hover{transform:translateY(-2px);box-shadow:0 6px 18px rgba(0,0,0,.15)}
 
 /* ===== CHAT EN DIRECT ===== */
 .chat-widget { position: fixed; bottom: 20px; right: 20px; z-index: 1000; display: flex; flex-direction: column; align-items: flex-end; }
@@ -223,15 +229,6 @@ header p{font-size:.9rem;color:var(--soft);margin-top:.3rem;font-weight:300}
 .chat-input:focus { border-color: var(--teal); background: white; }
 .chat-send { background: linear-gradient(135deg, var(--pink-mid), var(--pink)); color: white; border: none; border-radius: 50%; width: 40px; height: 40px; display: flex; justify-content: center; align-items: center; cursor: pointer; font-size: 1.1rem; box-shadow: 0 4px 10px rgba(240,98,146,0.3); transition: transform 0.2s; }
 .chat-send:hover { transform: scale(1.08); }
-
-/* Modales et divers */
-.modal-overlay{position:fixed;inset:0;background:rgba(46,74,71,.75);z-index:100;display:none;align-items:center;justify-content:center;backdrop-filter:blur(5px)}
-.modal-content{background:white;padding:2rem;border-radius:22px;max-width:420px;width:90%;text-align:center;margin:1rem;box-shadow:0 15px 40px rgba(0,0,0,.2);animation:popIn .35s cubic-bezier(.175,.885,.32,1.275)}
-@keyframes popIn{from{transform:scale(.7) translateY(20px);opacity:0}to{transform:scale(1) translateY(0);opacity:1}}
-.modal-content h3{font-family:'Playfair Display',serif;color:#c2185b;margin-bottom:.8rem;font-size:1.6rem}
-.modal-content p{color:var(--dark);font-size:.93rem;margin-bottom:1.2rem;line-height:1.55}
-.btn-close-modal{padding:12px 24px;border-radius:999px;border:none;background:linear-gradient(135deg,var(--pink-mid),var(--pink));color:white;font-family:'DM Sans',sans-serif;font-size:.95rem;font-weight:600;cursor:pointer;width:100%;transition:transform .15s,box-shadow .15s}
-.btn-close-modal:hover{transform:translateY(-2px);box-shadow:0 6px 18px rgba(0,0,0,.15)}
 </style>
 </head>
 <body>
@@ -375,10 +372,8 @@ header p{font-size:.9rem;color:var(--soft);margin-top:.3rem;font-weight:300}
     <h2><span class="dot dtr"></span>Tricount (Dépenses communes) 💸</h2>
     <p style="font-size:.8rem;color:var(--soft);margin-bottom:1rem">Qui a payé les courses ? Ajoute la dépense, l'appli calcule qui doit quoi à qui.</p>
     
-    <!-- Liste des dépenses -->
     <div class="tricount-list" id="tricountList"></div>
     
-    <!-- Formulaire d'ajout -->
     <div style="margin-top:1rem;padding-top:1.2rem;border-top:1.5px dashed var(--pale)">
       <p style="font-size:.88rem;color:#2e7d72;font-weight:600;margin-bottom:.8rem">➕ Ajouter une dépense :</p>
       <div style="display:flex;flex-direction:column;gap:8px">
@@ -387,15 +382,11 @@ header p{font-size:.9rem;color:var(--soft);margin-top:.3rem;font-weight:300}
           <input type="number" id="tAmount" class="profile-input" placeholder="Montant (€)">
           <select id="tPayer" class="profile-input" style="background:#f9fbfb">
             <option value="" disabled selected>Payé par...</option>
-            <!-- Rempli via JS -->
           </select>
         </div>
         
         <p style="font-size:.8rem;color:var(--mid);margin-top:4px">Pour qui ? (Décoche ceux qui n'ont rien à voir)</p>
-        <div class="checkbox-grid" id="tInvolved">
-          <!-- Rempli via JS -->
-        </div>
-
+        <div class="checkbox-grid" id="tInvolved"></div>
         <button class="add-btn" style="width:100%;border-radius:10px;padding:10px;margin-top:8px;background:linear-gradient(135deg, #4caf50, #2e7d32)" onclick="addExpense()">Valider la dépense 💳</button>
       </div>
     </div>
@@ -403,10 +394,13 @@ header p{font-size:.9rem;color:var(--soft);margin-top:.3rem;font-weight:300}
 
   <div class="card">
     <h2>⚖️ Le Bilan (Qui doit quoi)</h2>
-    <p style="font-size:.8rem;color:var(--soft);margin-bottom:1rem">En vert : ceux qui doivent récupérer de l'argent. En rouge : ceux qui doivent rembourser.</p>
+    <p style="font-size:.8rem;color:var(--soft);margin-bottom:1rem">En vert : ceux qui récupèrent. En rouge : ceux qui doivent de l'argent.</p>
     <div class="balance-list" id="balanceList">
       <div class="empty-state">Aucune dépense pour l'instant.</div>
     </div>
+    
+    <!-- Zone pour les instructions de remboursement -->
+    <div id="settlementList"></div>
   </div>
 </div>
 
@@ -414,10 +408,8 @@ header p{font-size:.9rem;color:var(--soft);margin-top:.3rem;font-weight:300}
 <div id="page-photos" class="page-section">
   <div class="card">
     <h2><span class="dot dph"></span>Album Souvenir 📸</h2>
-    <p style="font-size:.8rem;color:var(--soft);margin-bottom:1rem">Colle ici le lien de tes meilleures photos (depuis un drive, Google Photos, etc.) pour créer l'album partagé.</p>
-    
+    <p style="font-size:.8rem;color:var(--soft);margin-bottom:1rem">Colle ici le lien direct de tes meilleures photos pour créer l'album partagé.</p>
     <div class="photo-grid" id="photoGrid"></div>
-    
     <div style="margin-top:1rem;padding-top:1.2rem;border-top:1.5px dashed var(--pale)">
       <div style="display:flex;flex-direction:column;gap:8px">
         <input type="url" id="pUrl" class="profile-input" placeholder="Lien direct vers l'image (https://...)">
@@ -433,12 +425,10 @@ header p{font-size:.9rem;color:var(--soft);margin-top:.3rem;font-weight:300}
   <div class="card" style="text-align:center; padding-bottom: 2rem;">
     <h2 style="justify-content:center"><span class="dot" style="background:#e53935"></span>Roulette des Corvées 🎯</h2>
     <p style="font-size:.85rem;color:var(--soft);margin-bottom:1.2rem">Qui va descendre les poubelles, chercher le pain ou faire la vaisselle ?</p>
-    
     <div class="wheel-container">
       <div class="wheel-pointer"></div>
       <div class="wheel" id="rouletteWheel"></div>
     </div>
-    
     <div id="rouletteWinner" style="font-family:'Playfair Display', serif; font-size:1.3rem; color:var(--red); height:2rem; margin-bottom:1rem; font-weight:600;">Prêt à tourner ?</div>
     <button class="btn-submit" style="background:linear-gradient(135deg, #e53935, #c62828); box-shadow:0 4px 14px rgba(229,57,53,.3); width: 80%; padding: 14px; font-size: 1rem;" onclick="spinRoulette()">Lancer la Roulette 🎲</button>
   </div>
@@ -570,8 +560,7 @@ let state={},userStatus={},userPartner={},userGender={},userSnap={},villas=[],ex
 let totalCostVal=0;
 DEFAULT_PEOPLE.forEach(p=>state[p]=[]);
 let selectedPerson=null,selDays=new Set(),promoSeen=false;
-let currentWheelRotation = 0;
-let isSpinning = false;
+let currentWheelRotation = 0, isSpinning = false;
 const firstDow=(()=>{const d=new Date(YEAR,MONTH,1).getDay();return d===0?6:d-1;})();
 function normName(n){return n.trim().charAt(0).toUpperCase()+n.trim().slice(1).toLowerCase();}
 
@@ -870,10 +859,12 @@ function deleteExpense(id) {
 function renderTricount() {
   const list = document.getElementById('tricountList');
   const balList = document.getElementById('balanceList');
+  const setList = document.getElementById('settlementList');
   
   if(expenses.length === 0) {
     list.innerHTML = `<div class="empty-state">Rien n'a encore été dépensé (radins).</div>`;
     balList.innerHTML = `<div class="empty-state">Les comptes sont à zéro.</div>`;
+    setList.innerHTML = '';
     return;
   }
 
@@ -901,16 +892,61 @@ function renderTricount() {
     e.involved.forEach(p => { if(balances[p] !== undefined) balances[p] -= share; }); // Doit payer
   });
 
-  // Rendu des balances
+  // Rendu des balances brutes
   const active = people.filter(p=>state[p]&&state[p].length>0);
   let balHtml = '';
   active.forEach(p => {
     const b = balances[p];
-    if(Math.abs(b) < 0.05) return; // Ignore les centimes
+    if(Math.abs(b) < 0.05) return;
     if(b > 0) balHtml += `<div class="balance-item positive"><span>${p}</span><span>+ ${b.toFixed(2)}€ (à récupérer)</span></div>`;
     else balHtml += `<div class="balance-item negative"><span>${p}</span><span>${b.toFixed(2)}€ (à rembourser)</span></div>`;
   });
   balList.innerHTML = balHtml || `<div class="empty-state">Tout le monde est à l'équilibre parfait ! ⚖️</div>`;
+
+  // ALGORITHME DE REMBOURSEMENTS (Qui doit payer à qui)
+  let debtors = [];
+  let creditors = [];
+  active.forEach(p => {
+    if(balances[p] < -0.05) debtors.push({name: p, amount: -balances[p]});
+    else if(balances[p] > 0.05) creditors.push({name: p, amount: balances[p]});
+  });
+
+  // Trier pour optimiser un peu les virements (les plus gros soldent les plus gros)
+  debtors.sort((a,b) => b.amount - a.amount);
+  creditors.sort((a,b) => b.amount - a.amount);
+
+  let settlements = [];
+  let d = 0, c = 0;
+  
+  while(d < debtors.length && c < creditors.length) {
+    let amountToSettle = Math.min(debtors[d].amount, creditors[c].amount);
+    
+    if(amountToSettle > 0.05) {
+      settlements.push({ from: debtors[d].name, to: creditors[c].name, amount: amountToSettle });
+    }
+    
+    debtors[d].amount -= amountToSettle;
+    creditors[c].amount -= amountToSettle;
+    
+    if(debtors[d].amount < 0.05) d++;
+    if(creditors[c].amount < 0.05) c++;
+  }
+
+  // Rendu des virements à faire
+  if(settlements.length === 0) {
+    setList.innerHTML = '';
+  } else {
+    let setHtml = `<div style="margin-top:1.5rem;padding-top:1rem;border-top:1.5px dashed var(--pale)">
+      <h3 style="font-size:1rem;color:var(--dark);margin-bottom:0.8rem">💸 Qui rembourse qui ?</h3>`;
+    settlements.forEach(s => {
+      setHtml += `<div style="display:flex; justify-content:space-between; padding:8px 12px; background:white; border:1px solid var(--pale); border-radius:8px; margin-bottom:6px; font-size:0.9rem;">
+        <span><strong>${s.from}</strong> ➔ <strong>${s.to}</strong></span>
+        <span style="font-weight:700;color:var(--red)">${s.amount.toFixed(2)}€</span>
+      </div>`;
+    });
+    setHtml += `</div>`;
+    setList.innerHTML = setHtml;
+  }
 }
 
 // ===== PHOTOS =====
