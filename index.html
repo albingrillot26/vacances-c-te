@@ -237,7 +237,6 @@ header p{font-size:.9rem;color:var(--soft);margin-top:.3rem;font-weight:300}
 </style>
 </head>
 <body>
-<!-- MUSIQUE DE FOND -->
 <audio id="bgMusic" loop src="JuL - La Bandite  Clip officiel  2019.mp3"></audio>
 
 <div class="bg"></div>
@@ -251,7 +250,6 @@ header p{font-size:.9rem;color:var(--soft);margin-top:.3rem;font-weight:300}
   <p>Coordonne les arrivées, visualise les présences, règle les comptes</p>
 </header>
 
-<!-- Compte à rebours -->
 <div class="countdown-bar">
   <div>
     <div class="vibe-emoji" id="vibeEmoji">🌊</div>
@@ -264,7 +262,6 @@ header p{font-size:.9rem;color:var(--soft);margin-top:.3rem;font-weight:300}
   </div>
 </div>
 
-<!-- ================= TABS NAVIGATION ================= -->
 <div class="nav-tabs">
   <button id="tab-cal" class="nav-tab active" onclick="switchTab('cal')">📅 Dispos</button>
   <button id="tab-villas" class="nav-tab" onclick="switchTab('villas')">🏡 Villas</button>
@@ -274,7 +271,6 @@ header p{font-size:.9rem;color:var(--soft);margin-top:.3rem;font-weight:300}
   <button id="tab-roulette" class="nav-tab" onclick="switchTab('roulette')">🎯 Roulette</button>
 </div>
 
-<!-- ================= PAGE 1: DISPOS & CALENDRIER ================= -->
 <div id="page-cal" class="page-section active">
   <div class="card">
     <h2><span class="dot dp"></span>Participants</h2>
@@ -324,7 +320,6 @@ header p{font-size:.9rem;color:var(--soft);margin-top:.3rem;font-weight:300}
   </div>
 </div>
 
-<!-- ================= PAGE 2: VILLAS ================= -->
 <div id="page-villas" class="page-section">
   <div class="card">
     <h2><span class="dot dv"></span>Villas en vue 🏡</h2>
@@ -346,7 +341,6 @@ header p{font-size:.9rem;color:var(--soft);margin-top:.3rem;font-weight:300}
   </div>
 </div>
 
-<!-- ================= PAGE 3: BUDGET ================= -->
 <div id="page-costs" class="page-section">
   <div class="card">
     <h2><span class="dot dg"></span>Répartition Logement</h2>
@@ -358,11 +352,20 @@ header p{font-size:.9rem;color:var(--soft);margin-top:.3rem;font-weight:300}
       <div class="goal-bar"><div class="goal-fill" id="goalFill" style="width:0%"></div></div>
       <div class="goal-note" id="goalNote">En attente des inscriptions...</div>
     </div>
+    
     <div class="cost-row">
       <label>Coût total du séjour :</label>
       <input class="cost-input" type="number" id="totalCost" min="0" placeholder="Ex: 3500" oninput="handleCostInput()">
       <span style="font-size:.88rem;color:var(--soft)">€</span>
     </div>
+    
+    <div id="goatRow" style="display:none; background:#fff3e0; padding:10px; border-radius:10px; border:1px dashed #ffb74d; margin-bottom:1rem;">
+      <label style="cursor:pointer; display:flex; align-items:center; gap:8px;">
+        <input type="checkbox" id="goatCheckbox" onchange="toggleGoat(this.checked)" style="transform: scale(1.2);">
+        <span style="color:#e65100; font-weight:600; font-size:0.85rem;">👑 Albin régale Léa (Le GOAT prend sa part)</span>
+      </label>
+    </div>
+
     <table class="pay-table">
       <thead><tr><th>Prénom</th><th>Jours</th><th>Ratio</th><th>À payer</th></tr></thead>
       <tbody id="payBody"></tbody>
@@ -371,7 +374,6 @@ header p{font-size:.9rem;color:var(--soft);margin-top:.3rem;font-weight:300}
   </div>
 </div>
 
-<!-- ================= PAGE 4: TRICOUNT ================= -->
 <div id="page-tricount" class="page-section">
   <div class="card">
     <h2><span class="dot dtr"></span>Tricount (Dépenses communes) 💸</h2>
@@ -404,12 +406,10 @@ header p{font-size:.9rem;color:var(--soft);margin-top:.3rem;font-weight:300}
       <div class="empty-state">Aucune dépense pour l'instant.</div>
     </div>
     
-    <!-- Zone pour les instructions de remboursement -->
     <div id="settlementList"></div>
   </div>
 </div>
 
-<!-- ================= PAGE 5: PHOTOS ================= -->
 <div id="page-photos" class="page-section">
   <div class="card">
     <h2><span class="dot dph"></span>Album Souvenir 📸</h2>
@@ -425,7 +425,6 @@ header p{font-size:.9rem;color:var(--soft);margin-top:.3rem;font-weight:300}
   </div>
 </div>
 
-<!-- ================= PAGE 6: ROULETTE ================= -->
 <div id="page-roulette" class="page-section">
   <div class="card" style="text-align:center; padding-bottom: 2rem;">
     <h2 style="justify-content:center"><span class="dot" style="background:#e53935"></span>Roulette des Corvées 🎯</h2>
@@ -439,7 +438,6 @@ header p{font-size:.9rem;color:var(--soft);margin-top:.3rem;font-weight:300}
   </div>
 </div>
 
-<!-- ================= MODALES ================= -->
 <div class="modal-overlay" id="promoModal" onclick="if(event.target===this)this.style.display='none'">
   <div class="modal-content">
     <h3>Fais pas ton Kassim ! 🦭</h3>
@@ -463,7 +461,6 @@ header p{font-size:.9rem;color:var(--soft);margin-top:.3rem;font-weight:300}
   </div>
 </div>
 
-<!-- ================= WIDGET CHAT ================= -->
 <div class="chat-widget">
   <div class="chat-panel" id="chatPanel">
     <div class="chat-header">
@@ -563,6 +560,7 @@ const WHEEL_COLORS = ['#f06292', '#26a69a', '#fb8c00', '#7e57c2', '#ff9800', '#e
 let people=[...DEFAULT_PEOPLE];
 let state={},userStatus={},userPartner={},userGender={},userSnap={},villas=[],expenses=[],photos=[];
 let totalCostVal=0;
+let albinPaysForLea=false; // Variable du GOAT
 DEFAULT_PEOPLE.forEach(p=>state[p]=[]);
 let selectedPerson=null,selDays=new Set(),promoSeen=false;
 let currentWheelRotation = 0, isSpinning = false;
@@ -587,18 +585,25 @@ dbRef.on('value',(snapshot)=>{
       const inp=document.getElementById('totalCost');
       if(inp && document.activeElement!==inp) inp.value=totalCostVal||'';
     }
+    if(d.albinPaysForLea !== undefined) albinPaysForLea = d.albinPaysForLea; else albinPaysForLea = false;
   }
   renderAll();
 });
 
 function saveState(){
-  dbRef.set({people,state,userStatus,userPartner,userGender,userSnap,villas,expenses,photos,totalCost:totalCostVal});
+  dbRef.set({people,state,userStatus,userPartner,userGender,userSnap,villas,expenses,photos,totalCost:totalCostVal,albinPaysForLea});
 }
 function handleCostInput(){
   const val=parseFloat(document.getElementById('totalCost').value)||0;
   totalCostVal=val;
   clearTimeout(window._costTimer);
   window._costTimer=setTimeout(()=>{saveState();},800);
+  renderPayments();
+}
+
+function toggleGoat(checked) {
+  albinPaysForLea = checked;
+  saveState();
   renderPayments();
 }
 
@@ -818,7 +823,18 @@ function renderPayments(){
   });
 
   const albin = active.find(p => p.toLowerCase() === 'albin'), lea = active.find(p => p.toLowerCase() === 'léa' || p.toLowerCase() === 'lea');
-  if (albin && lea && amounts[lea] > 0) {
+  
+  // Rendu de la case à cocher pour le GOAT
+  const goatRow = document.getElementById('goatRow');
+  if (albin && lea) {
+    goatRow.style.display = 'block';
+    document.getElementById('goatCheckbox').checked = albinPaysForLea;
+  } else {
+    goatRow.style.display = 'none';
+  }
+
+  // Application de la règle SI cochée
+  if (albinPaysForLea && albin && lea && amounts[lea] > 0) {
     amounts[albin] += amounts[lea]; amounts[lea] = 0;
     badges[lea] += '<span class="discount-badge" style="background:#e8f5e9;color:#2e7d32">Régalée 🐐</span>';
     badges[albin] += '<span class="discount-badge" style="background:#fff3e0;color:#e65100">+ Léa 👑</span>';
@@ -1016,15 +1032,6 @@ function renderAll(){
   if(selectedPerson) renderProfileForm();
   buildRecapCal(); renderPayments(); renderVillas(); updateTricountDropdowns(); renderTricount(); renderPhotos(); renderWheel();
 }
-</script>
-  <script>
-  if ('serviceWorker' in navigator) {
-    window.addEventListener('load', () => {
-      navigator.serviceWorker.register('sw.js')
-        .then(reg => console.log('PWA prête !', reg))
-        .catch(err => console.log('Erreur PWA', err));
-    });
-  }
 </script>
 </body>
 </html>
