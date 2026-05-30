@@ -640,7 +640,31 @@ function spinRoulette() {
   document.getElementById('rouletteWinner').textContent = "Ça tourne...";
   document.getElementById('rouletteWinner').style.animation = 'none';
 
-  currentWheelRotation += (5 * 360) + Math.floor(Math.random() * 360); 
+  // --- DÉBUT DU TRUQUAGE VIP 👑 ---
+  let randomAngle = Math.floor(Math.random() * 360); // Hasard par défaut
+  
+  // On liste ceux qui ont "le droit" de perdre (tout le monde SAUF Albin et Léa)
+  const allowedVictims = active.filter(p => {
+    const name = p.toLowerCase();
+    return name !== 'albin' && name !== 'léa' && name !== 'lea';
+  });
+
+  // Si au moins un "pigeon" est dispo, on le cible
+  if (allowedVictims.length > 0) {
+    // 1. On choisit une victime au hasard parmi les non-protégés
+    const targetWinner = allowedVictims[Math.floor(Math.random() * allowedVictims.length)];
+    const targetIndex = active.indexOf(targetWinner); // Sa position sur la roue
+    
+    const anglePerSlice = 360 / active.length;
+    // 2. On vise pile le milieu de la case de la victime
+    const desiredPointerAngle = targetIndex * anglePerSlice + (anglePerSlice / 2);
+    
+    // 3. Calcul mathématique invisible pour forcer la roue à s'arrêter là
+    randomAngle = (360 - desiredPointerAngle - (currentWheelRotation % 360) + 360) % 360;
+  }
+  // --- FIN DU TRUQUAGE ---
+
+  currentWheelRotation += (5 * 360) + randomAngle; 
   const wheel = document.getElementById('rouletteWheel');
   wheel.style.transform = `rotate(${currentWheelRotation}deg)`;
 
