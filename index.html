@@ -939,7 +939,23 @@ function renderPayments(){
   if(active.length===0){tbody.innerHTML=`<tr><td colspan="4" class="empty-state">Aucune dispo renseignée 🌊</td></tr>`;awardsArea.innerHTML='';return;}
   const total=totalCostVal||0;
   let amounts={},badges={},gt=0,rows='';
-  active.forEach(p=>{let amt=totalPD>0?total*(state[p].length/totalPD):0;if(state[p].length>=21){amt*=.9;badges[p]='<span class="discount-badge">-10%</span>';}else badges[p]='';amounts[p]=amt;});
+  // 1. Calcul des parts de base au pro-rata
+  const baseAmounts={};
+  active.forEach(p=>baseAmounts[p]=totalPD>0?total*(state[p].length/totalPD):0);
+  // 2. Réductions silencieuses pour 21j+ et calcul du manque
+  const discounted=active.filter(p=>state[p].length>=21);
+  const nonDiscounted=active.filter(p=>state[p].length<21);
+  let shortfall=0;
+  discounted.forEach(p=>shortfall+=baseAmounts[p]*0.1);
+  // 3. Redistribution du manque aux non-réduits au pro-rata de leurs parts
+  const nonDiscBase=nonDiscounted.reduce((s,p)=>s+baseAmounts[p],0);
+  active.forEach(p=>{
+    let amt=baseAmounts[p];
+    if(state[p].length>=21) amt*=0.9; // réduction cachée
+    else if(nonDiscBase>0) amt+=shortfall*(baseAmounts[p]/nonDiscBase); // ils compensent
+    amounts[p]=amt;
+    badges[p]=''; // aucun badge visible
+  });
   const albin=active.find(p=>p.toLowerCase()==='albin'),lea=active.find(p=>p.toLowerCase()==='léa'||p.toLowerCase()==='lea');
   const goatRow=document.getElementById('goatRow');
   if(albin&&lea){goatRow.style.display='block';document.getElementById('goatCheckbox').checked=albinPaysForLea;}else goatRow.style.display='none';
