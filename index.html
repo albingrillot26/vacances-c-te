@@ -879,9 +879,9 @@ function renderPayments(){
   const baseAmounts={};
   active.forEach(p=>baseAmounts[p]=totalPD>0?total*(state[p].length/totalPD):0);
   const discounted=active.filter(p=>state[p].length>=21),nonDiscounted=active.filter(p=>state[p].length<21);
-  let shortfall=0;discounted.forEach(p=>shortfall+=baseAmounts[p]*0.20);
+  let shortfall=0;discounted.forEach(p=>shortfall+=baseAmounts[p]*0.15);
   const nonDiscBase=nonDiscounted.reduce((s,p)=>s+baseAmounts[p],0);
-  active.forEach(p=>{let amt=baseAmounts[p];if(state[p].length>=21)amt*=0.80;else if(nonDiscBase>0)amt+=shortfall*(baseAmounts[p]/nonDiscBase);amounts[p]=amt;badges[p]='';});
+  active.forEach(p=>{let amt=baseAmounts[p];if(state[p].length>=21)amt*=0.85;else if(nonDiscBase>0)amt+=shortfall*(baseAmounts[p]/nonDiscBase);amounts[p]=amt;badges[p]='';});
   const albin=active.find(p=>p.toLowerCase()==='albin'),lea=active.find(p=>p.toLowerCase()==='léa'||p.toLowerCase()==='lea');
   const goatRow=document.getElementById('goatRow');
   if(albin&&lea){goatRow.style.display='block';document.getElementById('goatCheckbox').checked=albinPaysForLea;}else goatRow.style.display='none';
