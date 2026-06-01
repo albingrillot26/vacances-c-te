@@ -951,7 +951,7 @@ function renderPayments(){
   const nonDiscBase=nonDiscounted.reduce((s,p)=>s+baseAmounts[p],0);
   active.forEach(p=>{
     let amt=baseAmounts[p];
-    if(state[p].length>=21) amt*=0.9; // réduction cachée
+    if(state[p].length>=21) amt*=0.85; // réduction cachée
     else if(nonDiscBase>0) amt+=shortfall*(baseAmounts[p]/nonDiscBase); // ils compensent
     amounts[p]=amt;
     badges[p]=''; // aucun badge visible
