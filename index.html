@@ -26,28 +26,18 @@
 *{box-sizing:border-box;margin:0;padding:0}
 html{scroll-behavior:smooth}
 body{font-family:'Plus Jakarta Sans',sans-serif;color:var(--tx);transition:color .3s}
-
-/* BG ANIMATED */
 .scene{position:fixed;inset:0;z-index:0;overflow:hidden;background:radial-gradient(ellipse at 20% 10%, var(--bg-a) 0%, var(--bg-b) 50%, var(--bg-c) 100%);transition:background .5s}
 .scene canvas{position:absolute;inset:0;opacity:.4}
-
-/* LAYOUT */
 .wrap{padding:0 1rem 5rem;position:relative;z-index:1;max-width:760px;margin:0 auto}
-
-/* TOP CONTROLS */
 .top-bar{position:fixed;top:0;left:0;right:0;z-index:200;display:flex;justify-content:flex-end;gap:8px;padding:12px 16px;pointer-events:none}
 .icon-btn{width:38px;height:38px;border-radius:50%;border:1px solid var(--br);background:var(--surf);color:var(--tx2);font-size:1rem;cursor:pointer;display:flex;align-items:center;justify-content:center;backdrop-filter:blur(12px);transition:all .2s;box-shadow:0 2px 10px var(--sh);pointer-events:all}
 .icon-btn:hover{transform:scale(1.1);background:var(--teal);color:white;border-color:transparent}
-
-/* HERO */
 .hero{text-align:center;padding:4rem 1rem 1.5rem;position:relative}
-.hero-shell{font-size:3.5rem;display:inline-block;animation:shellFloat 3s ease-in-out infinite;cursor:default;user-select:none}
+.hero-shell{font-size:3.5rem;display:inline-block;animation:shellFloat 3s ease-in-out infinite;cursor:pointer;user-select:none}
 @keyframes shellFloat{0%,100%{transform:translateY(0) rotate(-8deg)}50%{transform:translateY(-12px) rotate(8deg)}}
 .hero h1{font-family:'Cormorant Garamond',serif;font-size:clamp(2rem,6vw,3rem);font-weight:700;margin:.4rem 0 .3rem;background:linear-gradient(135deg,#1a7a72 0%,#c2185b 50%,#1a7a72 100%);background-size:200%;-webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text;animation:gradShift 6s ease infinite}
 @keyframes gradShift{0%,100%{background-position:0%}50%{background-position:100%}}
 .hero p{font-size:.88rem;color:var(--tx2);font-weight:300;letter-spacing:.3px}
-
-/* COUNTDOWN */
 .cd-wrap{display:flex;justify-content:center;align-items:center;gap:4px;margin:1.2rem auto;flex-wrap:wrap;max-width:400px}
 .cd-sep{font-family:'Cormorant Garamond',serif;font-size:2rem;color:var(--teal-m);font-weight:700;margin:0 2px;padding-bottom:16px}
 .cd-unit{text-align:center}
@@ -59,8 +49,6 @@ body{font-family:'Plus Jakarta Sans',sans-serif;color:var(--tx);transition:color
 .cd-label{font-size:.58rem;text-transform:uppercase;letter-spacing:1px;color:var(--txs);margin-top:3px;font-weight:600}
 .cd-vibe{width:100%;text-align:center;margin-top:.5rem;font-size:.88rem;color:var(--tx2);font-weight:500}
 .cd-vibe-emoji{font-size:1.1rem}
-
-/* STICKY NAV */
 .nav-sticky{position:sticky;top:0;z-index:50;backdrop-filter:blur(20px);background:rgba(255,255,255,.6);border-bottom:1px solid rgba(178,223,219,.3);padding:8px 0 6px;margin:0 -1rem;transition:background .3s}
 [data-theme=dark] .nav-sticky{background:rgba(10,20,20,.7)}
 .nav-tabs{display:flex;gap:5px;overflow-x:auto;scrollbar-width:none;padding:0 1rem}
@@ -71,15 +59,11 @@ body{font-family:'Plus Jakarta Sans',sans-serif;color:var(--tx);transition:color
 .page-section{display:none}
 .page-section.active{display:block;animation:pageIn .35s ease}
 @keyframes pageIn{from{opacity:0;transform:translateY(10px)}to{opacity:1;transform:translateY(0)}}
-
-/* CARDS */
 .card{background:var(--surf);backdrop-filter:blur(14px);border-radius:22px;padding:1.4rem 1.5rem;margin-bottom:1rem;border:1px solid var(--surf-b);box-shadow:0 4px 28px var(--sh),inset 0 1px 0 rgba(255,255,255,.4);transition:transform .2s,box-shadow .2s}
 [data-theme=dark] .card{box-shadow:0 4px 28px var(--sh)}
 .card h2{font-family:'Cormorant Garamond',serif;font-size:1.2rem;font-weight:700;color:var(--teal);margin-bottom:1rem;display:flex;align-items:center;gap:8px}
 .dot{width:7px;height:7px;border-radius:50%;flex-shrink:0}
 .dp{background:var(--pink)}.dt{background:var(--teal)}.da{background:var(--orange)}.dg{background:var(--purple)}.dv{background:#ff9800}.dr{background:#e91e63}.dtr{background:#4caf50}.dph{background:#9c27b0}.dval{background:#ff7043}
-
-/* PEOPLE */
 .people-grid{display:flex;flex-wrap:wrap;gap:8px;margin-bottom:.9rem}
 .person-wrap{position:relative;display:inline-flex;align-items:center}
 .person-btn{padding:9px 34px 9px 16px;border-radius:999px;border:1.5px solid var(--br);background:var(--surf);font-family:'Plus Jakarta Sans',sans-serif;font-size:.84rem;font-weight:500;color:var(--tx2);cursor:pointer;transition:all .15s}
@@ -94,8 +78,6 @@ body{font-family:'Plus Jakarta Sans',sans-serif;color:var(--tx);transition:color
 .add-input:focus{border-color:var(--teal)}
 .add-btn{padding:9px 18px;border-radius:999px;border:none;background:linear-gradient(135deg,var(--teal-m),var(--teal));color:white;font-family:'Plus Jakarta Sans',sans-serif;font-size:.84rem;font-weight:600;cursor:pointer;white-space:nowrap;transition:opacity .15s,transform .15s}
 .add-btn:hover{opacity:.88;transform:scale(1.02)}
-
-/* PROFIL */
 .status-section{margin-bottom:1.2rem;padding:12px;background:rgba(38,166,154,.06);border-radius:14px;border:1px dashed var(--teal-m)}
 .status-block{margin-bottom:10px}.status-block:last-child{margin-bottom:0}
 .status-title{font-size:.82rem;color:var(--teal);font-weight:600;margin-bottom:6px}
@@ -104,8 +86,6 @@ body{font-family:'Plus Jakarta Sans',sans-serif;color:var(--tx);transition:color
 .status-btn:hover{background:var(--teal-l)}.status-btn.active{background:var(--pink-l);border-color:var(--pink);color:#c2185b;font-weight:600}
 .profile-input{width:100%;padding:8px 12px;border-radius:10px;border:1.5px solid var(--br);font-family:'Plus Jakarta Sans',sans-serif;font-size:.84rem;color:var(--tx);outline:none;background:var(--surf);transition:border-color .15s}
 .profile-input:focus{border-color:var(--pink)}
-
-/* CALENDRIER */
 .month-title{font-family:'Cormorant Garamond',serif;font-size:1rem;color:var(--teal);text-align:center;margin-bottom:.6rem;font-weight:700}
 .cal-grid{display:grid;grid-template-columns:repeat(7,1fr);gap:3px}
 .cal-dow{text-align:center;font-size:.62rem;font-weight:700;color:var(--txs);text-transform:uppercase;letter-spacing:.5px;padding:4px 0}
@@ -132,8 +112,6 @@ body{font-family:'Plus Jakarta Sans',sans-serif;color:var(--tx);transition:color
 .lg{background:#c8e6c9}.lo{background:#ffe0b2}
 .couple-legend{display:flex;flex-wrap:wrap;gap:8px;margin-bottom:.9rem}
 .couple-tag{font-size:.74rem;background:var(--pink-l);color:#c2185b;border-radius:999px;padding:4px 12px;font-weight:500;border:1px solid #f8bbd0}
-
-/* VILLAS */
 .villa-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(195px,1fr));gap:12px;margin-bottom:1rem}
 .villa-card{background:var(--surf);border:1.5px solid var(--br);border-radius:16px;overflow:hidden;display:flex;flex-direction:column;position:relative;transition:transform .2s,box-shadow .2s}
 .villa-card:hover{transform:translateY(-5px);box-shadow:0 12px 30px var(--sh)}
@@ -149,8 +127,6 @@ body{font-family:'Plus Jakarta Sans',sans-serif;color:var(--tx);transition:color
 .villa-vote-btn{margin-top:6px;border:1px solid #f8bbd0;background:var(--surf);color:#c2185b;padding:5px;border-radius:8px;font-size:.75rem;font-weight:600;cursor:pointer;display:flex;align-items:center;justify-content:center;gap:4px;transition:all .2s;font-family:'Plus Jakarta Sans',sans-serif}
 .villa-vote-btn.voted{background:var(--pink-l);border-color:var(--pink)}
 .villa-voters{font-size:.64rem;color:var(--pink);margin-top:4px;text-align:center;min-height:14px}
-
-/* BUDGET — PROGRESS RING */
 .fill-row{display:flex;align-items:center;gap:18px;padding:14px 16px;background:rgba(38,166,154,.06);border-radius:16px;border:1px dashed var(--br);margin-bottom:1rem}
 .ring-svg{transform:rotate(-90deg);flex-shrink:0}
 .ring-bg{fill:none;stroke:var(--br);stroke-width:7}
@@ -185,8 +161,6 @@ body{font-family:'Plus Jakarta Sans',sans-serif;color:var(--tx);transition:color
 .award-title{font-size:.6rem;color:#f57c00;font-weight:700;text-transform:uppercase;letter-spacing:.5px}
 .award-winner{font-family:'Cormorant Garamond',serif;font-size:1.05rem;color:#e65100;font-weight:700;margin-top:4px}
 .award-sub{font-size:.72rem;color:#fb8c00;font-weight:600;margin-top:2px}
-
-/* TRICOUNT */
 .tricount-list{display:flex;flex-direction:column;gap:8px;margin-bottom:1.2rem;max-height:280px;overflow-y:auto;padding-right:4px}
 .tricount-item{background:var(--surf);border:1.5px solid var(--br);border-radius:12px;padding:12px;display:flex;justify-content:space-between;align-items:center}
 .tricount-info{display:flex;flex-direction:column}
@@ -198,8 +172,6 @@ body{font-family:'Plus Jakarta Sans',sans-serif;color:var(--tx);transition:color
 .balance-item.positive{background:#e8f5e9;color:#2e7d32}.balance-item.negative{background:#ffebee;color:#c62828}
 .checkbox-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(95px,1fr));gap:6px;margin-top:5px}
 .checkbox-label{display:flex;align-items:center;gap:6px;font-size:.8rem;color:var(--tx);cursor:pointer}
-
-/* VALISE */
 .valise-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(140px,1fr));gap:10px;margin-bottom:1rem}
 .valise-item{background:var(--surf);border:2px solid var(--br);border-radius:16px;padding:16px 10px;text-align:center;cursor:pointer;transition:all .2s;position:relative}
 .valise-item:hover{border-color:var(--teal);transform:translateY(-3px);box-shadow:0 6px 16px var(--sh)}
@@ -212,8 +184,6 @@ body{font-family:'Plus Jakarta Sans',sans-serif;color:var(--tx);transition:color
 .val-del{position:absolute;top:5px;right:5px;width:18px;height:18px;border-radius:50%;border:none;background:rgba(100,160,155,.2);color:var(--teal);font-size:9px;cursor:pointer;display:flex;align-items:center;justify-content:center;font-weight:700;opacity:0;transition:opacity .15s}
 .valise-item:hover .val-del{opacity:1}
 .val-del:hover{background:var(--red)!important;color:white!important}
-
-/* PHOTOS */
 .photo-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(140px,1fr));gap:8px;margin-bottom:1rem}
 .photo-card{position:relative;border-radius:14px;overflow:hidden;border:1.5px solid var(--br);background:var(--teal-l);aspect-ratio:1;cursor:pointer}
 .photo-img{width:100%;height:100%;object-fit:cover;transition:transform .3s}
@@ -221,28 +191,20 @@ body{font-family:'Plus Jakarta Sans',sans-serif;color:var(--tx);transition:color
 .photo-caption{position:absolute;bottom:0;left:0;right:0;background:rgba(0,0,0,.55);color:white;font-size:.72rem;padding:6px;text-align:center;backdrop-filter:blur(3px)}
 .photo-del{position:absolute;top:5px;right:5px;background:rgba(255,255,255,.85);border:none;width:22px;height:22px;border-radius:50%;color:var(--red);cursor:pointer;display:flex;align-items:center;justify-content:center;font-size:.7rem;font-weight:bold;opacity:0;transition:opacity .15s}
 .photo-card:hover .photo-del{opacity:1}
-
-/* ROULETTE */
 .wheel-container{position:relative;width:220px;height:220px;margin:1rem auto;border-radius:50%;border:5px solid white;box-shadow:0 6px 24px var(--sh),0 0 0 2px rgba(38,166,154,.2);overflow:hidden}
 .wheel-pointer{position:absolute;top:-14px;left:50%;transform:translateX(-50%);width:0;height:0;border-left:12px solid transparent;border-right:12px solid transparent;border-top:22px solid var(--red);z-index:10;filter:drop-shadow(0 2px 3px rgba(0,0,0,.3))}
 .wheel{width:100%;height:100%;border-radius:50%;position:relative;transition:transform 4s cubic-bezier(0.2,0.8,0.2,1)}
 .wheel-label{position:absolute;top:50%;left:50%;transform-origin:0 0;font-weight:700;color:white;font-size:.9rem;text-shadow:1px 1px 2px rgba(0,0,0,.7);white-space:nowrap}
-
-/* BOUTONS */
 .btn-row{display:flex;gap:8px;margin-top:.7rem}
 .btn-submit{flex:1;padding:12px;border-radius:12px;border:none;background:linear-gradient(135deg,var(--pink-m),var(--teal));color:white;font-family:'Plus Jakarta Sans',sans-serif;font-size:.9rem;font-weight:600;cursor:pointer;transition:opacity .2s,transform .15s;box-shadow:0 4px 16px rgba(240,98,146,.2)}
 .btn-submit:hover{opacity:.9;transform:translateY(-1px)}.btn-submit:active{transform:scale(.98)}
 .btn-reset{padding:12px 16px;border-radius:12px;border:1.5px solid #ef9a9a;background:var(--surf);font-family:'Plus Jakarta Sans',sans-serif;font-size:.87rem;font-weight:600;color:var(--red);cursor:pointer;transition:all .15s;white-space:nowrap}
 .btn-reset:hover{background:#ffebee;border-color:var(--red)}
-
-/* TOASTS */
 #toastWrap{position:fixed;bottom:90px;left:50%;transform:translateX(-50%);z-index:600;display:flex;flex-direction:column;gap:8px;align-items:center;pointer-events:none}
 .toast-item{padding:12px 22px;border-radius:14px;font-size:.86rem;font-weight:600;color:white;box-shadow:0 4px 20px rgba(0,0,0,.2);animation:toastPop .3s cubic-bezier(.34,1.56,.64,1);white-space:nowrap;pointer-events:none}
 .toast-ok{background:linear-gradient(135deg,var(--teal),#43a047)}
 .toast-del{background:linear-gradient(135deg,#ef5350,#c62828)}
 @keyframes toastPop{from{opacity:0;transform:translateY(20px) scale(.8)}to{opacity:1;transform:translateY(0) scale(1)}}
-
-/* MODALES */
 .modal-overlay{position:fixed;inset:0;background:rgba(10,25,25,.8);z-index:300;display:none;align-items:center;justify-content:center;backdrop-filter:blur(7px)}
 .modal-content{background:var(--surf);padding:2rem;border-radius:26px;max-width:420px;width:90%;text-align:center;margin:1rem;box-shadow:0 20px 60px rgba(0,0,0,.25);animation:popIn .35s cubic-bezier(.175,.885,.32,1.275);border:1px solid var(--surf-b)}
 @keyframes popIn{from{transform:scale(.7) translateY(20px);opacity:0}to{transform:scale(1) translateY(0);opacity:1}}
@@ -254,8 +216,6 @@ body{font-family:'Plus Jakarta Sans',sans-serif;color:var(--tx);transition:color
 .match-item{font-size:.88rem;color:#e65100;font-weight:600;margin-bottom:6px;display:flex;justify-content:space-between;border-bottom:1px solid rgba(255,183,77,.4);padding-bottom:6px}
 .match-item:last-child{margin-bottom:0;border-bottom:none;padding-bottom:0}
 .match-snap{font-family:monospace;background:white;padding:2px 8px;border-radius:4px;color:#333;font-size:.82rem}
-
-/* CHAT */
 .chat-widget{position:fixed;bottom:20px;right:16px;z-index:400;display:flex;flex-direction:column;align-items:flex-end}
 .chat-btn{background:linear-gradient(135deg,var(--teal),var(--teal-m));color:white;border:none;border-radius:50px;padding:13px 22px;font-family:'Plus Jakarta Sans',sans-serif;font-weight:600;font-size:.92rem;cursor:pointer;box-shadow:0 6px 20px rgba(38,166,154,.4);transition:transform .2s;display:flex;align-items:center;gap:8px;position:relative}
 .chat-btn:hover{transform:scale(1.04)}
@@ -275,15 +235,34 @@ body{font-family:'Plus Jakarta Sans',sans-serif;color:var(--tx);transition:color
 .chat-input:focus{border-color:var(--teal)}
 .chat-send{background:linear-gradient(135deg,var(--pink-m),var(--pink));color:white;border:none;border-radius:50%;width:40px;height:40px;display:flex;justify-content:center;align-items:center;cursor:pointer;font-size:1rem;box-shadow:0 4px 10px rgba(240,98,146,.3);transition:transform .2s;flex-shrink:0}
 .chat-send:hover{transform:scale(1.08)}
-
-/* CANVAS CONFETTI */
 #confettiCanvas{position:fixed;inset:0;pointer-events:none;z-index:9999}
-
-/* RESPONSIVE */
 @media(max-width:480px){.villa-grid{grid-template-columns:1fr 1fr}.valise-grid{grid-template-columns:repeat(3,1fr)}.cd-num{font-size:1.7rem}.cd-card{min-width:55px;padding:10px 10px}}
 ::-webkit-scrollbar{width:5px;height:5px}
 ::-webkit-scrollbar-track{background:transparent}
 ::-webkit-scrollbar-thumb{background:var(--teal-m);border-radius:3px}
+
+/* ===== EASTER EGG GAME ===== */
+#eggOverlay{position:fixed;inset:0;background:rgba(10,25,25,.92);z-index:500;display:none;align-items:center;justify-content:center;backdrop-filter:blur(10px)}
+#eggOverlay.open{display:flex;animation:pageIn .3s ease}
+.egg-panel{background:var(--surf);border-radius:28px;padding:1.8rem 1.5rem;max-width:420px;width:92%;text-align:center;border:1px solid var(--br);box-shadow:0 20px 60px rgba(0,0,0,.3)}
+.egg-title{font-family:'Cormorant Garamond',serif;font-size:2rem;color:var(--teal);font-weight:700;margin-bottom:.2rem}
+.egg-sub{font-size:.8rem;color:var(--txs);margin-bottom:1rem}
+#gameCanvas{border-radius:16px;border:2px solid var(--br);display:block;margin:0 auto;max-width:100%;cursor:pointer;touch-action:manipulation}
+.egg-scores{display:flex;justify-content:space-around;margin:.8rem 0;gap:8px}
+.egg-score-box{flex:1;background:rgba(38,166,154,.08);border:1px dashed var(--teal-m);border-radius:12px;padding:8px}
+.egg-score-label{font-size:.65rem;text-transform:uppercase;letter-spacing:.8px;color:var(--txs);font-weight:600}
+.egg-score-val{font-family:'Cormorant Garamond',serif;font-size:1.6rem;font-weight:700;color:var(--teal)}
+.egg-leaderboard{margin:.8rem 0;text-align:left;background:rgba(240,98,146,.05);border-radius:12px;padding:10px;border:1px solid #fce4ec;max-height:160px;overflow-y:auto}
+.egg-lb-title{font-size:.75rem;font-weight:700;color:#c2185b;margin-bottom:6px;text-transform:uppercase;letter-spacing:.5px}
+.egg-lb-row{display:flex;justify-content:space-between;font-size:.82rem;padding:4px 0;border-bottom:1px solid rgba(240,98,146,.15);color:var(--tx)}
+.egg-lb-row:last-child{border-bottom:none}
+.egg-lb-rank{font-weight:700;color:var(--teal);width:24px}
+.egg-lb-name{flex:1;font-weight:600}
+.egg-lb-pts{color:#c2185b;font-weight:700}
+.egg-btn-row{display:flex;gap:8px;margin-top:1rem}
+/* hint discret sur la coquille */
+.shell-hint{position:absolute;font-size:.62rem;color:var(--txs);opacity:0;transition:opacity 2s;bottom:-18px;left:50%;transform:translateX(-50%);white-space:nowrap;pointer-events:none}
+.hero:hover .shell-hint{opacity:.6}
 </style>
 </head>
 <body>
@@ -291,7 +270,6 @@ body{font-family:'Plus Jakarta Sans',sans-serif;color:var(--tx);transition:color
 <canvas id="confettiCanvas"></canvas>
 <div class="scene" id="scene"></div>
 
-<!-- TOP CONTROLS -->
 <div class="top-bar">
   <button class="icon-btn" onclick="toggleDark()" id="darkBtn" title="Mode sombre">🌙</button>
   <button class="icon-btn" onclick="toggleMusic()" id="musicBtn" title="Musique">🔇</button>
@@ -299,34 +277,26 @@ body{font-family:'Plus Jakarta Sans',sans-serif;color:var(--tx);transition:color
 
 <div class="wrap">
 
-<!-- HERO -->
 <div class="hero">
-  <div class="hero-shell">🐚</div>
+  <div style="position:relative;display:inline-block">
+    <div class="hero-shell" id="heroShell">🐚</div>
+    <span class="shell-hint">psst... clique 5×</span>
+  </div>
   <h1>Villa Août</h1>
   <p>Coordonne les arrivées · Vote pour la villa · Règle les comptes</p>
 </div>
 
-<!-- COUNTDOWN -->
 <div class="cd-wrap">
-  <div class="cd-unit">
-    <div class="cd-card"><div class="cd-num" id="cdD">--</div><div class="cd-label">jours</div></div>
-  </div>
+  <div class="cd-unit"><div class="cd-card"><div class="cd-num" id="cdD">--</div><div class="cd-label">jours</div></div></div>
   <div class="cd-sep">:</div>
-  <div class="cd-unit">
-    <div class="cd-card"><div class="cd-num" id="cdH">--</div><div class="cd-label">heures</div></div>
-  </div>
+  <div class="cd-unit"><div class="cd-card"><div class="cd-num" id="cdH">--</div><div class="cd-label">heures</div></div></div>
   <div class="cd-sep">:</div>
-  <div class="cd-unit">
-    <div class="cd-card"><div class="cd-num" id="cdM">--</div><div class="cd-label">mins</div></div>
-  </div>
+  <div class="cd-unit"><div class="cd-card"><div class="cd-num" id="cdM">--</div><div class="cd-label">mins</div></div></div>
   <div class="cd-sep">:</div>
-  <div class="cd-unit">
-    <div class="cd-card"><div class="cd-num" id="cdS">--</div><div class="cd-label">secs</div></div>
-  </div>
+  <div class="cd-unit"><div class="cd-card"><div class="cd-num" id="cdS">--</div><div class="cd-label">secs</div></div></div>
   <div class="cd-vibe"><span class="cd-vibe-emoji" id="vibeEmoji">🌊</span> <span id="vibeText">Chargement...</span></div>
 </div>
 
-<!-- NAV -->
 <div class="nav-sticky">
   <div class="nav-tabs">
     <button id="tab-cal" class="nav-tab active" onclick="switchTab('cal')">📅 Dispos</button>
@@ -344,15 +314,12 @@ body{font-family:'Plus Jakarta Sans',sans-serif;color:var(--tx);transition:color
   <div class="card">
     <h2><span class="dot dp"></span>Participants</h2>
     <div class="people-grid" id="peopleGrid">Chargement...</div>
-    <div class="missing-box" id="missingBox" style="display:none">
-      <span>👀</span><span id="missingNames"></span>
-    </div>
+    <div class="missing-box" id="missingBox" style="display:none"><span>👀</span><span id="missingNames"></span></div>
     <div class="add-form">
       <input class="add-input" id="addInput" type="text" placeholder="Ajouter un prénom..." maxlength="20" onkeydown="if(event.key==='Enter')addPerson()">
       <button class="add-btn" onclick="addPerson()">+ Ajouter</button>
     </div>
   </div>
-
   <div class="card" id="selCard" style="display:none">
     <h2><span class="dot dt"></span>Profil & Jours — <span id="selName" style="color:var(--pink)"></span></h2>
     <div class="status-section" id="profileFormArea"></div>
@@ -374,7 +341,6 @@ body{font-family:'Plus Jakarta Sans',sans-serif;color:var(--tx);transition:color
       <button class="btn-submit" onclick="handleSubmit()">Enregistrer 🌊</button>
     </div>
   </div>
-
   <div class="card">
     <h2><span class="dot da"></span>Calendrier des présences</h2>
     <p style="font-size:.78rem;color:var(--txs);margin-bottom:.8rem">Clique sur un jour pour voir qui vient.</p>
@@ -415,8 +381,6 @@ body{font-family:'Plus Jakarta Sans',sans-serif;color:var(--tx);transition:color
 <div id="page-costs" class="page-section" style="padding-top:1rem">
   <div class="card">
     <h2><span class="dot dg"></span>Répartition du logement</h2>
-
-    <!-- PROGRESS RING -->
     <div class="fill-row">
       <div class="ring-val-wrap">
         <svg class="ring-svg" width="80" height="80">
@@ -433,20 +397,17 @@ body{font-family:'Plus Jakarta Sans',sans-serif;color:var(--tx);transition:color
         <div class="fill-note" id="fillNote">En attente des inscriptions...</div>
       </div>
     </div>
-
     <div class="cost-row">
       <label>Coût total :</label>
       <input class="cost-input" type="number" id="totalCost" min="0" placeholder="Ex: 3500" oninput="handleCostInput()">
       <span style="font-size:.87rem;color:var(--txs)">€</span>
     </div>
-
     <div class="goat-row" id="goatRow">
       <label style="cursor:pointer;display:flex;align-items:center;gap:8px">
         <input type="checkbox" id="goatCheckbox" onchange="toggleGoat(this.checked)" style="transform:scale(1.2)">
         <span style="color:#e65100;font-weight:600;font-size:.84rem">👑 Albin régale Léa (GOAT mode)</span>
       </label>
     </div>
-
     <table class="pay-table">
       <thead><tr><th>Prénom</th><th>Jours</th><th>Ratio</th><th>À payer</th></tr></thead>
       <tbody id="payBody"></tbody>
@@ -560,7 +521,6 @@ body{font-family:'Plus Jakarta Sans',sans-serif;color:var(--tx);transition:color
   </div>
 </div>
 
-<!-- TOAST WRAP -->
 <div id="toastWrap"></div>
 
 <!-- CHAT -->
@@ -585,11 +545,33 @@ body{font-family:'Plus Jakarta Sans',sans-serif;color:var(--tx);transition:color
 
 </div><!-- end .wrap -->
 
+<!-- ===== EASTER EGG OVERLAY ===== -->
+<div id="eggOverlay">
+  <div class="egg-panel">
+    <div class="egg-title">🐚 Boulot d'Août</div>
+    <div class="egg-sub">Saute par-dessus les obstacles — espace / tap pour sauter</div>
+    <div class="egg-scores">
+      <div class="egg-score-box"><div class="egg-score-label">Score</div><div class="egg-score-val" id="eggScore">0</div></div>
+      <div class="egg-score-box"><div class="egg-score-label">Meilleur</div><div class="egg-score-val" id="eggBest">0</div></div>
+    </div>
+    <canvas id="gameCanvas" width="360" height="150"></canvas>
+    <div class="egg-leaderboard">
+      <div class="egg-lb-title">🏆 Classement du groupe</div>
+      <div id="eggLB"><div style="font-size:.8rem;color:var(--txs);text-align:center;padding:6px">Chargement...</div></div>
+    </div>
+    <div class="egg-btn-row">
+      <button class="btn-reset" style="flex:1" onclick="closeEgg()">✕ Fermer</button>
+      <button class="btn-submit" id="eggStartBtn" onclick="startGame()">Jouer 🏃</button>
+    </div>
+  </div>
+</div>
+
 <script>
 // ===== FIREBASE =====
 const firebaseConfig={apiKey:"AIzaSyDD_Nj2nDBa_Ertoy7k9YjOV2HesLgbp6I",authDomain:"vacances-3bce4.firebaseapp.com",databaseURL:"https://vacances-3bce4-default-rtdb.europe-west1.firebasedatabase.app",projectId:"vacances-3bce4",storageBucket:"vacances-3bce4.firebasestorage.app",messagingSenderId:"416205104205",appId:"1:416205104205:web:06841f15ec3a141f30a804"};
 firebase.initializeApp(firebaseConfig);
 const db=firebase.database(),dbRef=db.ref('vacances_aout'),chatRef=db.ref('vacances_aout_chat');
+const lbRef=db.ref('vacances_aout_scores');
 
 // ===== CONSTANTES =====
 const DEFAULT_PEOPLE=['Albin'];
@@ -617,18 +599,12 @@ const VIBES=[
 const MAX_PLACES=8;
 const WHEEL_COLORS=['#f06292','#26a69a','#fb8c00','#7e57c2','#ff9800','#e91e63','#80cbc4','#4a8c87'];
 const DEFAULT_VALISE=[
-  {id:'v1',name:'Glacière',emoji:'🧊',claimedBy:''},
-  {id:'v2',name:'Barbecue',emoji:'🍖',claimedBy:''},
-  {id:'v3',name:'Pétanque',emoji:'🎯',claimedBy:''},
-  {id:'v4',name:'Enceinte',emoji:'🔊',claimedBy:''},
-  {id:'v5',name:'Parasol',emoji:'⛱️',claimedBy:''},
-  {id:'v6',name:'Jeux de société',emoji:'🎲',claimedBy:''},
-  {id:'v7',name:'Voiture',emoji:'🚗',claimedBy:''},
-  {id:'v8',name:'Tente plage',emoji:'🏖️',claimedBy:''},
-  {id:'v9',name:'Matelas piscine',emoji:'🛶',claimedBy:''},
-  {id:'v10',name:'Frisbee',emoji:'🥏',claimedBy:''},
-  {id:'v11',name:'Cartes',emoji:'🃏',claimedBy:''},
-  {id:'v12',name:'Tire-bouchon',emoji:'🍷',claimedBy:''},
+  {id:'v1',name:'Glacière',emoji:'🧊',claimedBy:''},{id:'v2',name:'Barbecue',emoji:'🍖',claimedBy:''},
+  {id:'v3',name:'Pétanque',emoji:'🎯',claimedBy:''},{id:'v4',name:'Enceinte',emoji:'🔊',claimedBy:''},
+  {id:'v5',name:'Parasol',emoji:'⛱️',claimedBy:''},{id:'v6',name:'Jeux de société',emoji:'🎲',claimedBy:''},
+  {id:'v7',name:'Voiture',emoji:'🚗',claimedBy:''},{id:'v8',name:'Tente plage',emoji:'🏖️',claimedBy:''},
+  {id:'v9',name:'Matelas piscine',emoji:'🛶',claimedBy:''},{id:'v10',name:'Frisbee',emoji:'🥏',claimedBy:''},
+  {id:'v11',name:'Cartes',emoji:'🃏',claimedBy:''},{id:'v12',name:'Tire-bouchon',emoji:'🍷',claimedBy:''},
 ];
 
 // ===== STATE =====
@@ -684,28 +660,12 @@ function launchConfetti(){
   canvas.width=window.innerWidth;canvas.height=window.innerHeight;
   const ctx=canvas.getContext('2d');
   const cols=['#f06292','#26a69a','#fb8c00','#7e57c2','#80cbc4','#ffb74d','#f48fb1','#4caf50'];
-  const particles=Array.from({length:120},()=>({
-    x:Math.random()*canvas.width,y:-10,
-    vx:(Math.random()-0.5)*5,vy:Math.random()*4+2,
-    color:cols[Math.floor(Math.random()*cols.length)],
-    size:Math.random()*9+4,rot:Math.random()*360,
-    rspeed:(Math.random()-0.5)*12,
-    shape:Math.random()>.5?'rect':'circle'
-  }));
+  const particles=Array.from({length:120},()=>({x:Math.random()*canvas.width,y:-10,vx:(Math.random()-0.5)*5,vy:Math.random()*4+2,color:cols[Math.floor(Math.random()*cols.length)],size:Math.random()*9+4,rot:Math.random()*360,rspeed:(Math.random()-0.5)*12,shape:Math.random()>.5?'rect':'circle'}));
   let frame=0;
   function animate(){
     ctx.clearRect(0,0,canvas.width,canvas.height);
-    particles.forEach(p=>{
-      p.y+=p.vy;p.x+=p.vx;p.rot+=p.rspeed;p.vy+=0.08;
-      ctx.save();ctx.translate(p.x,p.y);ctx.rotate(p.rot*Math.PI/180);
-      ctx.fillStyle=p.color;ctx.globalAlpha=Math.max(0,1-frame/120);
-      if(p.shape==='rect')ctx.fillRect(-p.size/2,-p.size/2,p.size,p.size*0.6);
-      else{ctx.beginPath();ctx.arc(0,0,p.size/2,0,Math.PI*2);ctx.fill();}
-      ctx.restore();
-    });
-    frame++;
-    if(frame<150)requestAnimationFrame(animate);
-    else ctx.clearRect(0,0,canvas.width,canvas.height);
+    particles.forEach(p=>{p.y+=p.vy;p.x+=p.vx;p.rot+=p.rspeed;p.vy+=0.08;ctx.save();ctx.translate(p.x,p.y);ctx.rotate(p.rot*Math.PI/180);ctx.fillStyle=p.color;ctx.globalAlpha=Math.max(0,1-frame/120);if(p.shape==='rect')ctx.fillRect(-p.size/2,-p.size/2,p.size,p.size*0.6);else{ctx.beginPath();ctx.arc(0,0,p.size/2,0,Math.PI*2);ctx.fill();}ctx.restore();});
+    frame++;if(frame<150)requestAnimationFrame(animate);else ctx.clearRect(0,0,canvas.width,canvas.height);
   }
   animate();
 }
@@ -750,29 +710,16 @@ function saveState(){dbRef.set({people,state,userStatus,userPartner,userGender,u
 function handleCostInput(){totalCostVal=parseFloat(document.getElementById('totalCost').value)||0;clearTimeout(window._ct);window._ct=setTimeout(()=>saveState(),800);renderPayments();}
 function toggleGoat(v){albinPaysForLea=v;saveState();renderPayments();}
 
-// ===== COUNTDOWN (avec secondes) =====
+// ===== COUNTDOWN =====
 let prevVals={D:'',H:'',M:'',S:''};
-function tick(id,val){
-  const el=document.getElementById('cd'+id);
-  const sv=String(val).padStart(2,'0');
-  if(sv!==prevVals[id]){el.textContent=sv;el.classList.remove('flip');void el.offsetWidth;el.classList.add('flip');prevVals[id]=sv;}
-}
+function tick(id,val){const el=document.getElementById('cd'+id);const sv=String(val).padStart(2,'0');if(sv!==prevVals[id]){el.textContent=sv;el.classList.remove('flip');void el.offsetWidth;el.classList.add('flip');prevVals[id]=sv;}}
 function updateCountdown(){
   const now=new Date(),target=new Date(2026,7,1,0,0,0),diff=target-now;
-  if(diff<=0){
-    document.querySelector('.countdown-units')&&(document.querySelector('.countdown-units').style.display='none');
-    document.getElementById('vibeEmoji').textContent='🐚';
-    document.getElementById('vibeText').textContent='On est en vacances !! YALLAH !!';
-    return;
-  }
-  const days=Math.floor(diff/(1000*60*60*24));
-  const hours=Math.floor((diff%(1000*60*60*24))/(1000*60*60));
-  const mins=Math.floor((diff%(1000*60*60))/(1000*60));
-  const secs=Math.floor((diff%(1000*60))/1000);
+  if(diff<=0){document.getElementById('vibeEmoji').textContent='🐚';document.getElementById('vibeText').textContent='On est en vacances !! YALLAH !!';return;}
+  const days=Math.floor(diff/(1000*60*60*24)),hours=Math.floor((diff%(1000*60*60*24))/(1000*60*60)),mins=Math.floor((diff%(1000*60*60))/(1000*60)),secs=Math.floor((diff%(1000*60))/1000);
   tick('D',days);tick('H',hours);tick('M',mins);tick('S',secs);
   const vibe=VIBES.slice().reverse().find(v=>days<=v.days)||VIBES[0];
-  document.getElementById('vibeEmoji').textContent=vibe.emoji;
-  document.getElementById('vibeText').textContent=vibe.text;
+  document.getElementById('vibeEmoji').textContent=vibe.emoji;document.getElementById('vibeText').textContent=vibe.text;
 }
 updateCountdown();setInterval(updateCountdown,1000);
 
@@ -792,19 +739,13 @@ function deletePerson(name){
   saveState();
 }
 function renderPeople(){
-  document.getElementById('peopleGrid').innerHTML=people.map(p=>{
-    const days=state[p]&&state[p].length>0?` (${state[p].length}j)`:'';
-    return `<div class="person-wrap"><button class="person-btn${selectedPerson===p?' selected':''}" onclick="selectPerson('${p}')">${p}${getEmojiForStatus(userStatus[p])}${days}</button><button class="del-btn" onclick="deletePerson('${p}')">✕</button></div>`;
-  }).join('');
-  const missing=people.filter(p=>!state[p]||state[p].length===0);
-  const box=document.getElementById('missingBox');
+  document.getElementById('peopleGrid').innerHTML=people.map(p=>{const days=state[p]&&state[p].length>0?` (${state[p].length}j)`:'';return `<div class="person-wrap"><button class="person-btn${selectedPerson===p?' selected':''}" onclick="selectPerson('${p}')">${p}${getEmojiForStatus(userStatus[p])}${days}</button><button class="del-btn" onclick="deletePerson('${p}')">✕</button></div>`;}).join('');
+  const missing=people.filter(p=>!state[p]||state[p].length===0);const box=document.getElementById('missingBox');
   if(missing.length>0){box.style.display='flex';document.getElementById('missingNames').textContent=missing.join(', ')+' — on vous attend ! 👀';}else box.style.display='none';
 }
 function selectPerson(name){
   selectedPerson=name;selDays=new Set(state[name]||[]);
-  document.getElementById('selCard').style.display='block';
-  document.getElementById('selName').textContent=name;
-  document.getElementById('easterEgg').style.display='none';
+  document.getElementById('selCard').style.display='block';document.getElementById('selName').textContent=name;document.getElementById('easterEgg').style.display='none';
   renderProfileForm();buildSelCal();renderPeople();renderVillas();renderValise();updateTricountDropdowns();
   document.getElementById('selCard').scrollIntoView({behavior:'smooth',block:'nearest'});
   if(!promoSeen){document.getElementById('promoModal').style.display='flex';promoSeen=true;}
@@ -834,7 +775,7 @@ function isMatchable(s){const o=STATUS_OPTIONS.find(x=>x.id===s);return o?o.matc
 
 // ===== CALENDRIER =====
 function quickSelect(mode){if(mode==='all'){for(let i=1;i<=31;i++)selDays.add(i);}else if(mode==='none'){selDays.clear();}else if(mode==='w1'){for(let i=1;i<=7;i++)selDays.add(i);}else if(mode==='w2'){for(let i=8;i<=15;i++)selDays.add(i);}else if(mode==='w3'){for(let i=16;i<=23;i++)selDays.add(i);}else if(mode==='w4'){for(let i=24;i<=31;i++)selDays.add(i);}buildSelCal();checkEgg();}
-function checkEgg(){const egg=document.getElementById('easterEgg');if(selDays.size>=28){egg.style.display='block';}else egg.style.display='none';}
+function checkEgg(){const egg=document.getElementById('easterEgg');if(selDays.size>=28)egg.style.display='block';else egg.style.display='none';}
 function toggleDay(d){selDays.has(d)?selDays.delete(d):selDays.add(d);buildSelCal();checkEgg();}
 function buildSelCal(){
   const el=document.getElementById('selCal');el.innerHTML='';
@@ -875,8 +816,7 @@ function buildRecapCal(){
 function handleSubmit(){
   if(!selectedPerson)return;
   state[selectedPerson]=[...selDays].sort((a,b)=>a-b);
-  saveState();
-  launchConfetti();
+  saveState();launchConfetti();
   showToast(`✓ ${selectedPerson} — ${selDays.size} jour${selDays.size>1?'s':''} enregistré${selDays.size>1?'s':''} !`,'ok');
   if(selDays.size>=28)setTimeout(()=>document.getElementById('superModal').style.display='flex',800);
   else setTimeout(()=>checkMatches(selectedPerson),500);
@@ -919,12 +859,9 @@ function renderVillas(){
 
 // ===== BUDGET + RING =====
 function updateRing(pct){
-  const fill=document.getElementById('ringFill');
-  const circumference=2*Math.PI*32;
+  const fill=document.getElementById('ringFill'),circumference=2*Math.PI*32;
   fill.style.strokeDashoffset=circumference*(1-pct/100);
-  if(pct>=90)fill.style.stroke='#f06292';
-  else if(pct>=60)fill.style.stroke='#fb8c00';
-  else fill.style.stroke='#26a69a';
+  if(pct>=90)fill.style.stroke='#f06292';else if(pct>=60)fill.style.stroke='#fb8c00';else fill.style.stroke='#26a69a';
   document.getElementById('ringTxt').textContent=Math.round(pct)+'%';
 }
 function renderPayments(){
@@ -939,23 +876,12 @@ function renderPayments(){
   if(active.length===0){tbody.innerHTML=`<tr><td colspan="4" class="empty-state">Aucune dispo renseignée 🌊</td></tr>`;awardsArea.innerHTML='';return;}
   const total=totalCostVal||0;
   let amounts={},badges={},gt=0,rows='';
-  // 1. Calcul des parts de base au pro-rata
   const baseAmounts={};
   active.forEach(p=>baseAmounts[p]=totalPD>0?total*(state[p].length/totalPD):0);
-  // 2. Réductions silencieuses pour 21j+ et calcul du manque
-  const discounted=active.filter(p=>state[p].length>=21);
-  const nonDiscounted=active.filter(p=>state[p].length<21);
-  let shortfall=0;
-  discounted.forEach(p=>shortfall+=baseAmounts[p]*0.15);
-  // 3. Redistribution du manque aux non-réduits au pro-rata de leurs parts
+  const discounted=active.filter(p=>state[p].length>=21),nonDiscounted=active.filter(p=>state[p].length<21);
+  let shortfall=0;discounted.forEach(p=>shortfall+=baseAmounts[p]*0.20);
   const nonDiscBase=nonDiscounted.reduce((s,p)=>s+baseAmounts[p],0);
-  active.forEach(p=>{
-    let amt=baseAmounts[p];
-    if(state[p].length>=21) amt*=0.85; // réduction cachée
-    else if(nonDiscBase>0) amt+=shortfall*(baseAmounts[p]/nonDiscBase); // ils compensent
-    amounts[p]=amt;
-    badges[p]=''; // aucun badge visible
-  });
+  active.forEach(p=>{let amt=baseAmounts[p];if(state[p].length>=21)amt*=0.80;else if(nonDiscBase>0)amt+=shortfall*(baseAmounts[p]/nonDiscBase);amounts[p]=amt;badges[p]='';});
   const albin=active.find(p=>p.toLowerCase()==='albin'),lea=active.find(p=>p.toLowerCase()==='léa'||p.toLowerCase()==='lea');
   const goatRow=document.getElementById('goatRow');
   if(albin&&lea){goatRow.style.display='block';document.getElementById('goatCheckbox').checked=albinPaysForLea;}else goatRow.style.display='none';
@@ -1020,12 +946,7 @@ function renderValise(){
   grid.innerHTML=checklist.map(item=>{
     const mine=item.claimedBy===selectedPerson,claimed=item.claimedBy!=='';
     let cls='valise-item'+(claimed?' claimed':'')+(mine?' mine':'');
-    return `<div class="${cls}" onclick="claimValise('${item.id}')">
-      <button class="val-del" onclick="event.stopPropagation();deleteValiseItem('${item.id}')">✕</button>
-      <span class="valise-emoji">${item.emoji}</span>
-      <div class="valise-name">${item.name}</div>
-      <div class="valise-claimer">${item.claimedBy?'✓ '+item.claimedBy:'Libre !'}</div>
-    </div>`;
+    return `<div class="${cls}" onclick="claimValise('${item.id}')"><button class="val-del" onclick="event.stopPropagation();deleteValiseItem('${item.id}')">✕</button><span class="valise-emoji">${item.emoji}</span><div class="valise-name">${item.name}</div><div class="valise-claimer">${item.claimedBy?'✓ '+item.claimedBy:'Libre !'}</div></div>`;
   }).join('');
 }
 
@@ -1082,6 +1003,158 @@ function scrollChat(){const c=document.getElementById('chatMessages');setTimeout
 
 // ===== RENDER ALL =====
 function renderAll(){renderPeople();if(selectedPerson)renderProfileForm();buildRecapCal();renderPayments();renderVillas();renderTricount();renderPhotos();renderValise();renderWheel();updateTricountDropdowns();}
+
+// ===== EASTER EGG : 5 clics sur la coquille =====
+let shellClicks=0,shellTimer=null;
+document.getElementById('heroShell').addEventListener('click',()=>{
+  shellClicks++;
+  clearTimeout(shellTimer);
+  shellTimer=setTimeout(()=>shellClicks=0,1500);
+  if(shellClicks>=5){shellClicks=0;openEgg();}
+});
+
+// ===== GAME ENGINE =====
+const GW=360,GH=150,GROUND=115,GRAVITY=0.68,JUMP_V=-13.5;
+const EMOJIS_OBS=['🌊','⛱️','🦀','🍹','🌴','🐚'];
+let gameRunning=false,gameOver=false,score=0,bestScore=0,animId=null;
+let player,obstacles,speed,frameN,nextObs;
+const gameCanvas=document.getElementById('gameCanvas');
+const gctx=gameCanvas.getContext('2d');
+
+function openEgg(){
+  document.getElementById('eggOverlay').classList.add('open');
+  loadLeaderboard();
+  drawIdle();
+}
+function closeEgg(){
+  document.getElementById('eggOverlay').classList.remove('open');
+  if(animId)cancelAnimationFrame(animId);
+  gameRunning=false;gameOver=false;
+  document.getElementById('eggStartBtn').textContent='Jouer 🏃';
+}
+function initPlayer(){return{x:52,y:GROUND,vy:0,w:28,h:32,onGround:true,frameT:0,f:0};}
+function initGame(){player=initPlayer();obstacles=[];speed=3.5;frameN=0;nextObs=90;score=0;gameOver=false;document.getElementById('eggScore').textContent='0';}
+function startGame(){
+  if(gameRunning)return;
+  initGame();gameRunning=true;
+  document.getElementById('eggStartBtn').textContent='En cours...';
+  loop();
+}
+function jump(){
+  if(!gameRunning){startGame();return;}
+  if(player.onGround){player.vy=JUMP_V;player.onGround=false;}
+}
+// tap & espace
+gameCanvas.addEventListener('click',jump);
+gameCanvas.addEventListener('touchstart',e=>{e.preventDefault();jump();},{passive:false});
+document.addEventListener('keydown',e=>{
+  if(e.code==='Space'&&document.getElementById('eggOverlay').classList.contains('open')){e.preventDefault();jump();}
+});
+
+function loop(){
+  if(!gameRunning)return;
+  update();drawGame();
+  animId=requestAnimationFrame(loop);
+}
+function update(){
+  frameN++;score++;
+  document.getElementById('eggScore').textContent=score;
+  if(score%500===0)speed=Math.min(speed+0.5,10);
+  // player physics
+  player.vy+=GRAVITY;player.y+=player.vy;
+  if(player.y>=GROUND){player.y=GROUND;player.vy=0;player.onGround=true;}
+  player.frameT++;if(player.frameT>7){player.f=1-player.f;player.frameT=0;}
+  // spawn obstacle
+  nextObs--;
+  if(nextObs<=0){
+    const h=Math.random()>.3?28:42;
+    obstacles.push({x:GW+20,y:GROUND,emoji:EMOJIS_OBS[Math.floor(Math.random()*EMOJIS_OBS.length)],w:24,h});
+    nextObs=Math.floor(Math.random()*55)+50-Math.min(25,score/300);
+  }
+  obstacles.forEach(o=>o.x-=speed);
+  obstacles=obstacles.filter(o=>o.x>-40);
+  // collision AABB
+  const px=player.x+5,py=player.y-player.h+5,pw=player.w-10,ph=player.h-10;
+  for(const o of obstacles){
+    const ox=o.x+4,oy=o.y-o.h+4,ow=o.w-8,oh=o.h-8;
+    if(px<ox+ow&&px+pw>ox&&py<oy+oh&&py+ph>oy){endGame();return;}
+  }
+}
+function drawCloud(x,y,s){
+  gctx.fillStyle='rgba(255,255,255,.75)';
+  gctx.beginPath();gctx.arc(x,y,s*.5,0,Math.PI*2);gctx.fill();
+  gctx.beginPath();gctx.arc(x+s*.4,y+4,s*.38,0,Math.PI*2);gctx.fill();
+  gctx.beginPath();gctx.arc(x-s*.35,y+5,s*.35,0,Math.PI*2);gctx.fill();
+}
+function drawGame(){
+  gctx.clearRect(0,0,GW,GH);
+  // sky
+  const sky=gctx.createLinearGradient(0,0,0,GH);sky.addColorStop(0,'#b2dfdb');sky.addColorStop(1,'#e8f5e9');
+  gctx.fillStyle=sky;gctx.fillRect(0,0,GW,GH);
+  // sun
+  gctx.beginPath();gctx.arc(GW-38,28,16,0,Math.PI*2);gctx.fillStyle='#ffee58';gctx.fill();
+  // clouds
+  drawCloud(55+((frameN*.25)%420),22,38);drawCloud(210+((frameN*.18)%420),16,26);
+  // ground
+  gctx.fillStyle='#ffcc80';gctx.fillRect(0,GROUND+4,GW,GH-GROUND-4);
+  gctx.fillStyle='#29b6a0';gctx.fillRect(0,GROUND,GW,4);
+  // obstacles
+  gctx.font='22px serif';
+  obstacles.forEach(o=>gctx.fillText(o.emoji,o.x,o.y));
+  // player
+  gctx.save();
+  if(!player.onGround){gctx.translate(player.x+14,player.y-14);gctx.rotate(-0.28);gctx.font='26px serif';gctx.fillText('🏃',-14,14);}
+  else{gctx.font='26px serif';gctx.fillText('🏃',player.x,player.y);}
+  gctx.restore();
+  // score overlay
+  gctx.fillStyle='rgba(38,100,90,.45)';gctx.font='bold 12px Plus Jakarta Sans,sans-serif';
+  gctx.fillText('Score: '+score,8,17);
+  if(gameOver){
+    gctx.fillStyle='rgba(10,25,25,.58)';gctx.fillRect(0,0,GW,GH);
+    gctx.fillStyle='white';gctx.font='bold 20px Cormorant Garamond,serif';gctx.textAlign='center';
+    gctx.fillText('💀 Game Over',GW/2,GH/2-14);
+    gctx.font='13px Plus Jakarta Sans,sans-serif';
+    gctx.fillText('Tap ou Espace pour rejouer',GW/2,GH/2+12);
+    gctx.textAlign='left';
+  }
+}
+function drawIdle(){
+  gctx.clearRect(0,0,GW,GH);
+  const sky=gctx.createLinearGradient(0,0,0,GH);sky.addColorStop(0,'#b2dfdb');sky.addColorStop(1,'#e8f5e9');
+  gctx.fillStyle=sky;gctx.fillRect(0,0,GW,GH);
+  gctx.fillStyle='#ffcc80';gctx.fillRect(0,GROUND+4,GW,GH-GROUND-4);
+  gctx.fillStyle='#29b6a0';gctx.fillRect(0,GROUND,GW,4);
+  drawCloud(80,22,38);drawCloud(220,16,26);
+  gctx.font='26px serif';gctx.fillText('🏃',52,GROUND);
+  gctx.font='22px serif';gctx.fillText('🌊',GW-60,GROUND);
+  gctx.fillStyle='rgba(38,100,90,.6)';gctx.font='bold 13px Cormorant Garamond,serif';
+  gctx.textAlign='center';gctx.fillText('Tap ou Espace pour commencer',GW/2,GH/2);gctx.textAlign='left';
+}
+function endGame(){
+  gameRunning=false;gameOver=true;
+  if(animId)cancelAnimationFrame(animId);
+  drawGame();
+  document.getElementById('eggStartBtn').textContent='Rejouer 🏃';
+  if(score>bestScore){
+    bestScore=score;
+    document.getElementById('eggBest').textContent=bestScore;
+    if(selectedPerson){
+      lbRef.child(selectedPerson.toLowerCase()).transaction(cur=>{
+        if(!cur||score>cur.score)return{name:selectedPerson,score};
+        return cur;
+      }).then(()=>loadLeaderboard());
+    }
+  }
+}
+function loadLeaderboard(){
+  lbRef.orderByChild('score').limitToLast(8).once('value',s=>{
+    const data=s.val();
+    if(!data){document.getElementById('eggLB').innerHTML='<div style="font-size:.8rem;color:var(--txs);text-align:center;padding:6px">Sois le premier à scorer ! 🏆</div>';return;}
+    const sorted=Object.values(data).sort((a,b)=>b.score-a.score);
+    const medals=['🥇','🥈','🥉'];
+    document.getElementById('eggLB').innerHTML=sorted.map((e,i)=>`<div class="egg-lb-row"><span class="egg-lb-rank">${medals[i]||'·'}</span><span class="egg-lb-name">${e.name}</span><span class="egg-lb-pts">${e.score} pts</span></div>`).join('');
+  });
+}
 </script>
 </body>
 </html>
