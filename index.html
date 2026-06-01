@@ -946,7 +946,7 @@ function renderPayments(){
   const discounted=active.filter(p=>state[p].length>=21);
   const nonDiscounted=active.filter(p=>state[p].length<21);
   let shortfall=0;
-  discounted.forEach(p=>shortfall+=baseAmounts[p]*0.1);
+  discounted.forEach(p=>shortfall+=baseAmounts[p]*0.15);
   // 3. Redistribution du manque aux non-réduits au pro-rata de leurs parts
   const nonDiscBase=nonDiscounted.reduce((s,p)=>s+baseAmounts[p],0);
   active.forEach(p=>{
