@@ -153,7 +153,6 @@ body{font-family:'Plus Jakarta Sans',sans-serif;color:var(--tx);transition:color
 .total-row td{font-weight:700;color:var(--teal);border-top:2px solid var(--teal-m);background:rgba(128,203,196,.06)}
 .empty-state{text-align:center;color:var(--txs);font-size:.84rem;padding:1.2rem 0;font-style:italic}
 .discount-badge{background:var(--pink-l);color:#c2185b;font-size:.64rem;padding:3px 7px;border-radius:6px;font-weight:700;margin-left:6px;vertical-align:middle;display:inline-block}
-.cap-badge{background:#e8f5e9;color:#2e7d32;font-size:.64rem;padding:3px 7px;border-radius:6px;font-weight:700;margin-left:6px;vertical-align:middle;display:inline-block}
 .awards-container{display:flex;gap:8px;margin-top:1.5rem;flex-wrap:wrap}
 /* Suivi paiements */
 .pay-check{width:18px;height:18px;accent-color:var(--teal);cursor:pointer;flex-shrink:0}
@@ -171,7 +170,7 @@ body{font-family:'Plus Jakarta Sans',sans-serif;color:var(--tx);transition:color
 .payment-total-row{display:flex;justify-content:space-between;align-items:center;margin-top:12px;padding-top:10px;border-top:1.5px dashed var(--br);font-size:.88rem}
 .payment-total-label{color:var(--tx2);font-weight:500}
 .payment-total-val{font-family:'Cormorant Garamond',serif;font-size:1.3rem;font-weight:700}
-.cap-info{background:#e8f5e9;border:1px solid #a5d6a7;border-radius:10px;padding:8px 12px;margin-bottom:.8rem;font-size:.78rem;color:#2e7d32;display:flex;align-items:center;gap:8px}
+
 .award-card{flex:1;min-width:95px;background:linear-gradient(135deg,#fff8e1,#ffecb3);border:1px solid #ffe082;border-radius:14px;padding:14px 8px;text-align:center;box-shadow:0 4px 12px rgba(255,160,0,.1);transition:transform .2s}
 .award-card:hover{transform:translateY(-2px)}
 .award-icon{font-size:1.8rem;margin-bottom:4px}
@@ -419,7 +418,6 @@ body{font-family:'Plus Jakarta Sans',sans-serif;color:var(--tx);transition:color
       <input class="cost-input" type="number" id="totalCost" min="0" placeholder="Ex: 3500" oninput="handleCostInput()">
       <span style="font-size:.87rem;color:var(--txs)">€</span>
     </div>
-    <div class="cap-info">🎯 <strong>Albin, Léa & Lilie</strong> sont plafonnés à <strong>500 €</strong> — le reste est réparti sur les autres participants.</div>
     <table class="pay-table">
       <thead><tr><th>Prénom</th><th>Jours</th><th>Dû</th><th>A payé ?</th></tr></thead>
       <tbody id="payBody"></tbody>
@@ -878,10 +876,6 @@ function updateRing(pct){
   if(pct>=90)fill.style.stroke='#f06292';else if(pct>=60)fill.style.stroke='#fb8c00';else fill.style.stroke='#26a69a';
   document.getElementById('ringTxt').textContent=Math.round(pct)+'%';
 }
-// Personnes avec plafond fixe à 500€
-const CAPPED_PEOPLE=['albin','léa','lea','lilie'];
-const CAP_AMOUNT=500;
-
 function renderPayments(){
   const active=people.filter(p=>state[p]&&state[p].length>0);
   const tbody=document.getElementById('payBody'),awardsArea=document.getElementById('awardsArea');
@@ -898,41 +892,36 @@ function renderPayments(){
   const amounts={};
 
   if(total>0){
-    // 1. Séparer cappés et non-cappés
-    const capped=active.filter(p=>CAPPED_PEOPLE.includes(p.toLowerCase()));
-    const free=active.filter(p=>!CAPPED_PEOPLE.includes(p.toLowerCase()));
+    // 1. Part de base pro-rata
+    const base={};
+    active.forEach(p=>base[p]=totalPD>0?total*(state[p].length/totalPD):0);
 
-    // 2. Montant total réservé aux cappés (min entre cap et leur part pro-rata)
-    let cappedTotal=0;
-    capped.forEach(p=>{
-      const prorata=totalPD>0?total*(state[p].length/totalPD):0;
-      amounts[p]=Math.min(CAP_AMOUNT,prorata);
-      cappedTotal+=amounts[p];
-    });
-
-    // 3. Reste à couvrir par les non-cappés
-    const remaining=total-cappedTotal;
-    const freePD=free.reduce((s,p)=>s+state[p].length,0);
-    free.forEach(p=>{
-      amounts[p]=freePD>0?remaining*(state[p].length/freePD):0;
+    // 2. Réduction silencieuse -10% pour ceux qui restent tout le mois (30j+)
+    const discounted=active.filter(p=>state[p].length>=30);
+    const normal=active.filter(p=>state[p].length<30);
+    let surplus=0;
+    discounted.forEach(p=>surplus+=base[p]*0.10);
+    const normalBase=normal.reduce((s,p)=>s+base[p],0);
+    active.forEach(p=>{
+      if(state[p].length>=30) amounts[p]=base[p]*0.90;
+      else if(normalBase>0) amounts[p]=base[p]+surplus*(base[p]/normalBase);
+      else amounts[p]=base[p];
     });
   } else {
     active.forEach(p=>amounts[p]=0);
   }
 
-  // 4. Rendu tableau
+  // 3. Rendu tableau
   let rows='',gt=0;
   active.forEach(p=>{
     const amt=amounts[p]||0;
     gt+=amt;
-    const isCapped=CAPPED_PEOPLE.includes(p.toLowerCase());
     const isPaid=paidStatus[p]||false;
-    const capBadge=isCapped&&total>0?`<span class="cap-badge">plafonné 500€</span>`:'';
     const paidBadge=isPaid?`<span class="paid-stamp">✓ Payé</span>`:'';
     rows+=`<tr class="${isPaid?'paid-row':''}">
       <td class="name-c">${p}</td>
       <td class="days-c">${state[p].length}j</td>
-      <td class="amt-c">${total>0?amt.toFixed(2)+'€':'—'}${capBadge}${paidBadge}</td>
+      <td class="amt-c">${total>0?amt.toFixed(2)+'€':'—'}${paidBadge}</td>
       <td style="text-align:center" class="paid-stamp">
         <label style="display:flex;align-items:center;justify-content:center;gap:5px;cursor:pointer">
           <input type="checkbox" class="pay-check" ${isPaid?'checked':''} onchange="togglePaid('${p}',this.checked)">
