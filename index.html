@@ -892,21 +892,18 @@ function renderPayments(){
   const amounts={};
 
   if(total>0){
-    // 1. Part de base pro-rata
-    const base={};
-    active.forEach(p=>base[p]=totalPD>0?total*(state[p].length/totalPD):0);
-
-    // 2. Réduction silencieuse -10% pour ceux qui restent tout le mois (30j+)
-    const discounted=active.filter(p=>state[p].length>=30);
-    const normal=active.filter(p=>state[p].length<30);
-    let surplus=0;
-    discounted.forEach(p=>surplus+=base[p]*0.10);
-    const normalBase=normal.reduce((s,p)=>s+base[p],0);
+    // Tarif journalier progressif : moins tu restes, plus tu paies cher par jour.
+    // Coefficient basé sur l'inverse de la durée, normalisé pour que la somme = total.
+    // Exemple : 3j → coeff ~1.8×, 7j → ~1.4×, 15j → ~1.1×, 30j → ~0.85×
+    const maxDays=Math.max(...active.map(p=>state[p].length),1);
+    const weights={};
+    // Poids = jours × (maxDays / jours)^0.55  → court séjour paie plus/jour, long séjour paie moins/jour
     active.forEach(p=>{
-      if(state[p].length>=30) amounts[p]=base[p]*0.90;
-      else if(normalBase>0) amounts[p]=base[p]+surplus*(base[p]/normalBase);
-      else amounts[p]=base[p];
+      const d=state[p].length;
+      weights[p]=d*Math.pow(maxDays/d,0.55);
     });
+    const totalW=active.reduce((s,p)=>s+weights[p],0);
+    active.forEach(p=>amounts[p]=totalW>0?total*(weights[p]/totalW):0);
   } else {
     active.forEach(p=>amounts[p]=0);
   }
