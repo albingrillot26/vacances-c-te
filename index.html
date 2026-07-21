@@ -900,7 +900,7 @@ function renderPayments(){
     // Poids = jours × (maxDays / jours)^0.55  → court séjour paie plus/jour, long séjour paie moins/jour
     active.forEach(p=>{
       const d=state[p].length;
-      weights[p]=d*Math.pow(maxDays/d,0.25);
+      weights[p]=d*Math.pow(maxDays/d,0.20);
     });
     const totalW=active.reduce((s,p)=>s+weights[p],0);
     active.forEach(p=>amounts[p]=totalW>0?total*(weights[p]/totalW):0);
